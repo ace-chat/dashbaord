@@ -1,0 +1,10 @@
+.title{
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.box {
+  margin: 30vh auto 0;
+}

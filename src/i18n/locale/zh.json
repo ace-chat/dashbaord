@@ -1,0 +1,14 @@
+{
+  "Test": "测试",
+  "Home": "主页",
+  "About": "关于",
+  "Logout": "退出",
+  "Please check network connection": "请检查网络连接",
+  "Username": "用户名",
+  "Password": "密码",
+  "Google Key": "Google验证码",
+  "Submit": "提交",
+  "Please input your username!": "请输入您的用户名！",
+  "Please input your password!": "请输入您的密码！",
+  "Please input your Google key!": "请输入您的Google验证码！"
+}

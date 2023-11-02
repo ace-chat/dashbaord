@@ -9,7 +9,6 @@ import Login from '@/views/Login/Login.tsx'
 import Home from '@/views/HomePage/Home/Home.tsx'
 
 import Content from '@/views/HomePage/Content/Content.tsx'
-import Options from '@/views/HomePage/Content/Options/Options.tsx'
 import Optimized from "@/views/HomePage/Content/Optimized/Optimized.tsx";
 import Engine from "@/views/HomePage/Content/Engine/Engine.tsx";
 import Media from "@/views/HomePage/Content/Media/Media.tsx";
@@ -47,10 +46,6 @@ const routes: RouteObject[] = [
             path: 'content',
             element: <Content />,
             children: [
-              {
-                path: 'options',
-                element: <Options />
-              },
               {
                 path: 'optimized',
                 element: <Optimized />

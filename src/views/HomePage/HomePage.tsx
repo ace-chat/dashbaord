@@ -10,7 +10,7 @@ const HomePage: FC = () => {
     <Header />
     <Layout>
       <Aside />
-      <Layout.Content style={{ padding: 10, background: '#FFFFFF' }}>
+      <Layout.Content style={{ padding: 10, background: 'transparent', overflowY: 'auto' }}>
         <Outlet />
       </Layout.Content>
     </Layout>

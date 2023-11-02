@@ -1,17 +1,11 @@
-import type { CSSProperties } from 'react'
-
 type Props = {
   name: string;
-}
-
-const style: CSSProperties = {
-  width: 24,
-  height: 24,
+  style?: Record<string, string>;
 }
 
 const Icon = (props: Props) => {
   return <>
-    <svg className={'icon'} style={style} aria-hidden={true}>
+    <svg className={`icon h-24 w-24`} style={props.style} aria-hidden={true}>
       <use xlinkHref={`#icon-${props.name}`} />
     </svg>
   </>

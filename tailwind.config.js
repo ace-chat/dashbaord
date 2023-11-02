@@ -1,6 +1,6 @@
-const spacings = [12, 24, 28, 30, 36, 42, 60, 90, 100, 136, 140, 240, 358, 390, 406, 408, 720, 1110];
-const fontSizes = [16, 20]
-const borderRadius = [10, 24, 40]
+const spacings = [8, 9, 10, 12, 18, 22, 24, 28, 30, 34, 36, 40, 42, 55, 60, 76, 78, 90, 100, 136, 140, 147, 240, 251, 289, 300, 358, 390, 406, 408, 606, 682, 720, 821, 1110];
+const fontSizes = [10, 12, 14, 16, 20, 24]
+const borderRadius = [8, 10, 24, 40]
 
 /** @type {import('tailwindcss').Config} */
 export default {

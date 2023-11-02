@@ -15,6 +15,19 @@
   height: 100vh;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4e4e4e;
+  border-radius: 25px;
+}
+
 /* replace antd css */
 /* menu */
 .ant-menu{
@@ -33,9 +46,9 @@
   border-radius: 10px !important;
   margin: 0 0 12px 0 !important;
   box-sizing: border-box !important;
-  font-size: 16px !important;
   display: flex !important;
   align-items: center !important;
+  padding: 0 20px !important;
 }
 
 .ant-menu-submenu-title{
@@ -47,6 +60,11 @@
   box-sizing: border-box !important;
   display: flex !important;
   align-items: center !important;
+  padding: 0 20px !important;
+}
+
+.ant-menu-title-content{
+  font-size: 15px !important;
 }
 
 .ant-menu-item-selected{
@@ -121,7 +139,19 @@
   padding-bottom: 8px;
 }
 
-.ant-layout-content{
-  background: transparent !important;
-  padding: 0 !important;
+.ant-select-multiple .ant-select-selection-item-content{
+  display: flex !important;
+  align-items: center !important;
+  font-size: 9px !important;
+  color: #000000 !important;
+}
+
+.ant-select-multiple .ant-select-selection-item {
+  height: auto !important;
+  line-height: 1 !important;
+  padding: 5px 10px !important;
+}
+
+.ant-select-selector .ant-select-selection-placeholder, .ant-select-selector .ant-select-selection-item{
+  font-size: 10px !important;
 }

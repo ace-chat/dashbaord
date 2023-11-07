@@ -5,10 +5,10 @@ import Content from '@/components/Content/Content.tsx'
 
 const Media: FC = () => {
   const [title] = useState('Generate AI Social Media Ads Content')
-  const [subTitle] = useState('Tell us more about your project in detail so we can get a best content!')
+  const [subTitle] = useState('Generate a personalized caption for your product or service for the platform of your choice.')
 
   return <>
-    <Content title={title} subTitle={subTitle} />
+    <Content title={title} subTitle={subTitle} tag={"media"} />
   </>
 }
 

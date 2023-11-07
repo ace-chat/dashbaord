@@ -25,6 +25,24 @@ import Settings from "@/views/HomePage/Settings/Settings.tsx";
 
 import Oops from '@/views/Oops/Oops.tsx'
 
+//Optimize Content
+import Tone from '@/views/HomePage/Content/Optimized/Tone'
+import Summarize from '@/views/HomePage/Content/Optimized/Summarize'
+import Paraphrase from '@/views/HomePage/Content/Optimized/Paraphrase'
+import BrandVoice from '@/views/HomePage/Content/Optimized/BrandVoice'
+import Audience from '@/views/HomePage/Content/Optimized/Audience'
+
+//Email
+import Freestyle from '@/views/HomePage/Content/Email/Freestyle'
+import Marketing from '@/views/HomePage/Content/Email/Marketing'
+import Welcome from '@/views/HomePage/Content/Email/Welcome'
+
+//Blogs
+import Odds from '@/views/HomePage/Content/Email/Odds'
+import Intro from '@/views/HomePage/Content/Blogs/Intro'
+import Outline from '@/views/HomePage/Content/Blogs/Outline'
+import Entire from '@/views/HomePage/Content/Blogs/Entire'
+
 const routes: RouteObject[] = [
   {
     path: '/',
@@ -48,7 +66,29 @@ const routes: RouteObject[] = [
             children: [
               {
                 path: 'optimized',
-                element: <Optimized />
+                element: <Optimized />,
+                children: [
+                  {
+                    path: 'tone',
+                    element: <Tone />
+                  },
+                  {
+                    path: 'summarize',
+                    element: <Summarize />
+                  },
+                  {
+                    path: 'paraphrase',
+                    element: <Paraphrase />
+                  },
+                  {
+                    path: 'brandvoice',
+                    element: <BrandVoice />
+                  },
+                  {
+                    path: 'audience',
+                    element: <Audience />
+                  },
+                ]
               },
               {
                 path: 'engine',
@@ -60,11 +100,43 @@ const routes: RouteObject[] = [
               },
               {
                 path: 'email',
-                element: <Email />
+                element: <Email />,
+                children:[
+                  {
+                    path: 'freestyle',
+                    element: <Freestyle />
+                  },
+                  {
+                    path: 'marketing',
+                    element: <Marketing />
+                  },
+                  {
+                    path: 'welcome',
+                    element: <Welcome />
+                  },
+                  {
+                    path: 'odds',
+                    element: <Odds />
+                  },
+                ]
               },
               {
                 path: 'blogs',
-                element: <Blogs />
+                element: <Blogs />,
+                children: [
+                  {
+                    path: 'intro',
+                    element: <Intro />
+                  },
+                  {
+                    path: 'outline',
+                    element: <Outline />
+                  },
+                  {
+                    path: 'entire',
+                    element: <Entire />
+                  },
+                ]
               }
             ]
           },

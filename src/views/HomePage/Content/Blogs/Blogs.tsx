@@ -1,8 +1,8 @@
-import type { FC } from 'react'
+import { Outlet } from 'react-router-dom'
 
-const Blogs: FC = () => {
+const Blogs = () => {
   return <>
-    Blogs
+    <Outlet />
   </>
 }
 

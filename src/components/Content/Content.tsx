@@ -191,26 +191,41 @@ const Content = (props: Prop) => {
           </div>
           
           <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Style') }</span>
-            </div>
-            <div className={`mt-12`}>
+          <div className={`flex items-center`}>
+            <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
+            <span className={`ml-8 text-12`}>{ t('Style') }</span>
+          </div>
+          <div className={`mt-12`}>
+            {props.tag == "brandvoice" ?
+              <Select placeholder={t('Brand Voice (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={brandVoices}
+              optionRender={(node) => {
+                return (
+                  <div className={`flex items-center justify-between`}>
+                    <span>{node.label}</span>
+                    {node.value !== "none" &&
+                      <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />
+                    }
+                  </div>
+                );
+              }}
+              />
+            :
               <div>
                 <Select placeholder={t('Tones')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={tones} />
               </div>
-            </div>
+            }
           </div>
-          
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-            </div>
+        </div>
+
+        <div className={`mt-24`}>
+          <div className={`flex items-center`}>
+            <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
+            <span className={`ml-8 text-12`}>{ t('Language ') }</span>
           </div>
+          <div className={`mt-12`}>
+            <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
+          </div>
+        </div>
       </>
     )
   };
@@ -300,7 +315,7 @@ const Content = (props: Prop) => {
           
           <div className={`mt-24`}>
             <div className={`flex items-center`}>
-              <Icon name={'fourth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
+              <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
               <span className={`ml-8 text-12`}>{ t('Audience') }</span>
             </div>
             <div className={`mt-12`}>

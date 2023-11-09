@@ -29,6 +29,10 @@
   border-radius: 25px;
 }
 
+.placeholder ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+  color: #D33B3B;
+}
+
 /* replace antd css */
 /* menu */
 .ant-menu{

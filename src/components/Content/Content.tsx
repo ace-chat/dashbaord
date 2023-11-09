@@ -1,9 +1,18 @@
-import {useState } from 'react'
+import { useState } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
-import { Select, Input, InputNumber } from 'antd'
+import { Button } from 'antd'
 import { pxToVw } from '@/utils'
-import { countries } from '@/utils/constants';
+
+//components
+import { AdsComp } from './Ads'
+import { ToneComp } from './Tone'
+import { SummarizeComp } from './Summarize'
+import { ParaphraseComp } from './Paraphrase'
+import { AudienceComp } from './Audience'
+import { EmailComp } from './Email'
+import { IntroOutlineComp } from './IntroOutline'
+import { EntireComp } from './Entire'
 
 type Prop = {
   title: string;
@@ -74,575 +83,79 @@ const Content = (props: Prop) => {
     { value: 'russian', label: t('Russian') }
   ]);
 
-  const ContentComp = () => {
-    return(
-      <>
-      <div>
-            <div className={`flex items-center`}>
-              <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Platform') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Select mode="multiple" style={{ width: pxToVw(252), height: pxToVw(36) }} options={platforms} />
-            </div>
-          </div>
+  //sample generated text
+  const sampleText =`
+  Borem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpismolsa estie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus.${"\n"}Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.${"\n"}Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque quam a convallis. Sed ut vulputate nisi. Integer in felis sed leo vestibulum venenatis. Suspendisse quis arcu sem. Aenean feugiat ex eu vestibulum vestibulum. Morbi a eleifend magna. Nam metus lacus, porttitor eu mauris a, blandit ultrices nibh.${"\n"}Mauris sit amet magna non ligula vestibulum eleifend. Nulla varius volutpat turpis sed lacinia. Nam eget mi in purus lobortis eleifend. Sed nec ante dictum sem condimentum ullamcorper quis venenatis nisi. Proin vitae facilisis nisi, ac posuere leo.${"\n"}Nam pulvinar blandit velit, id condimentum diam faucibus at. Aliquam lacus nisi, sollicitudin at nisi nec, fermentum congue felis. Quisque mauris dolor, fringilla sed tincidunt ac, finibus non odio. Sed vitae mauris nec ante pretium finibus.${"\n"}Donec nisl neque, pharetra ac elit eu, faucibus aliquam ligula. Nullam dictum, tellus tincidunt tempor laoreet, nibh elit sollicitudin felis, eget feugiat sapien diam nec nisl. Aenean gravida turpis nisi, consequat dictum risus dapibus a. Duis felis ante, varius in neque eu, tempor suscipit sem. Maecenas ullamcorper gravida sem sit amet cursus. Etiam pulvinar purus vitae justo pharetra consequat. Mauris id mi ut arcu feugiat maximus. Mauris consequat tellus id tempus aliquet. Vestibulum dictum ultrices elit a luctus. Sed in ante ut leo congue posuere at sit amet ligula. Pellentesque eget augue nec nisl sodales m ligula.
+  `;
 
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Details') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div>
-                <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type brand name')} />
-              </div>
-              <div className={`my-12`}>
-                <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type service/product name')} />
-              </div>
-              <div>
-                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10) } }} placeholder={t('Description about service/product')} />
-              </div>
-            </div>
-          </div>
+  //generated text
+  const [generatedText, setGeneratedText] = useState("");
 
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Style') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div>
-                <Select placeholder={t('Tones')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={tones} />
-              </div>
-              <div className={`mt-12`}>
-                <Select placeholder={t('Brand Voice (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={brandVoices}
-                optionRender={(node) => {
-                  return (
-                    <div className={`flex items-center justify-between`}>
-                      <span>{node.label}</span>
-                      {node.value !== "none" &&
-                        <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />
-                      }
-                    </div>
-                  );
-                }}
-                />
-              </div>
-            </div>
-          </div>
+  //state variables
+  const [platform, setPlatform]: any = useState([]);
+  const [brandName, setBrandName]: any = useState();
+  const [productName, setProductName]: any = useState();
+  const [productDesc, setProdDesc]: any = useState();
+  const [tone, setTone]: any = useState();
+  const [brandVoice, setBrandVoice]: any = useState();
+  const [country, setCountry]: any = useState();
+  const [gender, setGender]: any = useState();
+  const [minAge, setMinAge]: any = useState();
+  const [maxAge, setMaxAge]: any = useState();
+  const [language, setLanguage]: any = useState("English");
+  const [text, setText]: any = useState();
+  const [wordCount, setWordCount]: any = useState();
+  const [details, setDetails]: any = useState();
 
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'fourth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Audience') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div>
-                <Select placeholder={t('Region (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={countries} />
-              </div>
-              <div className={`my-12`}>
-                <Select placeholder={t('Gender (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={genders} />
-              </div>
-              <div className={`flex items-center justify-between`}>
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Min Age (Optional)')}
-                  controls={true}
-                />
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Max Age (Optional)')}
-                  controls={true}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'fifth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-            </div>
-          </div>
-      </>
-    )
-  };
-
-  const ToneComp = () => {
-    return(
-      <>
-          <div>
-            <div className={`flex items-center`}>
-              <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Text') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type here')} />
-            </div>
-          </div>
-          
-          <div className={`mt-24`}>
-          <div className={`flex items-center`}>
-            <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-            <span className={`ml-8 text-12`}>{ t('Style') }</span>
-          </div>
-          <div className={`mt-12`}>
-            {props.tag == "brandvoice" ?
-              <Select placeholder={t('Brand Voice (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={brandVoices}
-              optionRender={(node) => {
-                return (
-                  <div className={`flex items-center justify-between`}>
-                    <span>{node.label}</span>
-                    {node.value !== "none" &&
-                      <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />
-                    }
-                  </div>
-                );
-              }}
-              />
-            :
-              <div>
-                <Select placeholder={t('Tones')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={tones} />
-              </div>
-            }
-          </div>
-        </div>
-
-        <div className={`mt-24`}>
-          <div className={`flex items-center`}>
-            <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-            <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-          </div>
-          <div className={`mt-12`}>
-            <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-          </div>
-        </div>
-      </>
-    )
-  };
-
-  const SummarizeComp = () => {
-   return(
-      <>
-      <div>
-          <div className={`flex items-center`}>
-            <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-            <span className={`ml-8 text-12`}>{ t('Text') }</span>
-          </div>
-          <div className={`mt-12`}>
-            <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type here')} />
-          </div>
-        </div>
-        
-        <div className={`mt-24`}>
-          <div className={`flex items-center`}>
-            <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-            <span className={`ml-8 text-12`}>{ t('Word Count') }</span>
-          </div>
-          <div className={`mt-12`}>
-            <div>
-              <InputNumber
-                className='w-240 text-10 items-center'
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-                min={0}
-                placeholder={t('Word Count')}
-                controls={true}
-              />
-            </div>
-          </div>
-        </div>
-        
-        <div className={`mt-24`}>
-          <div className={`flex items-center`}>
-            <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-            <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-          </div>
-          <div className={`mt-12`}>
-            <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-          </div>
-        </div>
-      </>
-    )
-  };
-
-  const ParaphraseComp = () => {
-    return(
-      <>
-      <div>
-         <div className={`flex items-center`}>
-           <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-           <span className={`ml-8 text-12`}>{ t('Text') }</span>
-         </div>
-         <div className={`mt-12`}>
-           <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type here')} />
-         </div>
-       </div>
-       
-       <div className={`mt-24`}>
-         <div className={`flex items-center`}>
-           <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-           <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-         </div>
-         <div className={`mt-12`}>
-           <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-         </div>
-       </div>
-   </>
-    )
-  };
-
-  const AudienceComp = () => {
-    return(
-      <>
-         <div>
-            <div className={`flex items-center`}>
-              <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Text') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type here')} />
-            </div>
-          </div>
-          
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Audience') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div>
-                <Select placeholder={t('Region (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={countries} />
-              </div>
-              <div className={`my-12`}>
-                <Select placeholder={t('Gender (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={genders} />
-              </div>
-              <div className={`flex items-center justify-between`}>
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Min Age (Optional)')}
-                  controls={true}
-                />
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Max Age (Optional)')}
-                  controls={true}
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-            </div>
-          </div>
-      </>
-    )
-  };
-
-  const EmailComp = () => {
-    return(
-      <>
-        <div>
-            <div className={`flex items-center`}>
-              <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Details') }</span>
-            </div>
-
-            <div className={`mt-12`}>
-                {props.tag == "freestyle" ?
-                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type here')} />
-              :
-                <>
-                  <div>
-                    <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type brand name')} />
-                  </div>
-                  <div className={`my-12`}>
-                    <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type service/product name')} />
-                  </div>
-                  <div>
-                    <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10) } }} placeholder={t('Description about service/product')} />
-                  </div>
-                </>
-                }
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Style') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div>
-                <Select placeholder={t('Tones')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={tones} />
-              </div>
-              <div className={`mt-12`}>
-                <Select placeholder={t('Brand Voice (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={brandVoices}
-                optionRender={(node) => {
-                  return (
-                    <div className={`flex items-center justify-between`}>
-                      <span>{node.label}</span>
-                      {node.value !== "none" &&
-                        <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />
-                      }
-                    </div>
-                  );
-                }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Audience') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div>
-                <Select placeholder={t('Region (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={countries} />
-              </div>
-              <div className={`my-12`}>
-                <Select placeholder={t('Gender (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={genders} />
-              </div>
-              <div className={`flex items-center justify-between`}>
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Min Age (Optional)')}
-                  controls={true}
-                />
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Max Age (Optional)')}
-                  controls={true}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'fourth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-            </div>
-          </div>
-      </>
-    )
-  };
-
-  const IntroOutlineComp = () => {
-    return(
-      <>
-      <div>
-          <div className={`flex items-center`}>
-              <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Topic') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10) } }} placeholder={t('Type here')} />
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Style') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div>
-                <Select placeholder={t('Tones')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={tones} />
-              </div>
-              <div className={`mt-12`}>
-                <Select placeholder={t('Brand Voice (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={brandVoices}
-                optionRender={(node) => {
-                  return (
-                    <div className={`flex items-center justify-between`}>
-                      <span>{node.label}</span>
-                      {node.value !== "none" &&
-                        <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />
-                      }
-                    </div>
-                  );
-                }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Audience') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div className={`flex items-center justify-between`}>
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Min Age (Optional)')}
-                  controls={true}
-                />
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Max Age (Optional)')}
-                  controls={true}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'fourth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-            </div>
-          </div>
-      </>
-    )
-  };
-
-  const EntireComp = () => {
-    return(
-      <>
-      <div>
-          <div className={`flex items-center`}>
-              <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Topic') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10) } }} placeholder={t('Type here')} />
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Style') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div>
-                <Select placeholder={t('Tones')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={tones} />
-              </div>
-              <div className={`mt-12`}>
-                <Select placeholder={t('Brand Voice (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={brandVoices}
-                optionRender={(node) => {
-                  return (
-                    <div className={`flex items-center justify-between`}>
-                      <span>{node.label}</span>
-                      {node.value !== "none" &&
-                        <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />
-                      }
-                    </div>
-                  );
-                }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Audience') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <div className={`flex items-center justify-between`}>
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Min Age (Optional)')}
-                  controls={true}
-                />
-                <InputNumber
-                  className='w-120 text-10 items-center'
-                  style={{ paddingTop: 3, paddingBottom: 3 }}
-                  min={12} // Minimum age
-                  max={100} // Maximum age
-                  placeholder={t('Max Age (Optional)')}
-                  controls={true}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className={`mt-24`}>
-          <div className={`flex items-center`}>
-            <Icon name={'fourth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-            <span className={`ml-8 text-12`}>{ t('Word Count') }</span>
-          </div>
-          <div className={`mt-12`}>
-            <div>
-              <InputNumber
-                className='w-240 text-10 items-center'
-                style={{ paddingTop: 5, paddingBottom: 5 }}
-                min={0}
-                placeholder={t('Word Count')}
-                controls={true}
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className={`mt-24`}>
-          <div className={`flex items-center`}>
-                <Icon name={'fifth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Other Details') }</span>
-              </div>
-              <div className={`mt-12`}>
-                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10) } }} placeholder={t('Type here')} />
-          </div>
-        </div>
-
-          <div className={`mt-24`}>
-            <div className={`flex items-center`}>
-              <Icon name={'sixth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Language ') }</span>
-            </div>
-            <div className={`mt-12`}>
-              <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} />
-            </div>
-          </div>
-      </>
-    )
+  function canGenerate(){
+    //social media ads & search engine validation
+    if (props.tag == 'engine' || props.tag == 'media') {
+      if (platform && brandName && productName && productDesc && tone && language) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    //optimized content change tone, freestyle email, intro and outline blog validation
+    if(props.tag ==  "tone"|| props.tag == "freestyle" || props.tag == "intro" || props.tag == "outline"){
+      if(text && tone && language){
+        return false;
+      } else {
+        return true;
+      }
+    }
+    //optimized content match brand voice , paraphrase and target audience validation
+    if(props.tag ==  "brandvoice" || props.tag == "paraphrase" || props.tag == "audience"){
+      if(text && language){
+        return false;
+      } else {
+        return true;
+      }
+    }
+    //optimized content summarize validation
+    if(props.tag == "summarize"){
+      if(text && wordCount && language){
+        return false;
+      } else {
+        return true;
+      }
+    }
+    //cold marketing, welcome and odds email validation
+    if(props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds"){
+      if(brandName && productName && productDesc && tone && language){
+        return false;
+      } else {
+        return true;
+      }
+    }
+    //entire bog validation
+    if(props.tag == "entire"){
+      if(text && tone && wordCount && details){
+        return false;
+      } else {
+        return true;
+      }
+    }
   };
 
   return <>
@@ -654,36 +167,185 @@ const Content = (props: Prop) => {
       <div className={`flex justify-around`}>
         <div className={`w-300 p-24`}>
 
-          {props.tag == "engine" && <ContentComp />}
-          {props.tag == "media" && <ContentComp />}
-          {props.tag == "tone" && <ToneComp />}
-          {props.tag == "summarize" && <SummarizeComp />}
-          {props.tag == "paraphrase" && <ParaphraseComp />}
-          {props.tag == "brandvoice" && <ToneComp />}
-          {props.tag == "audience" && <AudienceComp />}
-          {props.tag == "freestyle" && <EmailComp />}
-          {props.tag == "marketing" && <EmailComp />}
-          {props.tag == "welcome" && <EmailComp />}
-          {props.tag == "odds" && <EmailComp />}
-          {props.tag == "intro" && <IntroOutlineComp />}
-          {props.tag == "outline" && <IntroOutlineComp />}
-          {props.tag == "entire" && <EntireComp />}
+          {(props.tag == "engine" || props.tag == "media") && 
+            <AdsComp t={t} platforms={platforms} tones={tones} genders={genders} languages={languages} 
+              platform={platform} 
+              setPlatform={setPlatform}
+              brandName={brandName}
+              setBrandName={setBrandName} 
+              productName={productName}
+              setProductName={setProductName}
+              productDesc={productDesc} 
+              setProdDesc={setProdDesc}
+              tone={tone}
+              setTone={setTone} 
+              brandVoices={brandVoices}
+              brandVoice={brandVoice}
+              setBrandVoice={setBrandVoice}
+              country={country}
+              setCountry={setCountry} 
+              gender={gender} 
+              setGender={setGender}
+              minAge={minAge} 
+              setMinAge={setMinAge}
+              maxAge={maxAge} 
+              setMaxAge={setMaxAge}
+              language={language} 
+              setLanguage={setLanguage}
+            />
+          }
+          {(props.tag == "tone" || props.tag == "brandvoice") && 
+            <ToneComp 
+                t={t} tag={props.tag} tones={tones} brandVoices={brandVoices} languages={languages} 
+                text={text}
+                setText={setText} 
+                tone={tone} 
+                setTone={setTone} 
+                brandVoice={brandVoice} 
+                setBrandVoice={setBrandVoice}
+                language={language} 
+                setLanguage={setLanguage}
+            />
+          }
+          {props.tag == "summarize" && 
+            <SummarizeComp 
+                t={t} languages={languages} 
+                text={text}
+                setText={setText}
+                wordCount={wordCount}
+                setWordCount={setWordCount}
+                language={language} 
+                setLanguage={setLanguage}
+            />
+          }
+          {props.tag == "paraphrase" && 
+            <ParaphraseComp 
+                t={t} languages={languages} 
+                text={text}
+                setText={setText}
+                language={language} 
+                setLanguage={setLanguage}
+          />}
+          {props.tag == "audience" && 
+            <AudienceComp t={t} genders={genders} languages={languages} 
+                text={text}
+                setText={setText}
+                country={country}
+                setCountry={setCountry} 
+                gender={gender} 
+                setGender={setGender}
+                minAge={minAge} 
+                setMinAge={setMinAge}
+                maxAge={maxAge} 
+                setMaxAge={setMaxAge}
+                language={language} 
+                setLanguage={setLanguage}
+          />}
+          {(props.tag == "freestyle" || props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds") &&
+            <EmailComp t={t} tag={props.tag} tones={tones} genders={genders} languages={languages} 
+              text={text}
+              setText={setText}
+              brandName={brandName}
+              setBrandName={setBrandName} 
+              productName={productName}
+              setProductName={setProductName}
+              productDesc={productDesc} 
+              setProdDesc={setProdDesc}
+              tone={tone}
+              setTone={setTone} 
+              brandVoices={brandVoices}
+              brandVoice={brandVoice}
+              setBrandVoice={setBrandVoice}
+              country={country}
+              setCountry={setCountry} 
+              gender={gender} 
+              setGender={setGender}
+              minAge={minAge} 
+              setMinAge={setMinAge}
+              maxAge={maxAge} 
+              setMaxAge={setMaxAge}
+              language={language} 
+              setLanguage={setLanguage}
+            />
+          }
+          
+          {(props.tag == "intro" || props.tag == "outline") && 
+            <IntroOutlineComp t={t} tones={tones} languages={languages} 
+              text={text}
+              setText={setText}
+              tone={tone}
+              setTone={setTone} 
+              brandVoices={brandVoices}
+              brandVoice={brandVoice}
+              setBrandVoice={setBrandVoice}
+              minAge={minAge} 
+              setMinAge={setMinAge}
+              maxAge={maxAge} 
+              setMaxAge={setMaxAge}
+              language={language} 
+              setLanguage={setLanguage}
+            />
+          }
+
+          {props.tag == "entire" && 
+            <EntireComp t={t} tones={tones} languages={languages} 
+              text={text}
+              setText={setText}
+              tone={tone}
+              setTone={setTone} 
+              brandVoices={brandVoices}
+              brandVoice={brandVoice}
+              setBrandVoice={setBrandVoice}
+              minAge={minAge} 
+              setMinAge={setMinAge}
+              maxAge={maxAge} 
+              setMaxAge={setMaxAge}
+              wordCount={wordCount}
+              setWordCount={setWordCount}
+              details={details}
+              setDetails={setDetails}
+              language={language} 
+              setLanguage={setLanguage}
+            />
+          }
 
           <div className={`mt-24`}>
-            <div className={`w-251 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}>{ t('Generate') }</div>
+            <Button
+              type="default"
+              disabled={canGenerate()}
+              //sample on click function
+              onClick={() => setGeneratedText(sampleText)}
+              className={`w-251 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
+            >
+              {t('Generate')}
+            </Button>
           </div>
+
         </div>
-    
+          
+        {generatedText.length == 0 ? 
+          <div>
+            <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
+              <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
+              <p className="text-18 text-[#C4C4C4] mt-14">Let's Get Started</p>
+              <p className="text-12 text-[#C4C4C4] font-light mt-10">Choose the service to generate content</p>
+            </div>
+          </div>
+        :
         <div>
           <div className={`items-start justify-between rounded-10 mt-14 p-14`} style={{ backgroundColor: "#F6F7F8", 'width': pxToVw(682), 'height': pxToVw(750), display: 'flex', flexDirection: 'column' }}>
             <div className="scrollable-content" style={{ flex: 1, maxHeight: "100%", overflowY: "auto"}}>
-              <div className='p-12 pl-4'>
-                <p className={`leading-normal text-12 pr-16`}>Borem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpismolsa estie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.</p>
-                <p className={`mt-24 leading-normal text-12 pr-16`}>Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque quam a convallis. Sed ut vulputate nisi. Integer in felis sed leo vestibulum venenatis. Suspendisse quis arcu sem. Aenean feugiat ex eu vestibulum vestibulum. Morbi a eleifend magna. Nam metus lacus, porttitor eu mauris a, blandit ultrices nibh. Mauris sit amet magna non ligula vestibulum eleifend. Nulla varius volutpat turpis sed lacinia. Nam eget mi in purus lobortis eleifend. Sed nec ante dictum sem condimentum ullamcorper quis venenatis nisi. Proin vitae facilisis nisi, ac posuere leo.</p>
-                <p className={`mt-24 leading-normal text-12 pr-16`}>Nam pulvinar blandit velit, id condimentum diam faucibus at. Aliquam lacus nisi, sollicitudin at nisi nec, fermentum congue felis. Quisque mauris dolor, fringilla sed tincidunt ac, finibus non odio. Sed vitae mauris nec ante pretium finibus. Donec nisl neque, pharetra ac elit eu, faucibus aliquam ligula. Nullam dictum, tellus tincidunt tempor laoreet, nibh elit sollicitudin felis, eget feugiat sapien diam nec nisl. Aenean gravida turpis nisi, consequat dictum risus dapibus a. Duis felis ante, varius in neque eu, tempor suscipit sem. Maecenas ullamcorper gravida sem sit amet cursus. Etiam pulvinar purus vitae justo pharetra consequat. Mauris id mi ut arcu feugiat maximus. Mauris consequat tellus id tempus aliquet. Vestibulum dictum ultrices elit a luctus. Sed in ante ut leo congue posuere at sit amet ligula. Pellentesque eget augue nec nisl sodales m ligula. Nullam dictum, tellus tincidunt tempor laoreet, nibh elit sollicitudin felis, eget feugiat sapien diam nec nisl. Aenean gravida turpis nisi, consequat dictum risus dapibus a. Duis felis ante, varius in neque eu, vestibulum </p>
-                <p className={`mt-24 leading-normal text-12 pr-16`}>Nam pulvinar blandit velit, id condimentum diam faucibus at. Aliquam lacus nisi, sollicitudin at nisi nec, fermentum congue felis. Quisque mauris dolor, fringilla sed tincidunt ac, finibus non odio. Sed vitae mauris nec ante pretium finibus. Donec nisl neque, pharetra ac elit eu, faucibus aliquam ligula. Nullam dictum, tellus tincidunt tempor laoreet, nibh elit sollicitudin felis, eget feugiat sapien diam nec nisl. Aenean gravida turpis nisi, consequat dictum risus dapibus a. Duis felis ante, varius in neque eu, tempor suscipit sem. Maecenas ullamcorper gravida sem sit amet cursus. Etiam pulvinar purus vitae justo pharetra consequat. Mauris id mi ut arcu feugiat maximus. Mauris consequat tellus id tempus aliquet. Vestibulum dictum ultrices elit a luctus. Sed in ante ut leo congue posuere at sit amet ligula. Pellentesque eget augue nec nisl sodales m ligula. Nullam dictum, tellus tincidunt tempor laoreet, nibh elit sollicitudin felis, eget feugiat sapien diam nec nisl. Aenean gravida turpis nisi, consequat dictum risus dapibus a. Duis felis ante, varius in neque eu, vestibulum </p>
-              </div>
+              <div className='pl-4'>
+                {generatedText.split('\n').map((paragraph, index) => {
+                  return(
+                    <p key={index} className={`leading-normal text-12 pr-16 mt-16`}>
+                    {paragraph}
+                  </p>
+                  )
+                })}
+              </div>    
             </div>
+
             <div className={`flex items-center justify-end mt-24 self-end`}>
               <div className={`w-78 flex items-center justify-between`}>
                 <div className={`cursor-pointer`}>
@@ -699,6 +361,7 @@ const Content = (props: Prop) => {
             </div>
           </div>
         </div>
+      }
 
 
         <div className={`w-289 p-24 h-821`}>

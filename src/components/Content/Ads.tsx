@@ -10,10 +10,12 @@ export const AdsComp = ({t, platforms, platform, setPlatform, brandName, setBran
       <div>
             <div className={`flex items-center`}>
               <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Platform') }</span>
+              <span className={`ml-8 text-12`}>{ t('Platform')}</span>
+              <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
             </div>
             <div className={`mt-12`}>
-              <Select style={{ width: pxToVw(252), height: pxToVw(36) }} options={platforms} placeholder={t("Platform")} value={platform} onSelect={(value) => setPlatform(value)} />
+              <Select style={{ width: pxToVw(252), height: pxToVw(36) }} options={platforms} placeholder={t("Platform")} value={platform} onSelect={(value) => setPlatform(value)}
+               />
             </div>
           </div>
 
@@ -21,6 +23,7 @@ export const AdsComp = ({t, platforms, platform, setPlatform, brandName, setBran
             <div className={`flex items-center`}>
               <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
               <span className={`ml-8 text-12`}>{ t('Details') }</span>
+              <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
             </div>
             <div className={`mt-12`}>
               <div> 
@@ -41,6 +44,7 @@ export const AdsComp = ({t, platforms, platform, setPlatform, brandName, setBran
             <div className={`flex items-center`}>
               <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
               <span className={`ml-8 text-12`}>{ t('Style') }</span>
+              <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
             </div>
             <div className={`mt-12`}>
               <div>
@@ -105,6 +109,7 @@ export const AdsComp = ({t, platforms, platform, setPlatform, brandName, setBran
             <div className={`flex items-center`}>
               <Icon name={'fifth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
               <span className={`ml-8 text-12`}>{ t('Language ') }</span>
+              <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
             </div>
             <div className={`mt-12`}>
               <Select placeholder={t('Select the language')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={languages} value={language} onSelect={(value) => setLanguage(value)} />

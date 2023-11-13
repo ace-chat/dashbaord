@@ -327,8 +327,8 @@ const Content = (props: Prop) => {
           <div>
             <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
               <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
-              <p className="text-18 text-[#C4C4C4] mt-14">Let's Get Started</p>
-              <p className="text-12 text-[#C4C4C4] font-light mt-10">Choose the service to generate content</p>
+              <p className="text-18 text-[#C4C4C4] mt-14">{t("Let's Get Started!")}</p>
+              <p className="text-12 text-[#C4C4C4] font-light mt-10">{t("Choose the service to generate content")}</p>
             </div>
           </div>
         :

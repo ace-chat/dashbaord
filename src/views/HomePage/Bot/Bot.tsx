@@ -1,8 +1,8 @@
-import type { FC } from 'react'
+import { Outlet } from 'react-router-dom'
 
-const Bot: FC = () => {
+const Bot = () => {
   return <>
-    Bot
+    <Outlet />
   </>
 }
 

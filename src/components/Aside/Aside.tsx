@@ -60,7 +60,10 @@ const Aside = () => {
         getItem(t("Entire"), 'content/blogs/entire')
       ])
     ]),
-    getItem(t('Chat Bot'), 'bot', <Icon name={'bot'} />),
+    getItem(t('Chat Bot'), 'bot', <Icon name={'bot'} />, [
+      getItem(t('Chat with ACE'), 'bot/chat'),
+      getItem(t('Create a Chatbot'), 'bot/create'),
+    ]),
     getItem(t('Analytics'), 'analytics', <Icon name={'analytics'} />),
     getItem(t('Support'), 'support', <Icon name={'support'} />),
     getItem(t('Settings'), 'settings', <Icon name={'settings'} />)

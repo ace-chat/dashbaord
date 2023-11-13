@@ -42,6 +42,8 @@ import Odds from '@/views/HomePage/Content/Email/Odds'
 import Intro from '@/views/HomePage/Content/Blogs/Intro'
 import Outline from '@/views/HomePage/Content/Blogs/Outline'
 import Entire from '@/views/HomePage/Content/Blogs/Entire'
+import Chat from '@/views/HomePage/Bot/Chat'
+import Create from '@/views/HomePage/Bot/Create'
 
 const routes: RouteObject[] = [
   {
@@ -142,7 +144,17 @@ const routes: RouteObject[] = [
           },
           {
             path: 'bot',
-            element: <Bot />
+            element: <Bot />,
+            children: [
+              {
+                path: 'chat',
+                element: <Chat />
+              },
+              {
+                path: 'create',
+                element: <Create />
+              },
+            ]
           },
           {
             path: 'analytics',

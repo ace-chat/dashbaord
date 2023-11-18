@@ -21,8 +21,6 @@ import Analytics from "@/views/HomePage/Analytics/Analytics.tsx";
 
 import Support from "@/views/HomePage/Support/Support.tsx";
 
-import Settings from "@/views/HomePage/Settings/Settings.tsx";
-
 import Oops from '@/views/Oops/Oops.tsx'
 
 //Optimize Content
@@ -163,10 +161,6 @@ const routes: RouteObject[] = [
           {
             path: 'support',
             element: <Support />
-          },
-          {
-            path: 'settings',
-            element: <Settings />
           }
         ],
       },

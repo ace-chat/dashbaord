@@ -65,8 +65,7 @@ const Aside = () => {
       getItem(t('Create a Chatbot'), 'bot/create'),
     ]),
     getItem(t('Analytics'), 'analytics', <Icon name={'analytics'} />),
-    getItem(t('Support'), 'support', <Icon name={'support'} />),
-    getItem(t('Settings'), 'settings', <Icon name={'settings'} />)
+    getItem(t('Support'), 'support', <Icon name={'support'} />)
   ]
   const change = (info: MenuInfo) => {
     console.log(info)

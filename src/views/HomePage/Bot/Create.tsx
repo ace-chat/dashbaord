@@ -21,7 +21,16 @@ const Create = () => {
                         <Input styles={{ input: { width: pxToVw(368), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Company Name')} />
                     </div>
                     <div className={`mt-12`}>
-                        <Input styles={{ input: { width: pxToVw(368), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type brand name')} />
+                        <Select mode='multiple' showSearch={false} placeholder={t('Add Website Links')} style={{ width: pxToVw(368), height: pxToVw(36), fontSize: pxToVw(10) }} options={[{value: "", label: ""}]}
+                            optionRender={() => {
+                            return (
+                                <div className={`flex items-center justify-between`}>
+                                    <Input styles={{ input: { width: pxToVw(368), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type New Link')} />
+
+                                </div>
+                            );
+                            }}
+                        />
                     </div>
                     <div className={`mt-12`}>
                         <Input styles={{ input: { width: pxToVw(368), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type brand name')} />
@@ -34,8 +43,7 @@ const Create = () => {
                     </div>
                 </div>
                 <div className={`mt-12`}>
-                    <Input.TextArea style={{resize: "none"}} styles={{ textarea: { width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10) } }} placeholder={t('Description about service/product')} />
-                    <Input styles={{ input: { width: pxToVw(368), height: pxToVw(228), fontSize: pxToVw(10) } }} placeholder={t('Type brand name')} />
+                    <Input.TextArea style={{resize: "none"}} styles={{ textarea: { width: pxToVw(368), height: pxToVw(228), fontSize: pxToVw(10) } }} placeholder={t('Description about service/product')} />
                 </div>
             </div>
 

@@ -44,6 +44,7 @@ import Chat from '@/views/HomePage/Bot/Chat'
 import Create from '@/views/HomePage/Bot/Create'
 import Simple from '@/views/HomePage/Analytics/Simple'
 import Deep from '@/views/HomePage/Analytics/Deep'
+import Profile from '@/views/Profile/Profile'
 
 const routes: RouteObject[] = [
   {
@@ -173,7 +174,11 @@ const routes: RouteObject[] = [
           {
             path: 'support',
             element: <Support />
-          }
+          },
+          {
+            path: 'profile',
+            element: <Profile />,
+          },
         ],
       },
       {

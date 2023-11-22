@@ -84,7 +84,11 @@ const Aside = () => {
         items={items}
         onClick={change}
       />
-      <div className={'w-240 h-60 flex items-center justify-between border border-[#E7E7E7] bg-[#EDEFF2] rounded-10 px-12 cursor-pointer'}>
+      <div className={'w-240 h-60 flex items-center justify-between border border-[#E7E7E7] bg-[#EDEFF2] rounded-10 px-12 cursor-pointer'} 
+        onClick={() => {
+          navigate("profile")
+        }}
+      >
         <div className={'flex items-center'}>            
           <img className={'w-28 h-28 mr-12'} src={Avatar} alt="avatar" />
           <div className={'text-12 font-bold text-[#000000]'}>ACE Support</div>

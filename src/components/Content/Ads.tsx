@@ -14,8 +14,7 @@ export const AdsComp = ({t, platforms, platform, setPlatform, brandName, setBran
               <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
             </div>
             <div className={`mt-12`}>
-              <Select style={{ width: pxToVw(252), height: pxToVw(36) }} options={platforms} placeholder={t("Platform")} value={platform} onSelect={(value) => setPlatform(value)}
-               />
+              <Select style={{ width: pxToVw(252), height: pxToVw(36) }} options={platforms} placeholder={t("Platform")} value={platform} onSelect={(value) => setPlatform(value)} />
             </div>
           </div>
 

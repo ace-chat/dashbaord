@@ -36,9 +36,9 @@ const Chat = () => {
                 <p className="text-12 text-[#C4C4C4] font-light">{ t("Let's Get Started!") }</p>
             </div>
             <div>
-                <Input className='message-box' styles={{ input: { fontSize: pxToVw(10) } }} placeholder={t('Send a Message')}
+                <Input className='message-box' styles={{ input: { fontSize: pxToVw(12) } }} placeholder={t('Send a Message')}
                     suffix={
-                        <Icon name={"send"} style={{ 'width': pxToVw(10), 'height': pxToVw(10) }} />
+                        <Icon name={"send"} style={{ 'width': pxToVw(12), 'height': pxToVw(12) }} />
                     } 
                 />
             </div>

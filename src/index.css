@@ -29,6 +29,14 @@
   border-radius: 25px;
 }
 
+.custom-div{
+  background: linear-gradient(90deg, #5B63DF 0%, #5BC7DF 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 6px;
+}
+
 .message-box {
   width: 923px;
   height: 36px;
@@ -141,6 +149,10 @@
   max-width: 256px !important;
   min-width: 256px !important;
   width: 256px !important;
+}
+
+.custom-select .ant-select-selector {
+  min-height: 36px;
 }
 
 .ant-layout-sider-children{

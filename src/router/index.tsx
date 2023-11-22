@@ -42,6 +42,8 @@ import Outline from '@/views/HomePage/Content/Blogs/Outline'
 import Entire from '@/views/HomePage/Content/Blogs/Entire'
 import Chat from '@/views/HomePage/Bot/Chat'
 import Create from '@/views/HomePage/Bot/Create'
+import Simple from '@/views/HomePage/Analytics/Simple'
+import Deep from '@/views/HomePage/Analytics/Deep'
 
 const routes: RouteObject[] = [
   {
@@ -156,7 +158,17 @@ const routes: RouteObject[] = [
           },
           {
             path: 'analytics',
-            element: <Analytics />
+            element: <Analytics />,
+            children: [
+              {
+                path: 'simple',
+                element: <Simple />
+              },
+              {
+                path: 'deep',
+                element: <Deep />
+              },
+            ]
           },
           {
             path: 'support',

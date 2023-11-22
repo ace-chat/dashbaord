@@ -92,7 +92,7 @@ const Content = (props: Prop) => {
   const [generatedText, setGeneratedText] = useState("");
 
   //state variables
-  const [platform, setPlatform]: any = useState([]);
+  const [platform, setPlatform]: any = useState();
   const [brandName, setBrandName]: any = useState();
   const [productName, setProductName]: any = useState();
   const [productDesc, setProdDesc]: any = useState();

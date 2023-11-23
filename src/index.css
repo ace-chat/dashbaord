@@ -37,6 +37,13 @@
   margin-top: 6px;
 }
 
+.custom-div-text{
+  background: linear-gradient(90deg, #5B63DF 0%, #5BC7DF 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .message-box {
   width: 923px;
   height: 36px;
@@ -49,7 +56,6 @@
 }
 
 .ant-menu{
-
   border-inline-end: none !important;
   background: transparent !important;
   color: #535563 !important;
@@ -68,6 +74,7 @@
   display: flex !important;
   align-items: center !important;
   padding: 0 20px !important;
+  color: white;
 }
 
 .ant-menu-submenu-title{
@@ -80,6 +87,7 @@
   display: flex !important;
   align-items: center !important;
   padding: 0 20px !important;
+  color: white;
 }
 
 .ant-menu-title-content{
@@ -87,13 +95,13 @@
 }
 
 .ant-menu-item-selected{
-  background-color: #DEE2E9 !important;
-  color: #000000 !important;
+  background-color: #E7E7E7 !important;
+  color: #4F6BE8 !important;
 }
 
 .ant-menu-submenu-selected >.ant-menu-submenu-title{
-  background-color: #DEE2E9 !important;
-  color: #000000 !important;
+  background-color: #E7E7E7 !important;
+  color: #4F6BE8 !important;
 }
 
 .ant-menu-item:not(.ant-menu-item-selected):active {
@@ -112,10 +120,9 @@
   display: none; 
 }
 
-
 .ant-menu-submenu-popup{
   background: #F4F6FA !important;
-  color: #535563 !important;
+  color: #4F6BE8 !important;
   padding-inline-start: 0 !important;
   border: 1px solid #DEE2E9;
   box-sizing: content-box;
@@ -125,8 +132,9 @@
 }
 
 .ant-menu-sub{
-  background: #F4F6FA !important;
+  background: #E7E7E7 !important;
   padding: 13px 12px !important;
+  color: #535563
 }
 
 .ant-menu-submenu-hidden{
@@ -139,12 +147,12 @@
 
 .ant-layout-header{
   height: 80px !important;
-  background: transparent !important;
+  background: #250F53 !important;
   padding: 0 36px 0 44px;
 }
 
 .ant-layout-sider{
-  background: transparent !important;
+  background: linear-gradient(356deg, #21608D 0.15%, #23336D 36.53%, #250F53 97.43%) !important;
   flex: 1 1 256px !important;
   max-width: 256px !important;
   min-width: 256px !important;

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import analyticsIcon from '@/assets/home/analytics.png'
 import contentIcon from '@/assets/home/content.png'
 import chatIcon from '@/assets/home/chat.png'
+import { pxToVw } from '@/utils'
 
 function Home() {
   const { t } = useTranslation()
@@ -36,8 +37,8 @@ function Home() {
           cards.map(card => {
             return <div key={card.id} className={`w-358 h-390 bg-[#FFFFFF] px-30 rounded-24 pt-60 flex items-center flex-col`}>
               <img className={'w-78 h-78'} src={card.icon} alt="icon" />
-              <div className={'font-bold text-20 text-[#000000] mb-12 mt-42'}>{ card.title }</div>
-              <div className={'text-16 text-[#535563] leading-8'}>{ card.content }</div>
+              <div className={'font-bold text-[#000000] mb-12 mt-42'} style={{ fontSize: pxToVw(20) }} >{ card.title }</div>
+              <div className={'flex text-[#535563] leading-8'} style={{ textAlign: "center", fontSize: pxToVw(16) }} >{ card.content }</div>
             </div>
           })
         }

@@ -64,6 +64,13 @@ const Content = (props: Prop) => {
     { value: 'example2', label: t('Example 2') },
   ]);
 
+  const [types] = useState([
+    { value: 'news', label: t('News-based') },
+    { value: 'opinion', label: t('Opinion Piece') },
+    { value: 'storytelling', label: t('Storytelling') },
+    { value: 'interactive', label: t('Interactive') },
+  ]);
+
   const [genders] = useState([
     { value: 'male', label: t('Male') },
     { value: 'female', label: t('Female') },
@@ -106,6 +113,7 @@ const Content = (props: Prop) => {
   const [text, setText]: any = useState();
   const [wordCount, setWordCount]: any = useState();
   const [details, setDetails]: any = useState();
+  const [type, setType]: any = useState();
 
   function canGenerate(){
     //social media ads & search engine validation
@@ -150,7 +158,7 @@ const Content = (props: Prop) => {
     }
     //entire bog validation
     if(props.tag == "entire"){
-      if(text && tone && wordCount && details){
+      if(text && tone && wordCount && details && type){
         return false;
       } else {
         return true;
@@ -306,6 +314,9 @@ const Content = (props: Prop) => {
               setDetails={setDetails}
               language={language} 
               setLanguage={setLanguage}
+              types={types}
+              type={type}
+              setType={setType}
             />
           }
 

@@ -37,7 +37,7 @@ const Aside = () => {
   const { t } = useTranslation()
 
   const items: MenuProps['items'] = [
-    getItem(t('Home'), "home", <Icon name={'home'} />),
+    getItem(t('Home'), "home", <Icon name={"home"} />),
     getItem(t('Content Generation'), "content", <Icon name={'content'} />, [
       getItem(t('Social Media Ads'), 'content/media'),
       getItem(t('Search Engine Ads'), 'content/engine'),
@@ -80,7 +80,7 @@ const Aside = () => {
   return <>
     <Layout.Sider className="flex-1">
       <Menu
-        mode="vertical"
+        mode="inline"
         defaultSelectedKeys={[open]}
         items={items}
         onClick={change}

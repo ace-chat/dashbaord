@@ -3,7 +3,7 @@ import { Select, Input, InputNumber } from 'antd'
 import { pxToVw } from '@/utils'
 
 export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, brandVoice, setBrandVoice, minAge, setMinAge, maxAge, setMaxAge, wordCount, setWordCount, 
-    details, setDetails, languages, language, setLanguage}: any) => {
+    details, setDetails, languages, language, setLanguage, types, type, setType}: any) => {
     return(
         <>
         <div>
@@ -26,6 +26,9 @@ export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, b
               <div className={`mt-12`}>
                 <div>
                   <Select placeholder={t('Tones')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={tones} value={tone} onSelect={(value) => setTone(value)} />
+                </div>
+                <div className={`mt-12`}>
+                  <Select placeholder={t('Type')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={types} value={type} onSelect={(value) => setType(value)} />
                 </div>
                 <div className={`mt-12`}>
                   <Select placeholder={t('Brand Voice (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) }} options={brandVoices}

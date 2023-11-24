@@ -84,6 +84,7 @@ const Aside = () => {
         defaultSelectedKeys={[open]}
         items={items}
         onClick={change}
+        style={{ flex: "auto" }}
       />
       <div className={'w-240 h-60 flex items-center justify-between border border-[#E7E7E7] bg-[#557aa0] rounded-10 px-12 cursor-pointer'} 
         onClick={() => {

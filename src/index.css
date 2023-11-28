@@ -65,8 +65,8 @@
 }
 
 .ant-menu-item:hover {
-  background-color: white !important;
-  color: #4F6BE8 !important;
+  /* background-color: white !important; */
+  /* color: #4F6BE8 !important;  */
 }
 
 .ant-menu-item{
@@ -100,13 +100,13 @@
 }
 
 .ant-menu-item-selected .ant-menu-item:hover .ant-menu-submenu:hover{
-  background-color: white !important;
-  color: #4F6BE8 !important;
+  /* background-color: white !important;
+  color: #4F6BE8 !important; */
 }
 
 .ant-menu-submenu-selected >.ant-menu-submenu-title{
-  background-color: #E9E8F2 !important;
-  color: #4F6BE8 !important;
+  /* background-color: #E9E8F2 !important;
+  color: #4F6BE8 !important; */
 }
 
 .ant-menu-item:not(.ant-menu-item-selected):active {
@@ -141,7 +141,7 @@
   color: #535563
 }
 
-.ant-menu-submenu-hidden{
+:where(.css-dev-only-do-not-override-2i2tap) .ant-menu-hidden{
   display: none !important;
 }
 

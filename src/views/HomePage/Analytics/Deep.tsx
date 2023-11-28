@@ -85,7 +85,7 @@ const Deep = () => {
             </div> 
             
             <div className='flex rounded-8 mt-16 justify-center items-center' 
-                style={{"backgroundColor": "#F4F6FA", "display": "flex", "width": pxToVw(748), "height": pxToVw(75), border: "1px dashed #8B8B8B", flexDirection: "column" }}
+                style={{"backgroundColor": "#F4F6FA", "display": "flex", "width": pxToVw(760), "height": pxToVw(75), border: "1px dashed #8B8B8B", flexDirection: "column" }}
                 onClick={() => fileInput.current.click()}>
                 <input
                     type="file"

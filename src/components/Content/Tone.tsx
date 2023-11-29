@@ -8,18 +8,19 @@ export const ToneComp = ({t, tag, text, setText, tones, tone, setTone, brandVoic
             <div>
               <div className={`flex items-center`}>
                 <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Text') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Text') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
               <div className={`mt-12`}>
-                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type here')} value={text} onChange={(e) => setText(e.target.value)} />
+                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} 
+                  placeholder={t('Type here')} value={text} onChange={(e) => setText(e.target.value)} />
               </div>
             </div>
             
             <div className={`mt-24`}>
             <div className={`flex items-center`}>
               <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Style') }</span>
+              <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Style') }</span>
               {tag !== "brandvoice" &&
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               }
@@ -31,7 +32,7 @@ export const ToneComp = ({t, tag, text, setText, tones, tone, setTone, brandVoic
                 optionRender={(node) => {
                   return (
                     <div className={`flex items-center justify-between`}>
-                      <span>{node.label}</span>
+                      <span style={{ fontFamily: "PingFang SC Regular" }}>{node.label}</span>
                       {node.value !== "none" &&
                         <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />
                       }
@@ -50,7 +51,7 @@ export const ToneComp = ({t, tag, text, setText, tones, tone, setTone, brandVoic
           <div className={`mt-24`}>
             <div className={`flex items-center`}>
               <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-              <span className={`ml-8 text-12`}>{ t('Language ') }</span>
+              <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Language ') }</span>
               <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
             </div>
             <div className={`mt-12`}>

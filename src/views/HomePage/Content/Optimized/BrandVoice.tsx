@@ -4,11 +4,12 @@ import type { FC } from 'react'
 import Content from '@/components/Content/Content.tsx'
 
 const BrandVoice: FC = () => {
-  const [title] = useState('Generate Optimized Content Match Brand Voice')
+  const [flow] = useState('Optimized Content')
+  const [title] = useState('Match Brand Voice')
   const [subTitle] = useState('Generate a version of any text that speaks like your brand and is optimized for marketing.')
 
   return <>
-    <Content title={title} subTitle={subTitle} tag={"brandvoice"} />
+    <Content flow={flow} title={title} subTitle={subTitle} tag={"brandvoice"} />
   </>
 }
 

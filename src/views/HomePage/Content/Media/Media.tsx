@@ -4,7 +4,7 @@ import type { FC } from 'react'
 import Content from '@/components/Content/Content.tsx'
 
 const Media: FC = () => {
-  const [title] = useState('Generate AI Social Media Ads Content')
+  const [title] = useState('Social Media Ads')
   const [subTitle] = useState('Generate a personalized caption for your product or service for the platform of your choice.')
 
   return <>

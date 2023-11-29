@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux';
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'antd'
@@ -14,36 +15,98 @@ import { EmailComp } from './Email'
 import { IntroOutlineComp } from './IntroOutline'
 import { EntireComp } from './Entire'
 
+import axios from 'axios'
+import { base_url } from '@/utils/constants'
+import { RootState } from '@/store';
+
 type Prop = {
   title: string;
+  flow?: string;
   subTitle: string;
   tag: string;
 }
 
 const Content = (props: Prop) => {
   const { t } = useTranslation()
+  const { token } = useSelector((state: RootState) => state.token)
+  const [loading, setLoading] = useState(false);
+
+  const [countries, setCountries] = useState([]);
+  const [brandVoices, setBrandVoices] = useState([
+    { value: 'none', label: t('None') },
+    { value: 'new', label: t('Create New') }
+  ]);
+
+  async function getAllRegions(){
+    try {
+      const response = await axios.get(`${base_url}/common/regions`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if(response.data.code == 200){ //request success
+        const formattedData = response.data.data.map((item: any) => ({
+          label: item.country,
+          value: item.id,
+        }));
+        setCountries(formattedData);
+      }
+    } catch (error) {
+      // Handle errors (e.g., show an error message)
+      console.error('Error:', error);
+    }
+  };
+
+  async function getAllVoices(){
+    try {
+      const response = await axios.get(`${base_url}/common/voices`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if(response.data.code == 200){ //request success
+        const formattedData = response.data.data.map((item: any) => ({
+          label: item.name,
+          value: item.id,
+        }));
+        setBrandVoices([...brandVoices, ...formattedData]);
+      }
+    } catch (error) {
+      // Handle errors (e.g., show an error message)
+      console.error('Error:', error);
+    }
+  };
+
+  useEffect(() => {
+    Promise.all([
+      getAllRegions(),
+      getAllVoices()
+    ])
+  },[]);
 
   const [platformMapping]: any = useState({
     media: [
-      { value: 'facebook', label: t('Facebook') },
-      { value: 'instagram', label: t('Instagram') },
-      { value: 'X', label: t('X') },
-      { value: 'linkedin', label: t('LinkedIn') }
+      { value: 1, label: t('Facebook') },
+      { value: 2, label: t('Instagram') },
+      { value: 3, label: t('X') },
+      { value: 4, label: t('LinkedIn') }
     ],
     engine : [
-      { value: 'googleads', label: t('Google Ads') }
+      { value: 5, label: t('Google Ads') }
     ]
   });
 
   const [platforms] = useState(platformMapping[props.tag] || []);
 
   const [tones] = useState([
-    { value: 'luxury', label: t('Luxury') },
-    { value: 'persuasive', label: t('Persuasive') },
-    { value: 'professional', label: t('Professional') },
-    { value: 'funny', label: t('Funny') },
-    { value: 'narrative', label: t('Narrative') },
-    { value: 'conversational', label: t('Conversational') }
+    { value: 1, label: t('Luxury') },
+    { value: 2, label: t('Persuasive') },
+    { value: 3, label: t('Professional') },
+    { value: 4, label: t('Funny') },
+    { value: 5, label: t('Narrative') },
+    { value: 6, label: t('Conversational') }
   ])
 
   const [history] = useState([
@@ -57,13 +120,6 @@ const Content = (props: Prop) => {
       ] }
   ]);
 
-  const [brandVoices] = useState([
-    { value: 'none', label: t('None') },
-    { value: 'new', label: t('Create New') },
-    { value: 'example1', label: t('Example 1') },
-    { value: 'example2', label: t('Example 2') },
-  ]);
-
   const [types] = useState([
     { value: 'news', label: t('News-based') },
     { value: 'opinion', label: t('Opinion Piece') },
@@ -72,22 +128,22 @@ const Content = (props: Prop) => {
   ]);
 
   const [genders] = useState([
-    { value: 'male', label: t('Male') },
-    { value: 'female', label: t('Female') },
-    { value: 'other', label: t('Other') }
+    { value: 1, label: t('Male') },
+    { value: 2, label: t('Female') },
+    { value: 3, label: t('Other') }
   ]);
 
   const [languages] = useState([
-    { value: 'english', label: t('English') },
-    { value: 'french', label: t('French') },
-    { value: 'german', label: t('German') },
-    { value: 'arabic', label: t('Arabic') },
-    { value: 'chineese', label: t('Chineese') },
-    { value: 'dutch', label: t('Dutch') },
-    { value: 'italian', label: t('Italian') },
-    { value: 'portuguese', label: t('Portuguese') },
-    { value: 'spanish', label: t('Spanish') },
-    { value: 'russian', label: t('Russian') }
+    { value: 1, label: t('English') },
+    { value: 2, label: t('French') },
+    { value: 3, label: t('German') },
+    { value: 4, label: t('Arabic') },
+    { value: 5, label: t('Chineese') },
+    { value: 6, label: t('Dutch') },
+    { value: 7, label: t('Italian') },
+    { value: 8, label: t('Portuguese') },
+    { value: 9, label: t('Spanish') },
+    { value: 10, label: t('Russian') }
   ]);
 
   //sample generated text
@@ -109,7 +165,7 @@ const Content = (props: Prop) => {
   const [gender, setGender]: any = useState();
   const [minAge, setMinAge]: any = useState();
   const [maxAge, setMaxAge]: any = useState();
-  const [language, setLanguage]: any = useState("English");
+  const [language, setLanguage]: any = useState(1);
   const [text, setText]: any = useState();
   const [wordCount, setWordCount]: any = useState();
   const [details, setDetails]: any = useState();
@@ -166,18 +222,61 @@ const Content = (props: Prop) => {
     }
   };
 
+  async function generateText(){
+    const formData = new URLSearchParams();
+    if(props.tag == "media"){ // /content/media/generator
+      try {
+        setLoading(true);
+        formData.append('platform', platform);
+        formData.append('brand_name', brandName);
+        formData.append('service_name', productName);
+        formData.append('service_desc', productDesc);
+        formData.append('tones', tone);
+        formData.append('brand_voice', brandVoice);
+        formData.append('region', country);
+        formData.append('gender', gender);
+        formData.append('min_age', minAge);
+        formData.append('max_age', maxAge);
+        formData.append('language', language);
+
+        const response = await axios.post(`${base_url}/content/media/generator`, formData, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
+  
+        if(response.data.code == 200){ //request success
+          setLoading(false);
+          console.log(response.data.data.text, "--text")
+          setGeneratedText(response.data.data.text);
+        }
+      } catch (error) {
+        // Handle errors (e.g., show an error message)
+        setLoading(false);
+        console.error('Error:', error);
+      }
+    }
+  };
+
   return <>
-    <div className={`bg-white rounded-8 mt-40`} style={{ boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
-      <div className={`flex items-center flex-col`}>
-        <div className={`text-20 text-black mt-30`}>{ props.title }</div>
-        <div className={`text-12 text-[#545B65] mt-12 pb-12`}>{ props.subTitle }</div>
+    <div className={`flex flex-col`}>
+      <div className='flex flex-row mt-14' style={{ marginLeft: pxToVw(29) }}>
+        {props?.flow &&
+          <div className={`text-[#545B65]`} style={{ fontFamily: "PingFang SC Regular", fontSize: pxToVw(18)}}>{t(props.flow)}&nbsp;&gt;&nbsp;</div>
+        }
+        <div className={`text-black`} style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(18)}}>{ t(props.title) }</div>
       </div>
+      <div className={`text-[#545B65] mt-4`} style={{ marginLeft: pxToVw(29), fontFamily: "PingFang SC Light", fontSize: pxToVw(14) }}>{ t(props.subTitle) }</div>
+    </div>
+    <div className={`bg-white rounded-8 mt-14`} style={{ width: pxToVw(1389), marginLeft: pxToVw(29), boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
       <div className={`flex justify-around`}>
-        <div className={`w-300 p-24`}>
+        <div className={`w-300 p-24`} style={{ fontFamily: "PingFang SC Regular" }}>
 
           {(props.tag == "engine" || props.tag == "media") && 
             <AdsComp t={t} platforms={platforms} tones={tones} genders={genders} languages={languages} 
               platform={platform} 
+              countries={countries}
               setPlatform={setPlatform}
               brandName={brandName}
               setBrandName={setBrandName} 
@@ -237,6 +336,7 @@ const Content = (props: Prop) => {
           {props.tag == "audience" && 
             <AudienceComp t={t} genders={genders} languages={languages} 
                 text={text}
+                countries={countries}
                 setText={setText}
                 country={country}
                 setCountry={setCountry} 
@@ -252,6 +352,7 @@ const Content = (props: Prop) => {
           {(props.tag == "freestyle" || props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds") &&
             <EmailComp t={t} tag={props.tag} tones={tones} genders={genders} languages={languages} 
               text={text}
+              countries={countries}
               setText={setText}
               brandName={brandName}
               setBrandName={setBrandName} 
@@ -323,12 +424,12 @@ const Content = (props: Prop) => {
           <div className={`mt-24`}>
             <Button
               type="default"
+              loading={loading}
               disabled={canGenerate()}
-              //sample on click function
-              onClick={() => setGeneratedText(sampleText)}
+              onClick={() => generateText()}
               className={`w-251 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
             >
-              {t('Generate')}
+              <div style={{ fontFamily: "PingFang SC Regular" }}>{t('Generate')}</div>
             </Button>
           </div>
 
@@ -338,8 +439,8 @@ const Content = (props: Prop) => {
           <div>
             <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
               <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
-              <p className="text-18 text-[#C4C4C4] mt-14">{t("Let's Get Started!")}</p>
-              <p className="text-12 text-[#C4C4C4] font-light mt-10">{t("Choose the service to generate content")}</p>
+              <p className="text-18 text-[#C4C4C4] mt-14" style={{ fontFamily: "PingFang SC Light" }}>{t("Let's Get Started!")}</p>
+              <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{ fontFamily: "PingFang SC Light" }}>{t("Choose the service to generate content")}</p>
             </div>
           </div>
         :
@@ -349,7 +450,7 @@ const Content = (props: Prop) => {
               <div className='pl-4'>
                 {generatedText.split('\n').map((paragraph, index) => {
                   return(
-                    <p key={index} className={`leading-normal text-12 pr-16 mt-16`}>
+                    <p key={index} className={`leading-normal text-12 pr-16 mt-16`} style={{ fontFamily: "PingFang SC Regular" }}>
                     {paragraph}
                   </p>
                   )
@@ -376,18 +477,18 @@ const Content = (props: Prop) => {
 
 
         <div className={`w-289 p-24 h-821`}>
-          <div className={`text-12`}>{ t('History') }</div>
+          <div className={`text-12`} style={{ fontFamily: "PingFang SC Bold" }} >{ t('History') }</div>
           <div className={`mt-24`}>
             {
               history.map(item => {
                 return <div key={item.key} className={`mb-30`}>
-                  <div className={`text-10 text-[#787878]`}>{ t(item.time) }</div>
+                  <div className={`text-10 text-[#787878]`} style={{ fontFamily: "PingFang SC Light" }}>{ t(item.time) }</div>
                   <div className={`cursor-pointer`}>
                     {
                       item.children.map(it => {
                         return <div key={it.key} className={`flex items-center mt-18`}>
                           <Icon name={'history'} style={{ 'width': pxToVw(12), 'height': pxToVw(14) }} />
-                          <span className={`text-12 text-black ml-8 truncate`}>{ t(it.text) }</span>
+                          <span className={`text-12 text-black ml-8 truncate`} style={{ fontFamily: "PingFang SC Medium" }}>{ t(it.text) }</span>
                         </div>
                       })
                     }

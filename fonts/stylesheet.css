@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'PingFang SC Medium';
+    src: url('PingFangSCMedium.woff2') format('woff2'),
+        url('PingFangSCMedium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PingFang SC Regular';
+    src: url('PingFangSCRegular.woff2') format('woff2'),
+        url('PingFangSCRegular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PingFang SC Bold';
+    src: url('PingFangSCBold.woff2') format('woff2'),
+        url('PingFangSCBold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PingFang SC Heavy';
+    src: url('PingFangSCHeavy.woff2') format('woff2'),
+        url('PingFangSCHeavy.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PingFang SC Light';
+    src: url('PingFangSCLight.woff2') format('woff2'),
+        url('PingFangSCLight.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PingFang SC ExtraLight';
+    src: url('PingFangSCExtraLight.woff2') format('woff2'),
+        url('PingFangSCExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+

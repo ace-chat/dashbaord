@@ -20,20 +20,20 @@ const Chat = () => {
 
 
   return <>
-    <div className={`bg-white rounded-8 mt-40`} style={{ boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
-      <div className={`flex items-center flex-col`} style={{ 'width': pxToVw(1150) }}>
-        <div className={`text-20 text-black mt-30`}>{ t("Ace, Your Brand Centric Chatbot") }</div>
-        <div className={`text-12 text-[#545B65] mt-12 pb-12`}>{ t("How Can ACE Chatbot Help You Today?") }</div>
-      </div>
+    <div className='flex flex-col mt-14' style={{ marginLeft: pxToVw(29) }}>
+      <div className={`text-black`} style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(18)}}>{ t("Ace, Your Brand Centric Chatbot") }</div>
+      <div className={`text-[#545B65] mt-4`} style={{ fontFamily: "PingFang SC Light", fontSize: pxToVw(14) }}>{ t("How Can ACE Chatbot Help You Today?") }</div>
+    </div>
+    <div className={`bg-white rounded-8 mt-14`} style={{ width: pxToVw(1389), marginLeft: pxToVw(29), boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
       <div className={`flex justify-around`}>
 
         <div className='flex' style={{ flexDirection: "column" }}>
-            <div className="p-24" style={{ 'width': pxToVw(1150), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
+            <div className="p-24" style={{ 'width': pxToVw(1081), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
                 <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
                 <div className='mt-10'>
                     <Icon name={"ace"} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
                 </div>
-                <p className="text-12 text-[#C4C4C4] font-light">{ t("Let's Get Started!") }</p>
+                <p className="text-12 text-[#C4C4C4]" style={{ fontFamily: "PingFang SC Light" }}>{ t("Let's Get Started!") }</p>
             </div>
             <div>
                 <Input className='message-box' styles={{ input: { fontSize: pxToVw(12) } }} placeholder={t('Send a Message')}
@@ -50,20 +50,20 @@ const Chat = () => {
             onClick={() => {}}
             className={`w-161 h-36 flex items-center justify-center rounded-8 text-14 cursor-pointer select-none`}
         >
-            <Icon name={'add'} style={{ 'width': pxToVw(11), 'height': pxToVw(11), 'marginRight': '12px' }} />
-            {t('Create New Chat')}
+          <Icon name={'add'} style={{ 'width': pxToVw(11), 'height': pxToVw(11), 'marginRight': '12px' }} />
+          <div style={{ fontFamily: "PingFang SC Regular" }}>{t('Create New Chat')}</div>
         </Button>
           <div className={`mt-24`}>
             {
               history.map(item => {
                 return <div key={item.key} className={`mb-30`}>
-                  <div className={`text-10 text-[#787878]`}>{ t(item.time) }</div>
+                  <div className={`text-10 text-[#787878]`} style={{ fontFamily: "PingFang SC Light" }}>{ t(item.time) }</div>
                   <div className={`cursor-pointer`}>
                     {
                       item.children.map(it => {
                         return <div key={it.key} className={`flex items-center mt-18`}>
                           <Icon name={'history'} style={{ 'width': pxToVw(12), 'height': pxToVw(14) }} />
-                          <span className={`text-12 text-black ml-8 truncate`}>{ t(it.text) }</span>
+                          <span className={`text-12 text-black ml-8 truncate`} style={{ fontFamily: "PingFang SC Medium" }}>{ t(it.text) }</span>
                         </div>
                       })
                     }

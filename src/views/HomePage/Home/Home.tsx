@@ -37,8 +37,8 @@ function Home() {
           cards.map(card => {
             return <div key={card.id} className={`w-358 h-390 bg-[#FFFFFF] px-30 rounded-24 pt-60 flex items-center flex-col`}>
               <img className={'w-78 h-78'} src={card.icon} alt="icon" />
-              <div className={'font-bold text-[#000000] mb-12 mt-42'} style={{ fontSize: pxToVw(20) }} >{ card.title }</div>
-              <div className={'flex text-[#535563] leading-28'} style={{ textAlign: "center", fontSize: pxToVw(16) }} >{ card.content }</div>
+              <div className={'font-bold text-[#000000] mb-12 mt-42'} style={{ fontSize: pxToVw(20), fontFamily: "PingFang SC Medium" }} >{ card.title }</div>
+              <div className={'flex text-[#535563] leading-28'} style={{ textAlign: "center", fontSize: pxToVw(16), fontFamily: "PingFang SC Regular" }} >{ card.content }</div>
             </div>
           })
         }

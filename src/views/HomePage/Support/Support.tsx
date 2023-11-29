@@ -6,25 +6,6 @@ import { useState } from 'react';
 const Support = () => {
   const { t } = useTranslation();
 
-  const Card = ({height, title, subtitle, image, left, right}: any) => {
-    var div_style: any = {
-      "flexDirection": "column", 
-      "width": pxToVw(338), 
-      "height": height, 
-      background: `linear-gradient(180deg, rgba(9, 15, 51, 0.00) 0%, #01061F 100%), url('../../../src/assets/${image}.svg') lightgray 50% / cover no-repeat`
-    };
-
-    left ? div_style["marginleft"] = pxToVw(20) : right? div_style["marginRight"] = pxToVw(20) : null;
-
-    return(
-      <div className={`flex rounded-12 items-start justify-end`} style={div_style}>
-        <div style={{ color: "white", fontSize: pxToVw(15), marginLeft: pxToVw(20)}}>{ t("Explore") }</div>
-        <div className='text-bold' style={{ color: "white", fontSize: pxToVw(22), marginLeft: pxToVw(20), marginBottom: pxToVw(8) }}>{ t(title) }</div>
-        <div style={{ color: "white", fontSize: pxToVw(12), marginLeft: pxToVw(20), marginRight: pxToVw(20), marginBottom: pxToVw(30) }}>{ t(subtitle) }</div>
-      </div>
-    )
-  };
-
   const [cards] = useState([
     {
       id: 'search_engine',
@@ -83,12 +64,12 @@ const Support = () => {
   ]);
 
   return <>
-   <div className={`bg-white items-center rounded-8 mt-40`} style={{"width": pxToVw(1250), "height": pxToVw(1090), boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
+   <div className={`bg-white items-center rounded-8 mt-20`} style={{"width": pxToVw(1372), "height": pxToVw(1090), marginLeft: pxToVw(29), boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
       <div className={`flex flex-col`}>
-        <div className={`mt-30`} style={{ alignSelf: "flex-start", marginLeft: pxToVw(36), color: "#002138", fontSize: pxToVw(20) }}>{ t("Tutorials") }</div>
-        <div className={`mt-30`} style={{ alignSelf: "center", color: "#002138", fontSize: pxToVw(18) }}>{ t("Explore ACE AI") }</div>
-        <div className={`custom-div`} style={{ alignSelf: "center", fontSize: pxToVw(25) }}>{ t("Just in 5 minutes") }</div>
-        <div className={`mt-5`} style={{ "width": pxToVw(651), alignSelf: "center", textAlign: "center", color: "#404040", fontSize: pxToVw(12) }}>{ t("Your hub for mastering every facet of our website's diverse components. From harnessing AI analytics to crafting compelling content and setting up AI-powered chatbots, our tutorials empower you to unleash the full potential of our services.") }</div>
+        <div className={`mt-30`} style={{ alignSelf: "flex-start", marginLeft: pxToVw(36), color: "#002138", fontSize: pxToVw(20), fontFamily: "PingFang SC Medium" }}>{ t("Tutorials") }</div>
+        <div className={`mt-30`} style={{ alignSelf: "center", color: "#002138", fontSize: pxToVw(18), fontFamily: "PingFang SC Medium" }}>{ t("Explore ACE AI") }</div>
+        <div className={`custom-div`} style={{ alignSelf: "center", fontSize: pxToVw(25), fontFamily: "PingFang SC Regular" }}>{ t("Just in 5 minutes") }</div>
+        <div className={`mt-5`} style={{ "width": pxToVw(651), alignSelf: "center", textAlign: "center", color: "#404040", fontSize: pxToVw(12), fontFamily: "PingFang SC Regular" }}>{ t("Your hub for mastering every facet of our website's diverse components. From harnessing AI analytics to crafting compelling content and setting up AI-powered chatbots, our tutorials empower you to unleash the full potential of our services.") }</div>
       </div>
       
       <div className={`flex flex-row items-start justify-center`} style={{ marginTop: pxToVw(40) }}>
@@ -109,9 +90,9 @@ const Support = () => {
 
             return (
               <div key={card.id} className={`flex rounded-12 items-start justify-end`} style={div_style}>
-                <div style={{ color: "white", fontSize: pxToVw(15), marginLeft: pxToVw(20)}}>{ t("Explore") }</div>
-                <div className='text-bold' style={{ color: "white", fontSize: pxToVw(22), marginLeft: pxToVw(20), marginBottom: pxToVw(8) }}>{ t(card.title) }</div>
-                <div style={{ color: "white", fontSize: pxToVw(12), marginLeft: pxToVw(20), marginRight: pxToVw(20), marginBottom: pxToVw(30) }}>{ t(card.content) }</div>
+                <div style={{ color: "white", fontSize: pxToVw(15), marginLeft: pxToVw(20), fontFamily: "PingFang SC Bold"}}>{ t("Explore") }</div>
+                <div className='text-bold' style={{ color: "white", fontSize: pxToVw(22), marginLeft: pxToVw(20), marginBottom: pxToVw(8), fontFamily: "PingFang SC Medium" }}>{ t(card.title) }</div>
+                <div style={{ color: "white", fontSize: pxToVw(12), marginLeft: pxToVw(20), marginRight: pxToVw(20), marginBottom: pxToVw(30), fontFamily: "PingFang SC Regular" }}>{ t(card.content) }</div>
               </div>
             )
           })
@@ -141,9 +122,9 @@ const Support = () => {
 
               return (
                 <div key={card.id} className={`flex rounded-12 items-start justify-end`} style={div_style}>
-                  <div style={{ color: "white", fontSize: pxToVw(15), marginLeft: pxToVw(20)}}>{ t("Explore") }</div>
-                  <div className='text-bold' style={{ color: "white", fontSize: pxToVw(22), marginLeft: pxToVw(20), marginBottom: pxToVw(8) }}>{ t(card.title) }</div>
-                  <div style={{ color: "white", fontSize: pxToVw(12), marginLeft: pxToVw(20), marginRight: pxToVw(20), marginBottom: pxToVw(30) }}>{ t(card.content) }</div>
+                  <div style={{ color: "white", fontSize: pxToVw(15), marginLeft: pxToVw(20), fontFamily: "PingFang SC Bold"}}>{ t("Explore") }</div>
+                  <div className='text-bold' style={{ color: "white", fontSize: pxToVw(22), marginLeft: pxToVw(20), marginBottom: pxToVw(8), fontFamily: "PingFang SC Medium" }}>{ t(card.title) }</div>
+                  <div style={{ color: "white", fontSize: pxToVw(12), marginLeft: pxToVw(20), marginRight: pxToVw(20), marginBottom: pxToVw(30), fontFamily: "PingFang SC Regular" }}>{ t(card.content) }</div>
                 </div>
               )
             })
@@ -151,7 +132,7 @@ const Support = () => {
         </div>
 
         <div className={`flex items-center justify-center flex-row mt-20`}>
-          <div style={{ alignSelf: "center", color: "#5249D6", fontSize: pxToVw(15) }}>{ t("More") }</div>
+          <div style={{ alignSelf: "center", color: "#5249D6", fontSize: pxToVw(15), fontFamily: "PingFang SC Regular" }}>{ t("More") }</div>
           <Icon name='more_ellipse' style={{ "width": pxToVw(18), "height": pxToVw(18), marginLeft: pxToVw(6) }} />
         </div>
 

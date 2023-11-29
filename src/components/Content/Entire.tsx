@@ -9,7 +9,7 @@ export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, b
         <div>
             <div className={`flex items-center`}>
                 <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Topic') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Topic') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
               <div className={`mt-12`}>
@@ -20,7 +20,7 @@ export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, b
             <div className={`mt-24`}>
               <div className={`flex items-center`}>
                 <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Style') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Style') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
               <div className={`mt-12`}>
@@ -51,7 +51,7 @@ export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, b
             <div className={`mt-24`}>
               <div className={`flex items-center`}>
                 <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Audience') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Audience') }</span>
               </div>
               <div className={`mt-12`}>
                 <div className={`flex items-center justify-between`}>
@@ -82,7 +82,7 @@ export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, b
             <div className={`mt-24`}>
                 <div className={`flex items-center`}>
                     <Icon name={'fourth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                    <span className={`ml-8 text-12`}>{ t('Word Count') }</span>
+                    <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Word Count') }</span>
                     <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
                 </div>
                 <div className={`mt-12`}>
@@ -103,7 +103,7 @@ export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, b
             <div className={`mt-24`}>
                 <div className={`flex items-center`}>
                         <Icon name={'fifth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                        <span className={`ml-8 text-12`}>{ t('Other Details') }</span>
+                        <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Other Details') }</span>
                         <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
                     </div>
                     <div className={`mt-12`}>
@@ -115,7 +115,7 @@ export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, b
             <div className={`mt-24`}>
               <div className={`flex items-center`}>
                 <Icon name={'sixth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Language ') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Language ') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
               <div className={`mt-12`}>

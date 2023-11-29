@@ -7,6 +7,9 @@ import { setToken } from '@/reducers/token.ts'
 
 import styles from './Login.module.css'
 
+import axios from 'axios';
+import { base_url } from '@/utils/constants'
+
 function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -14,14 +17,30 @@ function Login() {
 
   const [form] = Form.useForm()
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [key, setKey] = useState('')
+  const [username, setUsername] = useState('test@test1.com')
+  const [password, setPassword] = useState('abcd123456')
+  const [key, setKey] = useState('testgooglekey')
   const finish = async () => {
     const valid = await form.validateFields()
     if (valid) {
-      dispatch(setToken("2348989028394234"))
-      navigate("/home");
+      const formData = new URLSearchParams();
+      formData.append('username', username);
+      formData.append('password', password);
+      try {
+        const response = await axios.post(`${base_url}/login`, formData, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
+        if(response.data.code == 200){ //request success
+          dispatch(setToken(response.data.data.token));
+          navigate("/home");
+          console.log("doneeee")
+        }
+      } catch (error) {
+        // Handle errors (e.g., show an error message)
+        console.error('Error:', error);
+      }
     }
   }
 
@@ -39,6 +58,7 @@ function Login() {
         >
           <Form.Item
             label={t('Username')}
+            initialValue={username}
             name="username"
             rules={[
               { required: true, message: t('Please input your username!') },
@@ -52,6 +72,7 @@ function Login() {
 
           <Form.Item
             label={t('Password')}
+            initialValue={password}
             name="password"
             rules={[
               { required: true, message: t('Please input your password!') },
@@ -64,6 +85,7 @@ function Login() {
           </Form.Item>
           <Form.Item
             label={t('Google Key')}
+            initialValue={key}
             name="key"
             rules={[
               { required: true, message: t('Please input your Google key!') },

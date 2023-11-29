@@ -1,16 +1,15 @@
 import Icon from '@/components/Icon/Icon.tsx'
 import { Select, Input, InputNumber } from 'antd'
 import { pxToVw } from '@/utils'
-import { countries } from '@/utils/constants';
 
-export const EmailComp = ({t, tag, text, setText, brandName, setBrandName, productName, setProductName, productDesc, setProdDesc, tones, tone, setTone, brandVoices, brandVoice, setBrandVoice, 
+export const EmailComp = ({t, tag, text, countries, setText, brandName, setBrandName, productName, setProductName, productDesc, setProdDesc, tones, tone, setTone, brandVoices, brandVoice, setBrandVoice, 
     country, setCountry, genders, gender, setGender, minAge, setMinAge, maxAge, setMaxAge, languages, language, setLanguage}: any) => {
     return(
         <>
           <div>
               <div className={`flex items-center`}>
                 <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Details') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Details') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
   
@@ -37,7 +36,7 @@ export const EmailComp = ({t, tag, text, setText, brandName, setBrandName, produ
             <div className={`mt-24`}>
               <div className={`flex items-center`}>
                 <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Style') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Style') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
               <div className={`mt-12`}>
@@ -65,7 +64,7 @@ export const EmailComp = ({t, tag, text, setText, brandName, setBrandName, produ
             <div className={`mt-24`}>
               <div className={`flex items-center`}>
                 <Icon name={'third'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Audience') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Audience') }</span>
               </div>
               <div className={`mt-12`}>
                 <div>
@@ -102,7 +101,7 @@ export const EmailComp = ({t, tag, text, setText, brandName, setBrandName, produ
             <div className={`mt-24`}>
               <div className={`flex items-center`}>
                 <Icon name={'fourth'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Language ') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Language ') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
               <div className={`mt-12`}>

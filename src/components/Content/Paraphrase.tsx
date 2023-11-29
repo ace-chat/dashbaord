@@ -8,7 +8,7 @@ export const ParaphraseComp = ({t, text, setText, languages, language, setLangua
             <div>
             <div className={`flex items-center`}>
                 <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Text') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Text') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
             </div>
             <div className={`mt-12`}>
@@ -19,7 +19,7 @@ export const ParaphraseComp = ({t, text, setText, languages, language, setLangua
             <div className={`mt-24`}>
             <div className={`flex items-center`}>
                 <Icon name={'second'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`}>{ t('Language ') }</span>
+                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Language ') }</span>
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
             </div>
             <div className={`mt-12`}>

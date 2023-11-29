@@ -4,11 +4,12 @@ import type { FC } from 'react'
 import Content from '@/components/Content/Content.tsx'
 
 const Tone: FC = () => {
-  const [title] = useState('Generate Optimized Content Change Tone')
+  const [flow] = useState('Optimized Content')
+  const [title] = useState('Change Tone')
   const [subTitle] = useState('Generate a version of text in a different tone that is optimized for marketing.')
 
   return <>
-    <Content title={title} subTitle={subTitle} tag={"tone"} />
+    <Content flow={flow} title={title} subTitle={subTitle} tag={"tone"} />
   </>
 }
 

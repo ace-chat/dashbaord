@@ -4,11 +4,12 @@ import type { FC } from 'react'
 import Content from '@/components/Content/Content.tsx'
 
 const Marketing: FC = () => {
-  const [title] = useState('Generate Cold Marketing Email Content')
+  const [flow] = useState('Email Ads')
+  const [title] = useState('Cold Marketing Email Content')
   const [subTitle] = useState('Generate an email to generate more leads for your brand.')
 
   return <>
-    <Content title={title} subTitle={subTitle} tag={"marketing"} />
+    <Content flow={flow} title={title} subTitle={subTitle} tag={"marketing"} />
   </>
 }
 

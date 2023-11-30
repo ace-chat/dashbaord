@@ -45,14 +45,14 @@
 }
 
 .message-box {
-  width: 923px;
-  height: 36px;
+  width: 930px;
+  height: 40px;
   border-radius: 10px;
   border: 1px solid #E4E4E4;
   background: #FFF;
   box-shadow: 0px 2px 9px 0px rgba(0, 0, 0, 0.08);
-  margin-left: 114px;
-  margin-top: 15px;
+  margin-left: 72px;
+  margin-top: 16px;
 }
 
 .ant-menu-title-content{

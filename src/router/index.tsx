@@ -23,7 +23,7 @@ import Support from "@/views/HomePage/Support/Support.tsx";
 
 import Oops from '@/views/Oops/Oops.tsx'
 
-//Optimize Content
+//Optimized Content
 import Tone from '@/views/HomePage/Content/Optimized/Tone'
 import Summarize from '@/views/HomePage/Content/Optimized/Summarize'
 import Paraphrase from '@/views/HomePage/Content/Optimized/Paraphrase'
@@ -68,7 +68,7 @@ const routes: RouteObject[] = [
             element: <Content />,
             children: [
               {
-                path: 'optimized',
+                path: 'optimize',
                 element: <Optimized />,
                 children: [
                   {

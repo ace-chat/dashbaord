@@ -4,7 +4,7 @@ import type { FC } from 'react'
 import Content from '@/components/Content/Content.tsx'
 
 const Engine: FC = () => {
-  const [title] = useState('Search Engine Ads Content')
+  const [title] = useState('Search Engine Ads')
   const [subTitle] = useState('Generate a personalized caption for your product or service for the platform of your choice.')
 
   return <>

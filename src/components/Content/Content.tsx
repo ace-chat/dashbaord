@@ -180,7 +180,7 @@ const Content = (props: Prop) => {
         return true;
       }
     }
-    //optimized content change tone, freestyle email, intro and outline blog validation
+    //Optimized content change tone, freestyle email, intro and outline blog validation
     if(props.tag ==  "tone"|| props.tag == "freestyle" || props.tag == "intro" || props.tag == "outline"){
       if(text && tone && language){
         return false;
@@ -188,7 +188,7 @@ const Content = (props: Prop) => {
         return true;
       }
     }
-    //optimized content match brand voice , paraphrase and target audience validation
+    //Optimized content match brand voice , paraphrase and target audience validation
     if(props.tag ==  "brandvoice" || props.tag == "paraphrase" || props.tag == "audience"){
       if(text && language){
         return false;
@@ -196,7 +196,7 @@ const Content = (props: Prop) => {
         return true;
       }
     }
-    //optimized content summarize validation
+    //Optimized content summarize validation
     if(props.tag == "summarize"){
       if(text && wordCount && language){
         return false;
@@ -450,9 +450,9 @@ const Content = (props: Prop) => {
               <div className='pl-4'>
                 {generatedText.split('\n').map((paragraph, index) => {
                   return(
-                    <p key={index} className={`leading-normal text-12 pr-16 mt-16`} style={{ fontFamily: "PingFang SC Regular" }}>
-                    {paragraph}
-                  </p>
+                    <p key={index} className={`leading-normal text-12 pr-16 mt-16`} style={{ fontFamily: "PingFang SC Regular", width: pxToVw(682) }}>
+                      {paragraph}
+                    </p>
                   )
                 })}
               </div>    
@@ -478,7 +478,7 @@ const Content = (props: Prop) => {
 
         <div className={`w-289 p-24 h-821`}>
           <div className={`text-12`} style={{ fontFamily: "PingFang SC Bold" }} >{ t('History') }</div>
-          <div className={`mt-24`}>
+          <div className={`mt-24 scrollable-content`}>
             {
               history.map(item => {
                 return <div key={item.key} className={`mb-30`}>

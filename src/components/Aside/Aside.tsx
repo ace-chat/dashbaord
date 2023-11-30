@@ -43,12 +43,12 @@ const Aside = () => {
     getItem(t('Content Generation'), "content", <Icon name={'content'} />, [
       getItem(t('Social Media Ads'), 'content/media'),
       getItem(t('Search Engine Ads'), 'content/engine'),
-      getItem(t('Optimized Content'), 'content/optimized', null, [
-        getItem(t('Change Tone'), 'content/optimized/tone'),
-        getItem(t('Summarize'), 'content/optimized/summarize'),
-        getItem(t('Paraphrase'), 'content/optimized/paraphrase'),
-        getItem(t('Match Brand Voice'), 'content/optimized/brandvoice'),
-        getItem(t('Target Audience'), 'content/optimized/audience')
+      getItem(t('Optimize Content'), 'content/optimize', null, [
+        getItem(t('Change Tone'), 'content/optimize/tone'),
+        getItem(t('Summarize'), 'content/optimize/summarize'),
+        getItem(t('Paraphrase'), 'content/optimize/paraphrase'),
+        getItem(t('Match Brand Voice'), 'content/optimize/brandvoice'),
+        getItem(t('Target Audience'), 'content/optimize/audience')
       ]),
       getItem(t('Email Ads'), 'content/email', null, [
         getItem(t("Freestyle"), 'content/email/freestyle'),

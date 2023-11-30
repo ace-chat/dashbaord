@@ -10,7 +10,7 @@ const Support = () => {
     {
       id: 'search_engine',
       title: t('Search Engine Ads'),
-      content: t(`Uncover our AI content generation tool's power, optimize text and keywords, boost search ad performance.`),
+      content: t(`Uncover our AI content generation tool's power, Optimized text and keywords, boost search ad performance.`),
       height: pxToVw(351),
       right: true,
       left: false,
@@ -19,7 +19,7 @@ const Support = () => {
     {
       id: 'deep_analytics',
       title: t('Deep Analytics'),
-      content: t(`Uncover our AI content generation tool's power, optimize text and keywords, boost search ad performance.`),
+      content: t(`Uncover our AI content generation tool's power, Optimized text and keywords, boost search ad performance.`),
       height: pxToVw(300),
       right: false,
       left: false,

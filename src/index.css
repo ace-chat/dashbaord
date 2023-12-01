@@ -55,6 +55,12 @@
   margin-top: 16px;
 }
 
+.message-profile{
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
 .ant-menu-title-content{
   font-family: 'PingFang SC Regular';
 }

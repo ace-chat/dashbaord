@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { pxToVw } from '@/utils'
 
 //components
@@ -37,6 +37,183 @@ const Content = (props: Prop) => {
     { value: 'new', label: t('Create New') }
   ]);
 
+  function createFormData() {
+    const formData = new URLSearchParams();
+    formData.append('language', language);
+  
+    if (props.tag === "media" || props.tag === "engine") {
+      formData.append('platform', platform);
+      formData.append('brand_name', brandName);
+      formData.append('service_name', productName);
+      formData.append('service_desc', productDesc);
+      formData.append('tones', tone);
+      formData.append('brand_voice', brandVoice);
+      //optional
+      if(country)
+        formData.append('region', country);
+      if(gender)
+        formData.append('gender', gender);
+      if(minAge)
+        formData.append('min_age', minAge);
+      if(maxAge)
+        formData.append('max_age', maxAge);
+    }
+
+    if(props.tag == "tone"){
+      formData.append('text', text);
+      formData.append('tones', tone);
+    }
+
+    if(props.tag == "summarize"){
+      formData.append('text', text);
+      formData.append('word_count', wordCount);
+    }
+
+    if(props.tag == "paraphrase"){
+      formData.append('text', text);
+    }
+
+    if(props.tag == "brandvoice"){
+      formData.append('text', text);
+      //optional
+      if(brandVoice)
+        formData.append('brand_voice', brandVoice);
+    }
+
+    if(props.tag == "audience"){
+      formData.append('text', text);
+      //optional
+      if(country)
+        formData.append('region', country);
+      if(gender)
+        formData.append('gender', gender);
+      if(minAge)
+        formData.append('min_age', minAge);
+      if(maxAge)
+        formData.append('max_age', maxAge);
+    }
+
+    if(props.tag == "freestyle"){
+      formData.append('detail', text);
+      formData.append('tones', tone);
+      //optional
+      if(brandVoice)
+        formData.append('brand_voice', brandVoice);
+      if(country)
+        formData.append('region', country);
+      if(gender)
+        formData.append('gender', gender);
+      if(minAge)
+        formData.append('min_age', minAge);
+      if(maxAge)
+        formData.append('max_age', maxAge);
+    }
+
+    if(props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds"){
+      formData.append('brand_name', brandName);
+      formData.append('service_name', productName);
+      formData.append('service_desc', productDesc);
+      formData.append('tones', tone);
+      //optional
+      if(brandVoice)
+       formData.append('brand_voice', brandVoice);
+      if(country)
+       formData.append('region', country);
+      if(gender)
+        formData.append('gender', gender);
+      if(minAge)
+        formData.append('min_age', minAge);
+      if(maxAge)
+        formData.append('max_age', maxAge);
+    }
+
+    if(props.tag == "intro" || props.tag == "outline"){
+      formData.append('topic', text);
+      formData.append('tones', tone);
+      //optional
+      if(brandVoice)
+        formData.append('brand_voice', brandVoice);
+      if(minAge)
+        formData.append('min_age', minAge);
+      if(maxAge)
+        formData.append('max_age', maxAge);
+    }
+
+    if(props.tag == "entire"){
+      formData.append('topic', text);
+      formData.append('tones', tone);
+      formData.append('type', type);
+      formData.append('word_count', wordCount);
+      formData.append('other_details', details);
+      //optional
+      if(brandVoice)
+       formData.append('brand_voice', brandVoice);
+      if(minAge)
+       formData.append('min_age', minAge);
+      if(maxAge)
+       formData.append('max_age', maxAge);
+    }
+
+
+    return formData;
+  };
+
+  function createUrlTag() {
+    //url tag depending on which page we are focused on in Content Generation
+    let url_tag = "";
+  
+    switch (props.tag) {
+      case "media":
+        url_tag = "content/media/generator";
+        break;
+      case "engine":
+        url_tag = "content/engine/generator";
+        break;
+      case "tone":
+        url_tag = "content/optimized/tone/generator";
+        break;
+      case "summarize":
+        url_tag = "content/optimized/summarize/generator";
+        break;
+      case "paraphrase":
+        url_tag = "content/optimized/paraphrase/generator";
+        break;
+      case "brandvoice":
+        url_tag = "content/optimized/voice/generator";
+        break;
+      case "audience":
+        url_tag = "content/optimized/audience/generator";
+        break;
+      case "freestyle":
+        url_tag = "content/email/freestyle/generator";
+        break;
+      case "marketing":
+        url_tag = "content/email/marketing/generator";
+        break;
+      case "welcome":
+        url_tag = "content/email/welcome/generator";
+        break;
+      case "odds":
+        url_tag = "content/email/advantage/generator";
+        break;
+      case "intro":
+        url_tag = "content/blog/intro/generator";
+        break;
+      case "outline":
+        url_tag = "content/blog/outline/generator";
+        break;
+      case "entire":
+        url_tag = "content/blog/entire/generator";
+        break;
+      default:
+        // Handle a default case if needed
+        break;
+    }
+  
+    return url_tag;
+  }
+  
+  
   async function getAllRegions(){
     try {
       const response = await axios.get(`${base_url}/common/regions`, {
@@ -146,11 +323,6 @@ const Content = (props: Prop) => {
     { value: 10, label: t('Russian') }
   ]);
 
-  //sample generated text
-  const sampleText =`
-  Borem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpismolsa estie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus.${"\n"}Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.${"\n"}Curabitur tempor quis eros tempus lacinia. Nam bibendum pellentesque quam a convallis. Sed ut vulputate nisi. Integer in felis sed leo vestibulum venenatis. Suspendisse quis arcu sem. Aenean feugiat ex eu vestibulum vestibulum. Morbi a eleifend magna. Nam metus lacus, porttitor eu mauris a, blandit ultrices nibh.${"\n"}Mauris sit amet magna non ligula vestibulum eleifend. Nulla varius volutpat turpis sed lacinia. Nam eget mi in purus lobortis eleifend. Sed nec ante dictum sem condimentum ullamcorper quis venenatis nisi. Proin vitae facilisis nisi, ac posuere leo.${"\n"}Nam pulvinar blandit velit, id condimentum diam faucibus at. Aliquam lacus nisi, sollicitudin at nisi nec, fermentum congue felis. Quisque mauris dolor, fringilla sed tincidunt ac, finibus non odio. Sed vitae mauris nec ante pretium finibus.${"\n"}Donec nisl neque, pharetra ac elit eu, faucibus aliquam ligula. Nullam dictum, tellus tincidunt tempor laoreet, nibh elit sollicitudin felis, eget feugiat sapien diam nec nisl. Aenean gravida turpis nisi, consequat dictum risus dapibus a. Duis felis ante, varius in neque eu, tempor suscipit sem. Maecenas ullamcorper gravida sem sit amet cursus. Etiam pulvinar purus vitae justo pharetra consequat. Mauris id mi ut arcu feugiat maximus. Mauris consequat tellus id tempus aliquet. Vestibulum dictum ultrices elit a luctus. Sed in ante ut leo congue posuere at sit amet ligula. Pellentesque eget augue nec nisl sodales m ligula.
-  `;
-
   //generated text
   const [generatedText, setGeneratedText] = useState("");
 
@@ -223,39 +395,28 @@ const Content = (props: Prop) => {
   };
 
   async function generateText(){
-    const formData = new URLSearchParams();
-    if(props.tag == "media"){ // /content/media/generator
-      try {
-        setLoading(true);
-        formData.append('platform', platform);
-        formData.append('brand_name', brandName);
-        formData.append('service_name', productName);
-        formData.append('service_desc', productDesc);
-        formData.append('tones', tone);
-        formData.append('brand_voice', brandVoice);
-        formData.append('region', country);
-        formData.append('gender', gender);
-        formData.append('min_age', minAge);
-        formData.append('max_age', maxAge);
-        formData.append('language', language);
+    const formData = createFormData();
+    const url_tag = createUrlTag();
 
-        const response = await axios.post(`${base_url}/content/media/generator`, formData, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-  
-        if(response.data.code == 200){ //request success
-          setLoading(false);
-          console.log(response.data.data.text, "--text")
-          setGeneratedText(response.data.data.text);
-        }
-      } catch (error) {
-        // Handle errors (e.g., show an error message)
+    try {
+      setLoading(true);
+      const response = await axios.post(`${base_url}/${url_tag}`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      if(response.data.code == 200){ //request success
         setLoading(false);
-        console.error('Error:', error);
+        console.log(response.data.data.text, "--text")
+        setGeneratedText(response.data.data.text);
       }
+    } catch (error: any) {
+      // Handle errors (e.g., show an error message)
+      setLoading(false);
+      console.error('Error:', error);
+      message.error(error.message);
     }
   };
 

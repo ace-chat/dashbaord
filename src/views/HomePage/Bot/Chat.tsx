@@ -3,6 +3,7 @@ import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
 import { pxToVw } from '@/utils'
 import { Button, Input } from 'antd'
+import Avatar from '../../../assets/message_avatar.png'
 
 const Chat = () => {
   const { t } = useTranslation()
@@ -35,19 +36,64 @@ const Chat = () => {
       <div className={`flex justify-around`}>
 
         <div className="flex" style={{ flexDirection: "column", height: pxToVw(748) }}>
-            <div className="scrollable-content p-24" style={{ 'width': pxToVw(1081), 'height': pxToVw(680), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
+            <div className="scrollable-content p-24" style={{ 'width': pxToVw(1081), 'height': pxToVw(680), display: "flex", flexDirection: "column" }}>
+            {messages.length == 0 ?
+              <div className='flex' style={{  display: "flex" , 'height': pxToVw(680), flexDirection:"column", alignItems: 'center', justifyContent: 'center' }}>
                 <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
                 <div className='mt-10'>
                     <Icon name={"ace"} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
                 </div>
-                {messages.length == 0 ?
-                  <p className="text-12 text-[#C4C4C4]" style={{ fontFamily: "PingFang SC Light" }}>{ t("Let's Get Started!") }</p>
-                :
+                <p className="text-12 text-[#C4C4C4]" style={{ fontFamily: "PingFang SC Light" }}>{ t("Let's Get Started!") }</p>
+              </div>
+            :
                 messages.map((message: any, index: any) => {
                   return(
-                      <p key={index} style={{ fontFamily: "PingFang SC Regular", fontSize: pxToVw(14), color: "black", width: pxToVw(706), alignSelf: "center" }}>
+                    <div style={{ display: "flex", width: pxToVw(930), alignSelf: "center", flexDirection: "row", alignItems: "center", marginTop: index !== 0 ? pxToVw(20) : pxToVw(0) }}>
+
+                      <div className='message-profile' 
+                        style={{ 
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          background: index % 2 !== 0 ? `linear-gradient(47deg, #8810C0 6.38%, #4D5BE2 52.16%, #1C9AFF 94.05%)` : "#d9d9d9",
+                          alignSelf: "flex-start" 
+                        }} 
+                      >
+                        {index % 2 !== 0 ? 
+                          <Icon name={"ace_white"} style={{ width: pxToVw(30), height: pxToVw(20), alignSelf: "center" }} />
+                        :
+                          <img src={Avatar} alt="Profile Image" style={{ width: pxToVw(40), height: pxToVw(40), borderRadius: pxToVw(8), alignSelf: "center", objectFit: "contain" }} />
+                        }
+                      </div>
+
+                      <p key={index} style={{ fontFamily: "PingFang SC Regular", fontSize: pxToVw(14), color: "black", marginLeft: pxToVw(18), width: pxToVw(870) }}>
                         {message}
                       </p>
+
+                      <div className={`flex items-center justify-end self-start`}>
+                        {index % 2 !== 0 ? 
+                          <div className={`w-78 flex items-center justify-between`}>
+                            <div className={`cursor-pointer`}>
+                              <Icon name={'copied'} style={{ 'width': pxToVw(15), 'height': pxToVw(15), color: "grey" }} />
+                            </div>
+                            <div className={`cursor-pointer`}>
+                              <Icon name={'good'} style={{ 'width': pxToVw(15), 'height': pxToVw(15), color: "grey"  }} />
+                            </div>
+                            <div className={`cursor-pointer`}>
+                              <Icon name={'poor'} style={{ 'width': pxToVw(15), 'height': pxToVw(15), color: "grey"  }} />
+                            </div>
+                          </div>
+                        :
+                        index === messages.length - 2 && 
+                          <div className={`w-78 flex items-center justify-between`}>
+                            <div className={`cursor-pointer`}>
+                              <Icon name={'pen'} style={{ 'width': pxToVw(15), 'height': pxToVw(15), color: "grey", marginLeft: pxToVw(65) }} />
+                            </div>
+                          </div>
+                        }
+                      </div>
+
+                    </div>                    
                   )
                 })
                 }

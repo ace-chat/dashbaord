@@ -84,7 +84,7 @@ const Chat = () => {
                             </div>
                           </div>
                         :
-                        index === messages.length - 2 && 
+                        index % 2 == 0 && 
                           <div className={`w-78 flex items-center justify-between`}>
                             <div className={`cursor-pointer`}>
                               <Icon name={'pen'} style={{ 'width': pxToVw(15), 'height': pxToVw(15), color: "grey", marginLeft: pxToVw(65) }} />

@@ -27,7 +27,7 @@ export const AdsComp = ({t, platforms, platform, countries, setPlatform, brandNa
               <div> 
                 <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type brand name')} value={brandName} onChange={(e) => setBrandName(e.target.value)} />
               </div>
-              <div className={`my-12`}>
+              <div className={`mt-12`}>
                 <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type service/product name')} value={productName} onChange={(e) => setProductName(e.target.value)} />
               </div>
               <div>

@@ -29,6 +29,15 @@
   border-radius: 25px;
 }
 
+.social-div{
+  width: 83.267px;
+  height: 101.93px;
+  flex-shrink: 0;
+  border-radius: 6.534px;
+  border: 1.307px solid #DBDBDB;
+  margin-right: 10px;
+}
+
 .custom-div{
   background: linear-gradient(90deg, #5B63DF 0%, #5BC7DF 100%);
   background-clip: text;
@@ -59,6 +68,44 @@
   width: 40px;
   height: 40px;
   border-radius: 8px;
+}
+
+.ant-btn:hover{
+  border: transparent !important;
+  color: #555555 !important;
+}
+
+.ant-switch .ant-switch-checked{
+  width: 38px !important;
+  height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.ant-switch-handle{
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.ant-switch-checked .ant-switch-handle::before{
+  background: #4F6BE8 !important;
+}
+
+.ant-switch:not(.ant-switch-checked) .ant-switch-handle::before {
+  background: #DBDBDB !important;
+}
+
+.ant-switch-checked .ant-switch-handle {
+  margin-left: -4px !important; 
+}
+
+.ant-switch-checked{
+  border: 1px solid #4F6BE8 !important;
+  background: #F4F6FA !important;
+}
+
+.ant-switch:not(.ant-switch-checked) .ant-switch-handle {
+  margin-left: 4px !important; 
 }
 
 .ant-menu-title-content{
@@ -205,6 +252,7 @@
   align-items: center !important;
   font-size: 9px !important;
   color: #000000 !important;
+  font-family: 'PingFang SC Regular' !important;
 }
 
 .ant-select-multiple .ant-select-selection-item {
@@ -212,6 +260,7 @@
   line-height: 1 !important;
   padding: 5px 10px !important;
   font-size: 10px !important;
+  font-family: 'PingFang SC Regular' !important;
 }
 
 .ant-select-selector .ant-select-selection-placeholder, .ant-select-selector .ant-select-selection-item {

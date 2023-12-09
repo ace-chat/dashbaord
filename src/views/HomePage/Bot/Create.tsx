@@ -8,6 +8,7 @@ import { pxToVw } from '@/utils'
 import axios from 'axios'
 import { base_url } from '@/utils/constants'
 import { RootState } from '@/store';
+import { ChangeNumber } from '@/components/Modal/ChangeNumber';
 
 type Prop = {
   title: string;
@@ -21,6 +22,7 @@ const Create = (props: Prop) => {
     const { token } = useSelector((state: RootState) => state.token)
     const [loading, setLoading] = useState(false);
 
+    const [whatsappActive, setWhatsappActive] = useState(true);
     const [generatedBot, setGeneratedBot]: any = useState("fsidh");
 
     //state variables
@@ -33,6 +35,24 @@ const Create = (props: Prop) => {
     const [companyIntro, setCompanyIntro]: any = useState();
     const [selectedFile, setSelectedFile] = useState();
     const fileInput: any = useRef();
+
+    //modal state controls
+    const [changeNumber, setChangeNumber] = useState(false);
+    const toggleChangeNumber = () => {
+        setChangeNumber(!changeNumber);
+    };
+    const [verifyNumber, setVerifyNumber] = useState(false);
+    const toggleVerifyNumber = () => {
+        setVerifyNumber(!verifyNumber);
+    };
+    const [qA, setQA] = useState(false);
+    const toggleQA = () => {
+        setQA(!qA);
+    };
+    const [manageFiles, setManageFiles] = useState(false);
+    const toggleManageFiles = () => {
+        setManageFiles(!manageFiles);
+    };
 
     //data sets
     const [tones] = useState([
@@ -88,9 +108,7 @@ const Create = (props: Prop) => {
              <div className={`flex p-24 flex-col`} style={{ width: pxToVw(686), height: pxToVw(748), justifyContent: "center", alignItems: "center" }}>
                 <Button
                     type="default"
-                    onClick={() => {
-
-                    }}
+                    onClick={toggleChangeNumber}
                     className={`w-273 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
                 >
                     <div style={{ fontFamily: "PingFang SC Regular" }}>{t('Change Number')}</div>
@@ -130,34 +148,48 @@ const Create = (props: Prop) => {
                 </div>
             </div>
             <div className="w-px bg-[#F3F3F3]"></div> {/* Vertical line */}
-            <div className={`flex p-24 flex-col`} style={{ width: pxToVw(686), height: pxToVw(748), justifyContent: "center", alignItems: "center"  }}>
+            <div className={`flex p-24 flex-col`} style={{ width: pxToVw(686), height: pxToVw(748), justifyContent: "center", alignItems: "center", paddingBottom: pxToVw(72)  }}>
                 <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(24) }}>{ t('Your Active Chatbots') }</div>
                 <div style={{ fontFamily: "PingFang SC Regular", fontSize: pxToVw(14), color: "#545B65" }}>{ t('Your Active Chatbots on social media') }</div>
                 <div className='flex flex-row mt-70'>
 
-                    <div className='flex flex-col'>
-                        <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center", borderColor: "#4F6BE8" }}>
-                            <Icon name={'whatsapp'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
+                    <div className='flex flex-col items-center'>
+                        <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center", borderColor: whatsappActive ? "#4F6BE8" : "" }}>
+                            <Icon name={whatsappActive ? 'whatsapp' : 'whatsapp_offline'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
                             <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Whatsapp') }</div>
                         </div>
-                        <Switch defaultChecked />
+                        <Switch checked={whatsappActive} onChange={setWhatsappActive} style={!whatsappActive ? { opacity: 0.6 } : {}} />
+                        <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>{whatsappActive ? "Active" : "Inactive"}</div>
                     </div>
 
-
-                    <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center" }}>
-                        <Icon name={'instagram'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
-                        <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Instagram') }</div>
+                    <div className='flex flex-col items-center'>
+                        <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center" }}>
+                            <Icon name={'instagram'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
+                            <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Instagram') }</div>
+                        </div>
+                        <Switch disabled={true} />
+                        <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>Coming Soon</div>
+                    </div>
+                    
+                    <div className='flex flex-col items-center'>
+                        <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center" }}>
+                            <Icon name={'telegram'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
+                            <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Telegram') }</div>
+                        </div>
+                        <Switch disabled={true} />
+                        <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>Coming Soon</div>
                     </div>
 
-                    <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center" }}>
-                        <Icon name={'telegram'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
-                        <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Telegram') }</div>
+                    <div className='flex flex-col items-center'>
+                        <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center" }}>
+                            <Icon name={'facebook'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
+                            <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Facebook') }</div>
+                            <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>Coming Soon</div>
+                        </div>
+                        <Switch disabled={true} />
+                        <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>Coming Soon</div>
                     </div>
 
-                    <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center" }}>
-                        <Icon name={'facebook'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
-                        <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Facebook') }</div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -301,6 +333,8 @@ const Create = (props: Prop) => {
 
       </div>
     }
+        {/* Modals Import */}
+        <ChangeNumber  t={t} changeNumber={changeNumber} toggleChangeNumber={toggleChangeNumber} />
     </div>
   </>
 }

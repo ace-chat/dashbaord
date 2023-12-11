@@ -115,7 +115,7 @@ const Create = (props: Prop) => {
                 </Button>
                 <div className='mt-20'>
                     <Button
-                        type="default"
+                        type="default" 
                         onClick={() => {
 
                         }}
@@ -158,7 +158,7 @@ const Create = (props: Prop) => {
                             <Icon name={whatsappActive ? 'whatsapp' : 'whatsapp_offline'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
                             <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Whatsapp') }</div>
                         </div>
-                        <Switch checked={whatsappActive} onChange={setWhatsappActive} style={!whatsappActive ? { opacity: 0.6 } : {}} />
+                        <Switch size='small' checked={whatsappActive} onChange={setWhatsappActive} style={!whatsappActive ? { opacity: 0.6 } : {}} />
                         <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>{whatsappActive ? "Active" : "Inactive"}</div>
                     </div>
 
@@ -167,7 +167,7 @@ const Create = (props: Prop) => {
                             <Icon name={'instagram'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
                             <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Instagram') }</div>
                         </div>
-                        <Switch disabled={true} />
+                        <Switch size='small' disabled={true} />
                         <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>Coming Soon</div>
                     </div>
                     
@@ -176,7 +176,7 @@ const Create = (props: Prop) => {
                             <Icon name={'telegram'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
                             <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Telegram') }</div>
                         </div>
-                        <Switch disabled={true} />
+                        <Switch size='small' disabled={true} />
                         <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>Coming Soon</div>
                     </div>
 
@@ -184,9 +184,8 @@ const Create = (props: Prop) => {
                         <div className='flex social-div flex-col' style={{ justifyContent: 'center', alignItems: "center" }}>
                             <Icon name={'facebook'} style={{ 'width': pxToVw(60), 'height': pxToVw(60) }} /> 
                             <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(12), marginTop: pxToVw(4) }}>{ t('Facebook') }</div>
-                            <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>Coming Soon</div>
                         </div>
-                        <Switch disabled={true} />
+                        <Switch size='small' disabled={true} />
                         <div style={{ marginTop: pxToVw(5), fontSize: pxToVw(12), fontFamily: "PingFang SC Regular", textAlign: "center"}}>Coming Soon</div>
                     </div>
 

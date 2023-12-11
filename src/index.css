@@ -76,7 +76,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: "PingFang SC Regular";
-  font-size: 13px;
+  font-size: 13px !important;
 }
 
 .ant-btn:hover{
@@ -93,8 +93,8 @@
 }
 
 .ant-switch-handle{
-  /* width: 12px !important;
-  height: 12px !important; */
+  width: 12px !important;
+  height: 12px !important;
   align-self: center !important;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .ant-switch-checked .ant-switch-handle {
-  /* margin-left: -4px !important;  */
+  margin-left: -4px !important; 
 }
 
 .ant-switch-checked{
@@ -121,7 +121,7 @@
 }
 
 .ant-switch:not(.ant-switch-checked) .ant-switch-handle {
-  /* margin-left: 4px !important;  */
+  margin-left: 4px !important; 
 }
 
 .ant-menu-title-content{
@@ -309,3 +309,11 @@
   top: 0 !important;
   margin-top: 4px !important;
 }
+
+.number_modal{
+  width: 600px !important;
+  height: 500px !important;
+  justify-content: center;
+  padding: 40px 60px !important;
+}
+

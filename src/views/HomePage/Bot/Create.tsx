@@ -9,6 +9,7 @@ import axios from 'axios'
 import { base_url } from '@/utils/constants'
 import { RootState } from '@/store';
 import { ChangeNumber } from '@/components/Modal/ChangeNumber';
+import { VerifyNumber } from '@/components/Modal/Verify';
 
 type Prop = {
   title: string;
@@ -35,6 +36,11 @@ const Create = (props: Prop) => {
     const [companyIntro, setCompanyIntro]: any = useState();
     const [selectedFile, setSelectedFile] = useState();
     const fileInput: any = useRef();
+    const [oldNumber, setOldNumber] = useState({code: null, number: null});
+    const [newNumber, setNewNumber] = useState({code: null, number: null});
+    const [confirmNumber, setConfirmNumber] = useState({code: null, number: null});
+    const [code, setCode] = useState();
+
 
     //modal state controls
     const [changeNumber, setChangeNumber] = useState(false);
@@ -87,6 +93,28 @@ const Create = (props: Prop) => {
         if(companyName && companyIntro && platform && tone && phoneNumber && selectedFile && websiteLinks.length >= 1){
             return false;
         } 
+        else 
+            return true;
+    };
+
+    const checkNumbers = () => {
+        if (
+            oldNumber?.code !== null &&
+            oldNumber?.number !== null &&
+            newNumber?.code !== null &&
+            newNumber?.number !== null &&
+            confirmNumber?.code !== null &&
+            confirmNumber?.number !== null &&
+            oldNumber?.number !== "" &&
+            confirmNumber?.number !== "" &&
+            confirmNumber?.number !== "" 
+        ){
+            //add condition to check if old number matches what is saved in the db 
+            if(JSON.stringify(newNumber) == JSON.stringify(confirmNumber))
+                return false;
+            else
+                return true;
+        }
         else 
             return true;
     };
@@ -333,7 +361,12 @@ const Create = (props: Prop) => {
       </div>
     }
         {/* Modals Import */}
-        <ChangeNumber  t={t} changeNumber={changeNumber} toggleChangeNumber={toggleChangeNumber} />
+        <ChangeNumber  t={t} changeNumber={changeNumber} toggleChangeNumber={toggleChangeNumber} oldNumber={oldNumber} 
+            setOldNumber={setOldNumber} newNumber={newNumber} setNewNumber={setNewNumber} confirmNumber={confirmNumber} setConfirmNumber={setConfirmNumber} checkNumbers={checkNumbers} toggleVerifyNumber={toggleVerifyNumber} />
+    
+        <VerifyNumber t={t} verifyNumber={verifyNumber} toggleVerifyNumber={toggleVerifyNumber} code={code} setCode={setCode} newNumber={newNumber} />
+    
+    
     </div>
   </>
 }

@@ -1,0 +1,62 @@
+import { Button, Input, Modal, Select } from 'antd'
+import { pxToVw } from '@/utils'
+import { useRef, useState } from 'react';
+import Icon from '../Icon/Icon';
+
+export const ManageFiles = ({t, manageFiles, toggleManageFiles, fileInput, handleFileInputChange, selectedFiles}: any) => {
+    return(
+        <Modal
+            className='files_modal'
+            centered
+            open={manageFiles}
+            onCancel={toggleManageFiles}
+            maskClosable={false}
+            footer={() => {
+                return(
+                    <div />
+                )
+            }}
+        >
+            <div className={`flex justify-between`}>
+                <div className={`flex p-24 flex-col`} style={{ width: pxToVw(500), justifyContent: "center" }}>
+                    <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(22) }}>{t("Add More Files")}</div>
+                    <div className={`mt-12`}>
+                        <div className='flex rounded-8 mt-16 justify-center items-center' 
+                        style={{"backgroundColor": "#F4F6FA", "display": "flex", "width": pxToVw(430), "height": pxToVw(293), border: "1px dashed #8B8B8B", flexDirection: "column" }}
+                        onClick={() => fileInput.current.click()}>
+                            <input
+                                type="file"
+                                id="fileInput"
+                                accept=".pdf"
+                                ref={fileInput}
+                                onChange={handleFileInputChange}
+                                style={{ display: "none" }}
+                            />
+                            <Icon name={'upload'} style={{ 'width': pxToVw(22), 'height': pxToVw(22), 'marginTop': pxToVw(5) }} />
+                            <div className={`mt-2`} style={{ color: "#000", opacity: 0.6, fontSize: pxToVw(10), fontFamily: "PingFang SC Light" }}>{ t("Upload more files to knowledge base") }</div>
+                            <div className={`mt-2`} style={{ color: "#000", opacity: 0.6, fontSize: pxToVw(10), fontFamily: "PingFang SC Light" }}>{ t("Drop files here") }</div>
+                        </div> 
+                    </div>
+                    <div className='flex self-center'>
+                        <Button
+                            type="default"
+                            style={{ borderRadius: pxToVw(20), marginTop: pxToVw(30), marginBottom: pxToVw(30) }}
+                            onClick={() => {
+                                toggleManageFiles();
+                            }}
+                            className={`w-120 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 cursor-pointer select-none`}
+                        >
+                            <div className='modal-text'>{t('Submit ✨')}</div>
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="w-px bg-[#F3F3F3]"></div>
+
+                <div className={`flex p-24 flex-col`} style={{ width: pxToVw(500), justifyContent: "center" }}>
+                    <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(22) }}>{t("Existing Files")}</div>
+                </div>
+            </div>
+      </Modal>
+    )
+};

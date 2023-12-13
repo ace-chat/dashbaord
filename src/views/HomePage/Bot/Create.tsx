@@ -10,6 +10,7 @@ import { base_url } from '@/utils/constants'
 import { RootState } from '@/store';
 import { ChangeNumber } from '@/components/Modal/ChangeNumber';
 import { VerifyNumber } from '@/components/Modal/Verify';
+import { ManageFiles } from '@/components/Modal/ManageFiles';
 
 type Prop = {
   title: string;
@@ -34,13 +35,12 @@ const Create = (props: Prop) => {
     const [platform, setPlatform]: any = useState();
     const [phoneNumber, setPhoneNumber]: any = useState();
     const [companyIntro, setCompanyIntro]: any = useState();
-    const [selectedFile, setSelectedFile] = useState();
+    const [selectedFiles, setSelectedFiles]: any = useState([]);
     const fileInput: any = useRef();
     const [oldNumber, setOldNumber] = useState({code: null, number: null});
     const [newNumber, setNewNumber] = useState({code: null, number: null});
     const [confirmNumber, setConfirmNumber] = useState({code: null, number: null});
     const [code, setCode] = useState();
-
 
     //modal state controls
     const [changeNumber, setChangeNumber] = useState(false);
@@ -80,17 +80,17 @@ const Create = (props: Prop) => {
     const handleFileInputChange = (e: any) => {
         const chosenFile = e.target.files[0];
         if (chosenFile) {
-            setSelectedFile(chosenFile);
+            setSelectedFiles((prevFiles: any) => [...prevFiles, chosenFile]);
             console.log('Selected File:', chosenFile);
             const { name, size, type } = chosenFile;
             console.log('File Details:', { name, size, type });
-
+            fileInput.current = null;
             // Handle the file as needed (e.g., upload to server)
         }
     };
 
     const validate = () => {
-        if(companyName && companyIntro && platform && tone && phoneNumber && selectedFile && websiteLinks.length >= 1){
+        if(companyName && companyIntro && platform && tone && phoneNumber && selectedFiles.length > 0 && websiteLinks.length >= 1){
             return false;
         } 
         else 
@@ -144,9 +144,7 @@ const Create = (props: Prop) => {
                 <div className='mt-20'>
                     <Button
                         type="default" 
-                        onClick={() => {
-
-                        }}
+                        onClick={toggleManageFiles}
                         className={`w-273 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
                     >
                         <div style={{ fontFamily: "PingFang SC Regular" }}>{t('Manage Uploaded Files')}</div>
@@ -363,9 +361,9 @@ const Create = (props: Prop) => {
         {/* Modals Import */}
         <ChangeNumber  t={t} changeNumber={changeNumber} toggleChangeNumber={toggleChangeNumber} oldNumber={oldNumber} 
             setOldNumber={setOldNumber} newNumber={newNumber} setNewNumber={setNewNumber} confirmNumber={confirmNumber} setConfirmNumber={setConfirmNumber} checkNumbers={checkNumbers} toggleVerifyNumber={toggleVerifyNumber} />
-    
+
         <VerifyNumber t={t} verifyNumber={verifyNumber} toggleVerifyNumber={toggleVerifyNumber} code={code} setCode={setCode} newNumber={newNumber} />
-    
+        <ManageFiles t={t} manageFiles={manageFiles} toggleManageFiles={toggleManageFiles} fileInput={fileInput} handleFileInputChange={handleFileInputChange} selectedFiles={selectedFiles} />
     
     </div>
   </>

@@ -324,10 +324,28 @@
   align-self: center !important;
 }
 
+.qa_modal{
+  width: 1080px !important;
+  /* height: 583px !important; */
+  padding: 40px 60px !important;
+  align-self: center !important;
+}
+
 .input-otp__field{
   /* width: 40px !important;
   height: 30px !important; */
   border-width: 1px;
   border-color: #707070;
+}
+
+.pdf-div{
+  width: 50px;
+  height: 90px;
+  border-radius: 3px;
+  border: 1.5px solid #21A1FE;
+  background: rgba(0, 0, 0, 0.62);
+  justify-content: center;
+  align-items: center;
+  position: absolute;
 }
 

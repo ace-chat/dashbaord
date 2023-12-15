@@ -11,6 +11,7 @@ import { RootState } from '@/store';
 import { ChangeNumber } from '@/components/Modal/ChangeNumber';
 import { VerifyNumber } from '@/components/Modal/Verify';
 import { ManageFiles } from '@/components/Modal/ManageFiles';
+import { QA } from '@/components/Modal/QA';
 
 type Prop = {
   title: string;
@@ -41,6 +42,7 @@ const Create = (props: Prop) => {
     const [newNumber, setNewNumber] = useState({code: null, number: null});
     const [confirmNumber, setConfirmNumber] = useState({code: null, number: null});
     const [code, setCode] = useState();
+    const [qAPairs, setQAPairs] = useState([]);
 
     //modal state controls
     const [changeNumber, setChangeNumber] = useState(false);
@@ -78,14 +80,22 @@ const Create = (props: Prop) => {
     ]);
 
     const handleFileInputChange = (e: any) => {
-        const chosenFile = e.target.files[0];
-        if (chosenFile) {
-            setSelectedFiles((prevFiles: any) => [...prevFiles, chosenFile]);
-            console.log('Selected File:', chosenFile);
-            const { name, size, type } = chosenFile;
+        const chosenFiles = e.target.files;
+        if (chosenFiles.length > 0) {
+          // Convert the FileList to an array
+          const filesArray = Array.from(chosenFiles);
+      
+          // Update the selectedFiles array with the new files
+          setSelectedFiles((prevFiles: any) => [...prevFiles, ...filesArray]);
+      
+          // Log file details
+          filesArray.forEach((file: any) => {
+            const { name, size, type } = file;
             console.log('File Details:', { name, size, type });
-            fileInput.current = null;
-            // Handle the file as needed (e.g., upload to server)
+          });
+      
+          // Reset the file input
+          fileInput.current.value = '';
         }
     };
 
@@ -154,7 +164,7 @@ const Create = (props: Prop) => {
                     <Button
                         type="default"
                         onClick={() => {
-
+                            toggleQA();
                         }}
                         className={`w-273 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
                     >
@@ -318,6 +328,7 @@ const Create = (props: Prop) => {
                     onClick={() => fileInput.current.click()}>
                     <input
                         type="file"
+                        multiple={true}
                         id="fileInput"
                         accept=".pdf"
                         ref={fileInput}
@@ -364,7 +375,7 @@ const Create = (props: Prop) => {
 
         <VerifyNumber t={t} verifyNumber={verifyNumber} toggleVerifyNumber={toggleVerifyNumber} code={code} setCode={setCode} newNumber={newNumber} />
         <ManageFiles t={t} manageFiles={manageFiles} toggleManageFiles={toggleManageFiles} fileInput={fileInput} handleFileInputChange={handleFileInputChange} selectedFiles={selectedFiles} />
-    
+        <QA t={t} qA={qA} toggleQA={toggleQA} qAPairs={qAPairs} setQAPairs={setQAPairs} />
     </div>
   </>
 }

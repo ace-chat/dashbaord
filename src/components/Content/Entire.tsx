@@ -3,7 +3,7 @@ import { Select, Input, InputNumber } from 'antd'
 import { pxToVw } from '@/utils'
 
 export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, brandVoice, setBrandVoice, minAge, setMinAge, maxAge, setMaxAge, wordCount, setWordCount, 
-    details, setDetails, languages, language, setLanguage, types, type, setType}: any) => {
+    details, setDetails, languages, language, setLanguage, types, type, setType, toggleCreateBrandVoice}: any) => {
     return(
         <>
         <div>
@@ -35,7 +35,10 @@ export const EntireComp=({t, text, setText, tones, tone, setTone, brandVoices, b
                   value={brandVoice} onSelect={(value) => setBrandVoice(value)}
                   optionRender={(node) => {
                     return (
-                      <div className={`flex items-center justify-between`}>
+                      <div className={`flex items-center justify-between`}
+                        onClick={() => {
+                          node.value == "new" ? toggleCreateBrandVoice() : null;
+                        }}>
                         <span>{node.label}</span>
                         {node.value !== "none" &&
                           <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />

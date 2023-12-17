@@ -1,15 +1,8 @@
-import { Button, Input, Modal, Select } from 'antd'
+import { Button, Modal } from 'antd'
 import { pxToVw } from '@/utils'
-import { useRef, useState } from 'react';
 import Icon from '../Icon/Icon';
 
-export const ManageFiles = ({t, manageFiles, toggleManageFiles, fileInput, handleFileInputChange, selectedFiles}: any) => {
-    const [selectedFile, setSelectedFile] = useState(null);
-
-    const handleFileClick = (index: any) => {
-      setSelectedFile(index);
-    };
-
+export const ManageFiles = ({t, manageFiles, toggleManageFiles, fileInput, handleFileInputChange, selectedFiles, deleteFile}: any) => {
     return(
         <Modal
             className='files_modal'
@@ -78,19 +71,23 @@ export const ManageFiles = ({t, manageFiles, toggleManageFiles, fileInput, handl
                         >
                             {selectedFiles.map((file: any, index: number) => {
                             return (
-                                <>
-                                <div className='flex flex-col items-center pdf-div' key={index} style={{ marginTop: pxToVw(10), alignSelf: "self-start", paddingLeft: pxToVw(10), position: 'relative' }}>
+                                <div style={{ position: "relative" }}>
+                                <div className='flex flex-col items-center' key={index} style={{ marginTop: pxToVw(10), alignSelf: "self-start", paddingLeft: pxToVw(10), position: 'relative' }}>
+                                    <div className='ellipse'onClick={() => deleteFile(index)}>
+                                        {/* <Icon name='remove' style={{ width: pxToVw(5), height: pxToVw(5) }} /> */}
+                                    </div>
                                     <Icon name='pdf' style={{ width: pxToVw(45), height: pxToVw(45), alignSelf: "center" }} />
-                                    <div style={{ 
+                                    <div className='text' style={{ 
                                         fontFamily: "PingFang SC Medium", 
                                         fontSize: pxToVw(6), color: "#818181", 
                                         marginTop: pxToVw(5), width: pxToVw(35), height: pxToVw(30), 
-                                        textAlign: "center" }}
+                                        textAlign: "center",
+                                    }}
                                     >
                                         {file?.name}
                                     </div>
                                 </div>
-                                </>
+                                </div>
                             );
                             })}
                         </div> 

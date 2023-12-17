@@ -4,9 +4,11 @@ import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
 import { Button, message } from 'antd'
 import { pxToVw } from '@/utils'
+import React from 'react';
+import Plot from 'react-plotly.js';
 
 import axios from 'axios'
-import { base_url } from '@/utils/constants'
+import { upload_url } from '@/utils/constants'
 import { RootState } from '@/store';
 
 type Prop = {
@@ -21,7 +23,7 @@ const Simple = (props: Prop) => {
   const { token } = useSelector((state: RootState) => state.token)
   const [loading, setLoading] = useState(false);
 
-  const [generatedText, setGeneratedText] = useState("");
+  const [generatedResult, setGeneratedResult] = useState();
 
   const [history] = useState([
     { key: '1', time: 'Today', children: [
@@ -49,6 +51,32 @@ const Simple = (props: Prop) => {
     }
   };
 
+  const generate = async() => {
+    const formData: any = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      setLoading(true);
+      const response = await axios.post(`${upload_url}`, formData, {
+        headers: {
+          // 'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      if(response.data.code == 200){ 
+        setLoading(false);
+        setGeneratedResult(response.data);
+      }
+      else{
+        setLoading(false);
+        message.error(JSON.stringify(response.data));
+      }
+    } catch (error: any) {
+      setLoading(false);
+      message.error(error.message)
+    } 
+  };
+
   return <>
     <div className={`flex flex-col`}>
       <div className='flex flex-row mt-14' style={{ marginLeft: pxToVw(29) }}>
@@ -60,6 +88,9 @@ const Simple = (props: Prop) => {
       <div className={`text-[#545B65] mt-4`} style={{ marginLeft: pxToVw(29), fontFamily: "PingFang SC Light", fontSize: pxToVw(14) }}>{ t("Get your data all set with our simple analytics tool. Just a click away.") }</div>
     </div>
     <div className={`bg-white rounded-8 mt-14`} style={{ width: pxToVw(1389), marginLeft: pxToVw(29), boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
+      {generatedResult ? 
+        null
+      :
       <div className={`flex justify-around`}>
         <div className={`w-300 p-24`} style={{ fontFamily: "PingFang SC Regular" }}>
 
@@ -94,7 +125,7 @@ const Simple = (props: Prop) => {
               loading={loading}
               disabled={selectedFile ? false : true}
               onClick={() => {
-
+                generate()
               }}
               className={`w-251 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
             >
@@ -103,47 +134,14 @@ const Simple = (props: Prop) => {
           </div>
 
         </div>
-          
-        {generatedText.length == 0 ? 
-          <div>
-            <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
-              <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
-              <p className="text-18 text-[#C4C4C4] mt-14" style={{ fontFamily: "PingFang SC Light" }}>{t("Let's Get Started!")}</p>
-              <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{ fontFamily: "PingFang SC Light", textAlign: "center", width: pxToVw(573) }}>{t("Upload your sales or user data (preferably a .csv file) of your business and generate aggregation charts, correlation analysis charts and interpretations.")}</p>
-            </div>
-          </div>
-        :
-        <div>
-          <div className={`items-start justify-between rounded-10 mt-14 p-14`} style={{ backgroundColor: "#F6F7F8", 'width': pxToVw(682), 'height': pxToVw(750), display: 'flex', flexDirection: 'column' }}>
-            <div className="scrollable-content" style={{ flex: 1, maxHeight: "100%", overflowY: "auto"}}>
-              <div className='pl-4'>
-                {generatedText.split('\n').map((paragraph, index) => {
-                  return(
-                    <p key={index} className={`leading-normal text-12 pr-16 mt-16`} style={{ fontFamily: "PingFang SC Regular", width: pxToVw(682) }}>
-                      {paragraph}
-                    </p>
-                  )
-                })}
-              </div>    
-            </div>
 
-            <div className={`flex items-center justify-end mt-24 self-end`}>
-              <div className={`w-78 flex items-center justify-between`}>
-                <div className={`cursor-pointer`}>
-                  <Icon name={'copied'} style={{ 'width': pxToVw(15), 'height': pxToVw(15) }} />
-                </div>
-                <div className={`cursor-pointer`}>
-                  <Icon name={'good'} style={{ 'width': pxToVw(15), 'height': pxToVw(15) }} />
-                </div>
-                <div className={`cursor-pointer`}>
-                  <Icon name={'poor'} style={{ 'width': pxToVw(15), 'height': pxToVw(15) }} />
-                </div>
-              </div>
-            </div>
+        <div>
+          <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
+            <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
+            <p className="text-18 text-[#C4C4C4] mt-14" style={{ fontFamily: "PingFang SC Light" }}>{t("Let's Get Started!")}</p>
+            <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{ fontFamily: "PingFang SC Light", textAlign: "center", width: pxToVw(573) }}>{t("Upload your sales or user data (preferably a .csv file) of your business and generate aggregation charts, correlation analysis charts and interpretations.")}</p>
           </div>
         </div>
-      }
-
 
         <div className={`w-289 p-24 h-821`}>
           <div className={`text-12`} style={{ fontFamily: "PingFang SC Bold" }} >{ t('History') }</div>
@@ -168,6 +166,7 @@ const Simple = (props: Prop) => {
           </div>
         </div>
       </div>
+    }
     </div>
   </>
 }

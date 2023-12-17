@@ -21,7 +21,7 @@ const Deep = (props: Prop) => {
   const { token } = useSelector((state: RootState) => state.token)
   const [loading, setLoading] = useState(false);
 
-  const [generatedText, setGeneratedText] = useState("");
+  const [generatedResult, setGeneratedResult] = useState();
 
   const [history] = useState([
     { key: '1', time: 'Today', children: [
@@ -173,9 +173,9 @@ const Deep = (props: Prop) => {
 
         </div>
           
-        {generatedText.length == 0 ? 
+        {!generatedResult ? 
           <div>
-            <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
+            <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center'}}>
               <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
               <p className="text-18 text-[#C4C4C4] mt-14" style={{ fontFamily: "PingFang SC Light" }}>{t("Let's Get Started!")}</p>
               <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{ fontFamily: "PingFang SC Light", textAlign: "center", width: pxToVw(573) }}>{t("Upload your sales or user data (preferably a .csv file) of your business and fill in other sections and we will generate a comprehensive report for you that contains appropriate charts, interpretations, and potential business actions.")}</p>
@@ -183,31 +183,26 @@ const Deep = (props: Prop) => {
           </div>
         :
         <div>
-          <div className={`items-start justify-between rounded-10 mt-14 p-14`} style={{ backgroundColor: "#F6F7F8", 'width': pxToVw(682), 'height': pxToVw(750), display: 'flex', flexDirection: 'column' }}>
-            <div className="scrollable-content" style={{ flex: 1, maxHeight: "100%", overflowY: "auto"}}>
-              <div className='pl-4'>
-                {generatedText.split('\n').map((paragraph, index) => {
-                  return(
-                    <p key={index} className={`leading-normal text-12 pr-16 mt-16`} style={{ fontFamily: "PingFang SC Regular", width: pxToVw(682) }}>
-                      {paragraph}
-                    </p>
-                  )
-                })}
-              </div>    
-            </div>
-
-            <div className={`flex items-center justify-end mt-24 self-end`}>
-              <div className={`w-78 flex items-center justify-between`}>
-                <div className={`cursor-pointer`}>
-                  <Icon name={'copied'} style={{ 'width': pxToVw(15), 'height': pxToVw(15) }} />
-                </div>
-                <div className={`cursor-pointer`}>
-                  <Icon name={'good'} style={{ 'width': pxToVw(15), 'height': pxToVw(15) }} />
-                </div>
-                <div className={`cursor-pointer`}>
-                  <Icon name={'poor'} style={{ 'width': pxToVw(15), 'height': pxToVw(15) }} />
-                </div>
+          <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center'}}>
+            <Icon name={'pdf'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
+            <div className='flex flex-row mt-14' style={{ display: "flex", flexDirection: "row", alignItems: "center"}}>
+              <p className="text-18 text-[#C4C4C4]" style={{ fontFamily: "PingFang SC Light" }}>{t("Your file is ready")}</p>
+              <div style={{ marginLeft: pxToVw(5) }}>
+                <Icon name={"checkmark"} style={{ width: pxToVw(15), height: pxToVw(15) }} />
               </div>
+            </div>
+            <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{ fontFamily: "PingFang SC Light", textAlign: "center", width: pxToVw(573) }}>{t("Thank you for your patience. Our experts have prepared a deep analysis of your data based on the service you chose. Please download the report by clicking on the button below.")}</p>
+            <div className={`mt-20`}>
+              <Button
+                type="default"
+                loading={loading}
+                onClick={() => {
+
+                }}
+                className={`w-167 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 text-14 cursor-pointer select-none`}
+              >
+                <div className='download-text' style={{ fontFamily: "PingFang SC Regular" }}>{t('Download')}</div>
+              </Button>
             </div>
           </div>
         </div>

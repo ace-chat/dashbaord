@@ -2,7 +2,7 @@ import Icon from '@/components/Icon/Icon.tsx'
 import { Select, Input } from 'antd'
 import { pxToVw } from '@/utils'
 
-export const ToneComp = ({t, tag, text, setText, tones, tone, setTone, brandVoices, brandVoice, setBrandVoice, languages, language, setLanguage}: any) => {
+export const ToneComp = ({t, tag, text, setText, tones, tone, setTone, brandVoices, brandVoice, setBrandVoice, languages, language, setLanguage, toggleCreateBrandVoice}: any) => {
     return(
         <>
             <div>
@@ -31,7 +31,10 @@ export const ToneComp = ({t, tag, text, setText, tones, tone, setTone, brandVoic
                 value={brandVoice} onSelect={(value) => setBrandVoice(value)}
                 optionRender={(node) => {
                   return (
-                    <div className={`flex items-center justify-between`}>
+                    <div className={`flex items-center justify-between`}
+                      onClick={() => {
+                        node.value == "new" ? toggleCreateBrandVoice() : null;
+                      }}>
                       <span style={{ fontFamily: "PingFang SC Regular" }}>{node.label}</span>
                       {node.value !== "none" &&
                         <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />

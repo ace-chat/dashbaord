@@ -3,7 +3,7 @@ import { Select, Input, InputNumber } from 'antd'
 import { pxToVw } from '@/utils'
 
 export const AdsComp = ({t, platforms, platform, countries, setPlatform, brandName, setBrandName, productName, setProductName, productDesc, setProdDesc, tones, tone, setTone, brandVoices, brandVoice, setBrandVoice, 
-    country, setCountry, genders, gender, setGender, minAge, setMinAge, maxAge, setMaxAge, languages, language, setLanguage}: any) => {
+    country, setCountry, genders, gender, setGender, minAge, setMinAge, maxAge, setMaxAge, languages, language, setLanguage, toggleCreateBrandVoice}: any) => {
     return(
       <>
       <div>
@@ -53,7 +53,10 @@ export const AdsComp = ({t, platforms, platform, countries, setPlatform, brandNa
                 value={brandVoice} onSelect={(value) => setBrandVoice(value)}
                 optionRender={(node) => {
                   return (
-                    <div className={`flex items-center justify-between`}>
+                    <div className={`flex items-center justify-between`}
+                      onClick={() => {
+                        node.value == "new" ? toggleCreateBrandVoice() : null;
+                      }}>
                       <span style={{ fontFamily: "PingFang SC Regular"}}>{node.label}</span>
                       {node.value !== "none" &&
                         <Icon name={node.value == "new" ? 'add' : 'trash'} style={{ 'width': pxToVw(8), 'height': pxToVw(8) }} />
@@ -75,7 +78,7 @@ export const AdsComp = ({t, platforms, platform, countries, setPlatform, brandNa
               <div>
                 <Select placeholder={t('Region (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={countries} value={country} onSelect={(value) => setCountry(value)}/>
               </div>
-              <div className={`my-12`}>
+              <div className={`mt-12`}>
                 <Select placeholder={t('Gender (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={genders} value={gender} onSelect={(value) => setGender(value)} />
               </div>
               <div className={`flex items-center justify-between`}>

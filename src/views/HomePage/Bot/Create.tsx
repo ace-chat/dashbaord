@@ -26,7 +26,7 @@ const Create = (props: Prop) => {
     const [loading, setLoading] = useState(false);
 
     const [whatsappActive, setWhatsappActive] = useState(true);
-    const [generatedBot, setGeneratedBot]: any = useState("fsidh");
+    const [generatedBot, setGeneratedBot]: any = useState();
 
     //state variables
     const [websiteLinks, setWebsiteLinks]:any = useState([]);
@@ -42,7 +42,7 @@ const Create = (props: Prop) => {
     const [newNumber, setNewNumber] = useState({code: null, number: null});
     const [confirmNumber, setConfirmNumber] = useState({code: null, number: null});
     const [code, setCode] = useState();
-    const [qAPairs, setQAPairs] = useState([]);
+    const [qAPairs, setQAPairs] = useState([{question: "", answer: ""}]);
 
     //modal state controls
     const [changeNumber, setChangeNumber] = useState(false);
@@ -127,6 +127,14 @@ const Create = (props: Prop) => {
         }
         else 
             return true;
+    };
+
+    const deleteFile = (index: any) => {
+        var uploadedFiles =[ ...selectedFiles];
+        uploadedFiles = uploadedFiles.filter((_, ind): any => {
+            return index !== ind;
+        });
+        setSelectedFiles(uploadedFiles);
     };
 
   return <>
@@ -372,9 +380,8 @@ const Create = (props: Prop) => {
         {/* Modals Import */}
         <ChangeNumber  t={t} changeNumber={changeNumber} toggleChangeNumber={toggleChangeNumber} oldNumber={oldNumber} 
             setOldNumber={setOldNumber} newNumber={newNumber} setNewNumber={setNewNumber} confirmNumber={confirmNumber} setConfirmNumber={setConfirmNumber} checkNumbers={checkNumbers} toggleVerifyNumber={toggleVerifyNumber} />
-
         <VerifyNumber t={t} verifyNumber={verifyNumber} toggleVerifyNumber={toggleVerifyNumber} code={code} setCode={setCode} newNumber={newNumber} />
-        <ManageFiles t={t} manageFiles={manageFiles} toggleManageFiles={toggleManageFiles} fileInput={fileInput} handleFileInputChange={handleFileInputChange} selectedFiles={selectedFiles} />
+    <ManageFiles t={t} manageFiles={manageFiles} toggleManageFiles={toggleManageFiles} fileInput={fileInput} handleFileInputChange={handleFileInputChange} selectedFiles={selectedFiles} deleteFile={deleteFile} />
         <QA t={t} qA={qA} toggleQA={toggleQA} qAPairs={qAPairs} setQAPairs={setQAPairs} />
     </div>
   </>

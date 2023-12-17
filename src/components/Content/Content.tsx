@@ -18,6 +18,7 @@ import { EntireComp } from './Entire'
 import axios from 'axios'
 import { base_url } from '@/utils/constants'
 import { RootState } from '@/store';
+import { CreateBrandVoice } from '../Modal/CreateBrandVoice';
 
 type Prop = {
   title: string;
@@ -30,6 +31,15 @@ const Content = (props: Prop) => {
   const { t } = useTranslation()
   const { token } = useSelector((state: RootState) => state.token)
   const [loading, setLoading] = useState(false);
+
+  //modal for creating brand voice 
+  const [createBrandVoice, setCreateBrandVoice] = useState(false);
+  const toggleCreateBrandVoice = () => {
+    setCreateBrandVoice(!createBrandVoice);
+  };
+  const [brandVoiceText, setBrandVoiceText] = useState();
+  const [brandVoiceTitle, setBrandVoiceTitle] = useState();
+
 
   const [countries, setCountries] = useState([]);
   const [brandVoices, setBrandVoices] = useState([
@@ -111,8 +121,8 @@ const Content = (props: Prop) => {
 
     if(props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds"){
       formData.append('brand_name', brandName);
-      formData.append('service_name', productName);
       formData.append('service_desc', productDesc);
+      formData.append('brand_desc', brandDesc);
       formData.append('tones', tone);
       //optional
       if(brandVoice)
@@ -125,6 +135,8 @@ const Content = (props: Prop) => {
         formData.append('min_age', minAge);
       if(maxAge)
         formData.append('max_age', maxAge);
+      if(productName)
+        formData.append('service_name', productName);
     }
 
     if(props.tag == "intro" || props.tag == "outline"){
@@ -331,6 +343,7 @@ const Content = (props: Prop) => {
   const [brandName, setBrandName]: any = useState();
   const [productName, setProductName]: any = useState();
   const [productDesc, setProdDesc]: any = useState();
+  const [brandDesc, setBrandDesc]: any = useState();
   const [tone, setTone]: any = useState();
   const [brandVoice, setBrandVoice]: any = useState();
   const [country, setCountry]: any = useState();
@@ -378,7 +391,7 @@ const Content = (props: Prop) => {
     }
     //cold marketing, welcome and odds email validation
     if(props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds"){
-      if(brandName && productName && productDesc && tone && language){
+      if(brandName && productDesc && brandDesc && tone && language){
         return false;
       } else {
         return true;
@@ -409,7 +422,6 @@ const Content = (props: Prop) => {
 
       if(response.data.code == 200){ //request success
         setLoading(false);
-        console.log(response.data.data.text, "--text")
         setGeneratedText(response.data.data.text);
       }
     } catch (error: any) {
@@ -460,6 +472,7 @@ const Content = (props: Prop) => {
               setMaxAge={setMaxAge}
               language={language} 
               setLanguage={setLanguage}
+              toggleCreateBrandVoice={toggleCreateBrandVoice}
             />
           }
           {(props.tag == "tone" || props.tag == "brandvoice") && 
@@ -473,6 +486,7 @@ const Content = (props: Prop) => {
                 setBrandVoice={setBrandVoice}
                 language={language} 
                 setLanguage={setLanguage}
+                toggleCreateBrandVoice={toggleCreateBrandVoice}
             />
           }
           {props.tag == "summarize" && 
@@ -536,6 +550,9 @@ const Content = (props: Prop) => {
               setMaxAge={setMaxAge}
               language={language} 
               setLanguage={setLanguage}
+              brandDesc={brandDesc}
+              setBrandDesc={setBrandDesc}
+              toggleCreateBrandVoice={toggleCreateBrandVoice}
             />
           }
           
@@ -554,6 +571,7 @@ const Content = (props: Prop) => {
               setMaxAge={setMaxAge}
               language={language} 
               setLanguage={setLanguage}
+              toggleCreateBrandVoice={toggleCreateBrandVoice}
             />
           }
 
@@ -579,6 +597,7 @@ const Content = (props: Prop) => {
               types={types}
               type={type}
               setType={setType}
+              toggleCreateBrandVoice={toggleCreateBrandVoice}
             />
           }
 
@@ -636,7 +655,6 @@ const Content = (props: Prop) => {
         </div>
       }
 
-
         <div className={`w-289 p-24 h-821`}>
           <div className={`text-12`} style={{ fontFamily: "PingFang SC Bold" }} >{ t('History') }</div>
           <div className={`mt-24 scrollable-content`}>
@@ -659,6 +677,9 @@ const Content = (props: Prop) => {
             }
           </div>
         </div>
+
+        <CreateBrandVoice t={t} createBrandVoice={createBrandVoice} toggleCreateBrandVoice={toggleCreateBrandVoice}  brandVoiceText={brandVoiceText} setBrandVoiceText={setBrandVoiceText}
+          brandVoiceTitle={brandVoiceTitle} setBrandVoiceTitle={setBrandVoiceTitle} setBrandVoices={setBrandVoices} />
       </div>
     </div>
   </>

@@ -1,6 +1,5 @@
-import { Button, Input, Modal, Select } from 'antd'
+import { Button, Modal } from 'antd'
 import { pxToVw } from '@/utils'
-import { useState } from 'react';
 import { InputOTP } from 'antd-input-otp';
 
 export const VerifyNumber = ({t, verifyNumber, toggleVerifyNumber, code, setCode, newNumber}: any) => {

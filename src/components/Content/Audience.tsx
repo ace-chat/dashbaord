@@ -25,7 +25,7 @@ export const AudienceComp = ({t, text, countries, setText, country, setCountry, 
                 <div>
                   <Select placeholder={t('Region (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={countries} value={country} onSelect={(value) => setCountry(value)} />
                 </div>
-                <div className={`my-12`}>
+                <div className={`mt-12`}>
                   <Select placeholder={t('Gender (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={genders} value={gender} onSelect={(value) => setGender(value)} />
                 </div>
                 <div className={`flex items-center justify-between`}>

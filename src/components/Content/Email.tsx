@@ -15,22 +15,22 @@ export const EmailComp = ({t, tag, text, countries, setText, brandName, setBrand
   
               <div className={`mt-12`}>
                   {tag == "freestyle" ?
-                  <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type here')} value={text} onChange={(e) => setText(e.target.value)}/>
+                  <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
                 :
                   <>
                     <div>
-                      <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type brand name')} value={brandName} onChange={(e) => setBrandName(e.target.value)} />
+                      <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type Brand Name')} value={brandName} onChange={(e) => setBrandName(e.target.value)} />
                     </div>
                     <div className={`mt-12`}>
-                      <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type service/product name (Optional)')} value={productName} onChange={(e) => setProductName(e.target.value)} />
-                    </div>
-                    <div className={`mt-12`}>
-                      <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10) } }} placeholder={t('Service/product description')} 
-                        value={productDesc} onChange={(e) => setProdDesc(e.target.value)} />
-                    </div>
-                    <div className={`mt-12`}>
-                      <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10) } }} placeholder={t('Brand description')} 
+                      <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10) } }} placeholder={t('Brand Description')} 
                         value={brandDesc} onChange={(e) => setBrandDesc(e.target.value)} />
+                    </div>
+                    <div className={`mt-12`}>
+                      <Input styles={{ input: { width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10) } }} placeholder={t('Type Service/Product Name (Optional)')} value={productName} onChange={(e) => setProductName(e.target.value)} />
+                    </div>
+                    <div className={`mt-12`}>
+                      <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10) } }} placeholder={t('Service/Product Description')} 
+                        value={productDesc} onChange={(e) => setProdDesc(e.target.value)} />
                     </div>
                   </>
                   }
@@ -80,7 +80,7 @@ export const EmailComp = ({t, tag, text, countries, setText, brandName, setBrand
                 <div className={`mt-12`}>
                   <Select placeholder={t('Gender (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={genders} value={gender} onSelect={(value) => setGender(value)} />
                 </div>
-                <div className={`flex items-center justify-between`}>
+                <div className={`flex items-center justify-between mt-12`}>
                   <InputNumber
                     className='w-120 text-10 items-center'
                     style={{ paddingTop: 3, paddingBottom: 3 }}

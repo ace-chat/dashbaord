@@ -12,7 +12,7 @@ export const AudienceComp = ({t, text, countries, setText, country, setCountry, 
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
               <div className={`mt-12`}>
-                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type here')} value={text} onChange={(e) => setText(e.target.value)} />
+                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)} />
               </div>
             </div>
             
@@ -28,7 +28,7 @@ export const AudienceComp = ({t, text, countries, setText, country, setCountry, 
                 <div className={`mt-12`}>
                   <Select placeholder={t('Gender (Optional)')} style={{ width: pxToVw(252), height: pxToVw(36) }} options={genders} value={gender} onSelect={(value) => setGender(value)} />
                 </div>
-                <div className={`flex items-center justify-between`}>
+                <div className={`flex items-center justify-between mt-12`}>
                   <InputNumber
                     className='w-120 text-10 items-center'
                     style={{ paddingTop: 3, paddingBottom: 3 }}

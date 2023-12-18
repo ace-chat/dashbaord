@@ -90,7 +90,7 @@ const Deep = (props: Prop) => {
                     <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
                 </div>
                 <div className={`mt-12`}>
-                    <Input.TextArea styles={{ textarea: { width: pxToVw(335), height: pxToVw(72), fontSize: pxToVw(10) } }} placeholder={t('Type here')} 
+                    <Input.TextArea styles={{ textarea: { width: pxToVw(335), height: pxToVw(72), fontSize: pxToVw(10) } }} placeholder={t('Type Here')} 
                     value={business} onChange={(e) => setBusiness(e.target.value)}
                     />
                 </div>
@@ -103,7 +103,7 @@ const Deep = (props: Prop) => {
                     <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
                 </div>
                 <div className={`mt-12`}>
-                    <Input.TextArea styles={{ textarea: { width: pxToVw(335), height: pxToVw(72), fontSize: pxToVw(10) } }} placeholder={t('Type here')} 
+                    <Input.TextArea styles={{ textarea: { width: pxToVw(335), height: pxToVw(72), fontSize: pxToVw(10) } }} placeholder={t('Type Here')} 
                     value={product} onChange={(e) => setProduct(e.target.value)}
                     />
                 </div>
@@ -116,7 +116,7 @@ const Deep = (props: Prop) => {
                     <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
                 </div>
                 <div className={`mt-12`}>
-                    <Input.TextArea styles={{ textarea: { width: pxToVw(335), height: pxToVw(72), fontSize: pxToVw(10) } }} placeholder={t('Type here')} 
+                    <Input.TextArea styles={{ textarea: { width: pxToVw(335), height: pxToVw(72), fontSize: pxToVw(10) } }} placeholder={t('Type Here')} 
                     value={data} onChange={(e) => setData(e.target.value)}
                     />
                 </div>
@@ -188,7 +188,7 @@ const Deep = (props: Prop) => {
             <div className='flex flex-row mt-14' style={{ display: "flex", flexDirection: "row", alignItems: "center"}}>
               <p className="text-18 text-[#C4C4C4]" style={{ fontFamily: "PingFang SC Light" }}>{t("Your file is ready")}</p>
               <div style={{ marginLeft: pxToVw(5) }}>
-                <Icon name={"checkmark"} style={{ width: pxToVw(15), height: pxToVw(15) }} />
+                <Icon name={"checkmark"} style={{ width: pxToVw(15), height: pxToVw(15), marginTop: pxToVw(2) }} />
               </div>
             </div>
             <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{ fontFamily: "PingFang SC Light", textAlign: "center", width: pxToVw(573) }}>{t("Thank you for your patience. Our experts have prepared a deep analysis of your data based on the service you chose. Please download the report by clicking on the button below.")}</p>

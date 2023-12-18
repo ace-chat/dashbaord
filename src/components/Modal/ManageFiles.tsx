@@ -74,7 +74,7 @@ export const ManageFiles = ({t, manageFiles, toggleManageFiles, fileInput, handl
                                 <div style={{ position: "relative" }}>
                                 <div className='flex flex-col items-center' key={index} style={{ marginTop: pxToVw(10), alignSelf: "self-start", paddingLeft: pxToVw(10), position: 'relative' }}>
                                     <div className='ellipse'onClick={() => deleteFile(index)}>
-                                        {/* <Icon name='remove' style={{ width: pxToVw(5), height: pxToVw(5) }} /> */}
+                                        <Icon name={'remove'} style={{ width: pxToVw(5), height: pxToVw(5) }} />
                                     </div>
                                     <Icon name='pdf' style={{ width: pxToVw(45), height: pxToVw(45), alignSelf: "center" }} />
                                     <div className='text' style={{ 

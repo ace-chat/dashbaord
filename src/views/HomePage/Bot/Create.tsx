@@ -183,7 +183,8 @@ const Create = (props: Prop) => {
                     <Button
                         type="default"
                         onClick={() => {
-
+                            //add delete bot api
+                            setGeneratedBot();
                         }}
                         className={`w-273 h-36 flex items-center justify-center bg-[#EA6969] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
                     >

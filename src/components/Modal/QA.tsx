@@ -37,7 +37,7 @@ export const QA = ({t, qA, toggleQA, qAPairs, setQAPairs}: any) => {
                             <div key={index} style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(14), marginTop: pxToVw(10) }}>{t("Question")+" "+(index + 1)}</div>
                             <div className='flex flex-row' style={{ marginTop: pxToVw(10) }}>
                                 <Input styles={{ input: { width: pxToVw(850), height: pxToVw(40), fontSize: pxToVw(14), backgroundColor: "#F4F6FA", borderWidth: 0 } }} 
-                                    placeholder={t("Type here")} value={pair[index]?.question} 
+                                    placeholder={t("Type Here")} value={pair[index]?.question} 
                                     onChange={(e) => {
                                         const updatedQAPairs = [...qAPairs]; 
                                         updatedQAPairs[index] = { ...updatedQAPairs[index], question: e.target.value }; 
@@ -65,7 +65,7 @@ export const QA = ({t, qA, toggleQA, qAPairs, setQAPairs}: any) => {
                             <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(14), marginTop: pxToVw(10) }}>{t("Answer")+" "+(index + 1)}</div>
                             <div className='flex flex-row' style={{ marginTop: pxToVw(10) }}>
                                 <Input styles={{ input: { width: pxToVw(900), height: pxToVw(40), fontSize: pxToVw(14), backgroundColor: "#FFF",} }} 
-                                    placeholder={t("Type here")} value={pair[index]?.answer} 
+                                    placeholder={t("Type Here")} value={pair[index]?.answer} 
                                     onChange={(e) => {
                                         const updatedQAPairs = [...qAPairs]; 
                                         updatedQAPairs[index] = { ...updatedQAPairs[index], answer: e.target.value }; 

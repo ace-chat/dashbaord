@@ -12,7 +12,7 @@ export const IntroOutlineComp=({t, text, setText, tones, tone, setTone, brandVoi
                 <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
               </div>
               <div className={`mt-12`}>
-                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10) } }} placeholder={t('Type here')} value={text} onChange={(e) => setText(e.target.value)} />
+                <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10) } }} placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)} />
               </div>
             </div>
   

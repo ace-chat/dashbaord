@@ -1,4 +1,6 @@
 <svg width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect x="0.354184" y="1.10352" width="0.575" height="4.7" transform="rotate(-45 0.354184 1.10352)" fill="white" stroke="white" stroke-width="0.2"/>
-<rect x="0.760742" y="4.42658" width="0.575" height="4.7" transform="rotate(-135 0.760742 4.42658)" fill="white" stroke="white" stroke-width="0.2"/>
+<path d="M0.495605 1.10352L0.760771 0.838351L3.94275 4.02033L3.67759 4.2855L0.495605 1.10352Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0.212769 1.10352L0.760776 0.555508L4.2256 4.02033L3.67759 4.56834L0.212769 1.10352ZM0.495611 1.10352L3.67759 4.2855L3.94276 4.02033L0.760776 0.838351L0.495611 1.10352Z" fill="white"/>
+<path d="M0.760742 4.28516L0.495577 4.01999L3.67756 0.838011L3.94272 1.10318L0.760742 4.28516Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0.760742 4.56836L0.212734 4.02035L3.67756 0.555529L4.22556 1.10354L0.760742 4.56836ZM0.760742 4.28552L3.94272 1.10354L3.67756 0.838371L0.495577 4.02035L0.760742 4.28552Z" fill="white"/>
 </svg>

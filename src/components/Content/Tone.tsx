@@ -13,7 +13,7 @@ export const ToneComp = ({t, tag, text, setText, tones, tone, setTone, brandVoic
               </div>
               <div className={`mt-12`}>
                 <Input.TextArea styles={{ textarea: { width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10) } }} 
-                  placeholder={t('Type here')} value={text} onChange={(e) => setText(e.target.value)} />
+                  placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)} />
               </div>
             </div>
             

@@ -8,7 +8,7 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 import axios from 'axios'
-import { upload_url } from '@/utils/constants'
+import { base_url } from '@/utils/constants';
 import { RootState } from '@/store';
 
 type Prop = {
@@ -24,6 +24,7 @@ const Simple = (props: Prop) => {
   const [loading, setLoading] = useState(false);
 
   const [generatedResult, setGeneratedResult] = useState();
+  const [generatedContent, setGeneratedContent] = useState();
 
   const [history] = useState([
     { key: '1', time: 'Today', children: [
@@ -57,24 +58,49 @@ const Simple = (props: Prop) => {
 
     try {
       setLoading(true);
-      const response = await axios.post(`${upload_url}`, formData, {
+      const fileResponse = await axios.post(`${base_url}/common/upload`, formData, {
         headers: {
-          // 'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
-      if(response.data.code == 200){ 
-        setLoading(false);
-        setGeneratedResult(response.data);
-      }
+      if(fileResponse.data.code == 200){
+        getReport(fileResponse.data.data);
+      } 
       else{
         setLoading(false);
-        message.error(JSON.stringify(response.data));
+        message.error(JSON.stringify(fileResponse.data));
       }
     } catch (error: any) {
       setLoading(false);
       message.error(error.message)
     } 
+  };
+
+  const getReport = async (file_name: any) => {
+    const formData: any = new FormData();
+    formData.append('filename', file_name);
+
+    try {
+      const response = await axios.post(`${base_url}/analytics/simple/generator`, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+      });
+      if(response.data.code == 200){ 
+        setLoading(false);
+        setGeneratedResult(JSON.parse(response.data.data));
+        setGeneratedContent(JSON.parse(response.data.data.content))
+      }
+      else{
+        setLoading(false);
+        message.error(JSON.stringify(response.data));
+      } 
+    } catch (error: any) {
+      setLoading(false);
+      message.error(error.message)
+    }
   };
 
   return <>

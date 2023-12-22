@@ -1,77 +1,156 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
 import { pxToVw } from '@/utils'
 import { Button, Input } from 'antd'
 import Avatar from '../../../assets/message_avatar.png'
 
+import { getChatList, getChatHistory, createChatBot, askChatBot } from "@/request"
+import {ChatHistory, ChatHistoryChildren, ChatMessage} from "@/types";
+import moment from "moment-timezone";
+import { cloneDeep } from "lodash-es"
+
 const Chat = () => {
   const { t } = useTranslation()
+  const mg = useRef<null | HTMLDivElement>(null);
+  const [chatId, setChatId] = useState<string>("");
   const [message, setMessage]: any = useState("");
-  const [messages, setMessages]: any = useState([]);
-
-  const [history] = useState([
-    { key: '1', time: 'Today', children: [
-        { key: '1-1', text: 'Borem ipsum dolordict ImahBorem ipsum d' },
-        { key: '1-2', text: 'Borem ipsum dolordict ImahBorem ipsum d' }
-      ] },
-    { key: '2', time: 'Oct, 10st', children: [
-        { key: '2-1', text: 'Borem ipsum dolordict ImahBorem ipsum d' },
-        { key: '2-2', text: 'Borem ipsum dolordict ImahBorem ipsum d' }
-      ] }
-  ]);
+  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
+  const [history, setHistory] = useState<Array<ChatHistory>>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const sendMessage = () => {
-    console.log([...messages, message]);
-    setMessages([...messages, message]);
+    setLoading(true);
+    let m = cloneDeep(messages);
+    m.push({
+      key: Math.random() * 10000,
+      type: "human",
+      content: message,
+      time: moment().local().format(),
+    });
+    setMessages(m)
     setMessage("");
+
+    askChatBot({ id: chatId, content: message }).then(res => {
+      let mCopy = cloneDeep(m);
+      mCopy.push({
+        key: Math.random() * 10000,
+        type: "ai",
+        content: res,
+        time: moment().local().format(),
+      });
+      setMessages(mCopy);
+      setLoading(false);
+    }).catch(() => {
+      setLoading(false);
+    });
+  }
+
+  const create = async () => {
+    let res = await createChatBot();
+    await getHistory(res.chat_id);
+    setMessages([]);
+  }
+
+  const choose = async (id: string) => {
+    await getHistory(id);
+  }
+
+  const getList = async () => {
+    let response: Array<ChatHistoryChildren> = await getChatList();
+
+    let arr: Map<string, Array<ChatHistoryChildren>> = new Map();
+    response.forEach(item => {
+      let time = moment(item.created_at).local().format("MMMM Do YYYY");
+
+      if(arr.has(time)){
+        let a = arr.get(time) || [];
+        a.push(item);
+        arr.set(time, a);
+      }else{
+        arr.set(time, [item])
+      }
+    })
+
+    let a: Array<ChatHistory> = [];
+    arr.forEach((value, key) => {
+      a.push({
+        time: key,
+        children: value,
+      })
+    })
+
+    let realArr = a.reverse();
+    setHistory(realArr);
   };
 
-  return <>
-    <div className='flex flex-col mt-14' style={{ marginLeft: pxToVw(29), overflow: "hidden" }}>
-      <div className={`text-black`} style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(18)}}>{ t("Chat With ACE") }</div>
-      <div className={`text-[#545B65] mt-4`} style={{ fontFamily: "PingFang SC Light", fontSize: pxToVw(14) }}>{ t("How Can ACE Help You Today?") }</div>
-    </div>
-    <div className={`bg-white rounded-8 mt-14`} style={{ width: pxToVw(1389), height: pxToVw(748), marginLeft: pxToVw(29), boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
-      <div className={`flex justify-around`}>
+  const getHistory = async (id: string) => {
+    setChatId(id);
+    let res: Array<ChatMessage> = await getChatHistory(id);
 
-        <div className="flex" style={{ flexDirection: "column", height: pxToVw(748) }}>
-            <div className="scrollable-content p-24" style={{ 'width': pxToVw(1081), 'height': pxToVw(680), display: "flex", flexDirection: "column" }}>
-            {messages.length == 0 ?
-              <div className='flex' style={{  display: "flex" , 'height': pxToVw(680), flexDirection:"column", alignItems: 'center', justifyContent: 'center' }}>
+    let m: Array<ChatMessage> = [];
+    res.forEach(item => {
+      m.push({
+        key: Math.random() * 10000,
+        type: item.type,
+        content: item.content,
+        time: item.time
+      })
+    })
+
+    setMessages(m);
+  }
+
+  useEffect(() => {
+    setLoading(false);
+    Promise.all([
+      getList()
+    ]).then();
+  }, []);
+
+  useEffect(() => {
+    mg.current?.scrollTo({
+      top: 10000000,
+      behavior: 'smooth'
+    });
+  }, [messages]);
+
+  return <>
+    <div className='flex flex-col mt-14 ml-29 overflow-hidden'>
+      <div className={`text-black text-18`} style={{ fontFamily: "PingFang SC Medium"}}>{ t("Chat With ACE") }</div>
+      <div className={`text-[#545B65] mt-4 text-14`} style={{ fontFamily: "PingFang SC Light" }}>{ t("How Can ACE Help You Today?") }</div>
+    </div>
+    <div className={`bg-white rounded-8 mt-14 w-1389 h-748 ml-29`} style={{ boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
+      <div className={`flex justify-around`}>
+        <div className={"flex flex-col h-748"}>
+            <div ref={mg} className={"p-24 flex flex-col w-1081 h-680 overflow-y-auto items-center"}>
+            {
+              messages.length == 0 ? <div className={`w-680 flex flex-col items-center justify-center pt-306`}>
                 <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
                 <div className='mt-10'>
                     <Icon name={"ace"} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
                 </div>
                 <p className="text-12 text-[#C4C4C4]" style={{ fontFamily: "PingFang SC Light" }}>{ t("Let's Get Started!") }</p>
-              </div>
-            :
-                messages.map((message: any, index: any) => {
+              </div> : messages.map(msg => {
                   return(
-                    <div style={{ display: "flex", width: pxToVw(930), alignSelf: "center", flexDirection: "row", alignItems: "center", marginTop: index !== 0 ? pxToVw(20) : pxToVw(0) }}>
+                    <div key={msg.key} className={`w-930 flex self-center items-center flex-row mt-20`}>
 
-                      <div className='message-profile' 
-                        style={{ 
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          background: index % 2 !== 0 ? `linear-gradient(47deg, #8810C0 6.38%, #4D5BE2 52.16%, #1C9AFF 94.05%)` : "#d9d9d9",
-                          alignSelf: "flex-start" 
-                        }} 
+                      <div className={`message-profile flex items-center justify-center self-start `}
+                        style={{
+                          background: msg.type === "ai" ? `linear-gradient(47deg, #8810C0 6.38%, #4D5BE2 52.16%, #1C9AFF 94.05%)` : "#d9d9d9",
+                        }}
                       >
-                        {index % 2 !== 0 ? 
+                        {msg.type === "ai" ?
                           <Icon name={"ace_white"} style={{ width: pxToVw(30), height: pxToVw(20), alignSelf: "center" }} />
                         :
-                          <img src={Avatar} alt="Profile Image" style={{ width: pxToVw(40), height: pxToVw(40), borderRadius: pxToVw(8), alignSelf: "center", objectFit: "contain" }} />
+                          <img src={Avatar} alt="Profile Image" className={`w-40 h-40 rounded-8 self-center object-contain`} />
                         }
                       </div>
 
-                      <p key={index} style={{ fontFamily: "PingFang SC Regular", fontSize: pxToVw(14), color: "black", marginLeft: pxToVw(18), width: pxToVw(870) }}>
-                        {message}
-                      </p>
+                      <div className={`text-14 text-black ml-18 w-870 leading-4`} style={{ fontFamily: "PingFang SC Regular" }} dangerouslySetInnerHTML={{ __html: msg.content }}></div>
 
                       <div className={`flex items-center justify-end self-start`}>
-                        {index % 2 !== 0 ? 
+                        {msg.type === "ai" ?
                           <div className={`w-78 flex items-center justify-between`}>
                             <div className={`cursor-pointer`}>
                               <Icon name={'copied'} style={{ 'width': pxToVw(15), 'height': pxToVw(15), color: "grey" }} />
@@ -84,7 +163,6 @@ const Chat = () => {
                             </div>
                           </div>
                         :
-                        index % 2 == 0 && 
                           <div className={`w-78 flex items-center justify-between`}>
                             <div className={`cursor-pointer`}>
                               <Icon name={'pen'} style={{ 'width': pxToVw(15), 'height': pxToVw(15), color: "grey", marginLeft: pxToVw(65) }} />
@@ -92,45 +170,75 @@ const Chat = () => {
                           </div>
                         }
                       </div>
-
-                    </div>                    
+                    </div>
                   )
                 })
-                }
-            </div>
-            <div>
-                <Input className='message-box' styles={{ input: { fontSize: pxToVw(12) } }} placeholder={t('Send a Message')} value={message} onChange={(e) => setMessage(e.target.value)}
-                    suffix={
-                      <div onClick={() => {
-                        sendMessage()
-                      }}>
-                        <Icon name={"send"} style={{ 'width': pxToVw(12), 'height': pxToVw(12) }} />
+              }
+              {
+                loading && <div className={`flex items-center justify-center mt-20`}>
+                  <div className={`w-930 flex items-center`}>
+                      <div className={`message-profile flex items-center justify-center self-start `}
+                           style={{
+                             background: "linear-gradient(47deg, #8810C0 6.38%, #4D5BE2 52.16%, #1C9AFF 94.05%)",
+                           }}
+                      >
+                          <Icon name={"ace_white"}
+                                style={{width: pxToVw(30), height: pxToVw(20), alignSelf: "center"}}/>
                       </div>
-                    } 
-                />
+                      <div className={`w-120 text-14 text-black ml-18 flex items-center justify-between`}>
+                          <span className="relative flex h-3 w-3">
+                            <span
+                                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-800 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-600"></span>
+                          </span>
+                          <span className="relative flex h-3 w-3">
+                            <span
+                                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-800 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-600"></span>
+                          </span>
+                          <span className="relative flex h-3 w-3">
+                            <span
+                                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-800 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-600"></span>
+                          </span>
+                      </div>
+                  </div>
+                  </div>
+              }
             </div>
+          <div>
+            <Input className='message-box' disabled={chatId === ""} styles={{input: {fontSize: pxToVw(12)}}}
+                   placeholder={t('Send a Message')} value={message} onChange={(e) => setMessage(e.target.value)}
+                   onPressEnter={sendMessage}
+                   suffix={
+                     <div onClick={sendMessage}>
+                       <Icon name={"send"} style={{'width': pxToVw(12), 'height': pxToVw(12)}}/>
+                     </div>
+                   }
+            />
+          </div>
         </div>
-    
+
         <div className={`w-289 p-24 h-821`}>
-        <Button
+          <Button
             type="default"
-            onClick={() => {}}
+            onClick={create}
             className={`w-161 h-36 flex items-center justify-center rounded-8 text-14 cursor-pointer select-none`}
         >
           <Icon name={'add'} style={{ 'width': pxToVw(11), 'height': pxToVw(11), 'marginRight': '12px' }} />
           <div style={{ fontFamily: "PingFang SC Regular" }}>{t('Create New Chat')}</div>
         </Button>
-          <div className={`mt-24 scrollable-content`}>
+          <div className={`mt-24`}>
             {
               history.map(item => {
-                return <div key={item.key} className={`mb-30`}>
-                  <div className={`text-10 text-[#787878]`} style={{ fontFamily: "PingFang SC Light" }}>{ t(item.time) }</div>
+                return <div key={item.time} className={`mb-30`}>
+                  <div className={`text-10 text-[#787878]`} style={{ fontFamily: "PingFang SC Light" }}>{ item.time }</div>
                   <div className={`cursor-pointer`}>
                     {
                       item.children.map(it => {
-                        return <div key={it.key} className={`flex items-center mt-18`}>
+                        return <div key={it.created_at} className={`flex items-center mt-18`} onClick={() => { choose(it.chat_id) }}>
                           <Icon name={'history'} style={{ 'width': pxToVw(12), 'height': pxToVw(14) }} />
-                          <span className={`text-12 text-black ml-8 truncate`} style={{ fontFamily: "PingFang SC Medium" }}>{ t(it.text) }</span>
+                          <span className={`text-12 text-black ml-8 truncate`} style={{ fontFamily: "PingFang SC Medium" }}>{ it.title }</span>
                         </div>
                       })
                     }

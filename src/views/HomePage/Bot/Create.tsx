@@ -1,13 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux';
+import { useState, useRef } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
 import { Button, Input, Select, Space, Switch } from 'antd'
 import { pxToVw } from '@/utils'
 
-import axios from 'axios'
-import { base_url } from '@/utils/constants'
-import { RootState } from '@/store';
 import { ChangeNumber } from '@/components/Modal/ChangeNumber';
 import { VerifyNumber } from '@/components/Modal/Verify';
 import { ManageFiles } from '@/components/Modal/ManageFiles';
@@ -22,8 +18,7 @@ type Prop = {
 
 const Create = (props: Prop) => {
     const { t } = useTranslation()
-    const { token } = useSelector((state: RootState) => state.token)
-    const [loading, setLoading] = useState(false);
+    const [loading] = useState(false);
 
     const [whatsappActive, setWhatsappActive] = useState(true);
     const [generatedBot, setGeneratedBot]: any = useState();

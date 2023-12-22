@@ -1,8 +1,8 @@
 import { Button, Input, Modal } from 'antd'
 import { pxToVw } from '@/utils'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-export const CreateBrandVoice = ({t, createBrandVoice, toggleCreateBrandVoice, brandVoiceText, setBrandVoiceText, brandVoiceTitle, setBrandVoiceTitle, setBrandVoices}: any) => {
+export const CreateBrandVoice = ({t, createBrandVoice, toggleCreateBrandVoice, brandVoiceText, setBrandVoiceText, brandVoiceTitle, setBrandVoiceTitle}: any) => {
     const [tag, setTag] = useState(0);
 
     return(

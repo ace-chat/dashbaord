@@ -6,12 +6,9 @@ import store from '@/store'
 import type { Response } from '@/types'
 
 const http = axios.create({
-  baseURL: '',
-  timeout: 10000,
+  baseURL: import.meta.env.DEV ? "http://127.0.0.1:8080/api/v1" : "",
+  timeout: 200000,
   withCredentials: false,
-  headers: {
-    Authorization: `Bearer ${  store.getState().token.token}`,
-  },
 })
 
 http.interceptors.request.use(
@@ -23,7 +20,12 @@ http.interceptors.response.use(
   (res) => res.data,
   (err) => {
     if (!window.navigator.onLine) {
-      message.error(i18n.t('Please check network connection')).then()
+      message.error(i18n.t('Please check network connection')).then();
+    }
+
+    if(err.response.data.code === 20005){
+      message.error(i18n.t(err.response.data.message)).then();
+      window.location.href = "/login";
     }
 
     return Promise.reject(err)
@@ -44,11 +46,14 @@ export const instance = ({
     http({
       url,
       method,
+      headers: {
+        Authorization: `Bearer ${store.getState().token.token}`,
+      },
       params,
       data,
     })
       .then((res) => {
-        resolve(res as any)
+        resolve(res.data as any)
       })
       .catch((err) => {
         reject(err)

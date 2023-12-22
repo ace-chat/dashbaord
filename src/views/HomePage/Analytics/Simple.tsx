@@ -1,11 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
 import { Button, message } from 'antd'
 import { pxToVw } from '@/utils'
-import React from 'react';
-import Plot from 'react-plotly.js';
 
 import axios from 'axios'
 import { base_url } from '@/utils/constants';
@@ -24,7 +22,7 @@ const Simple = (props: Prop) => {
   const [loading, setLoading] = useState(false);
 
   const [generatedResult, setGeneratedResult] = useState();
-  const [generatedContent, setGeneratedContent] = useState();
+  const [_, setGeneratedContent] = useState();
 
   const [history] = useState([
     { key: '1', time: 'Today', children: [

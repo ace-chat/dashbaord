@@ -153,7 +153,7 @@ const routes: RouteObject[] = [
               },
               {
                 path: 'create',
-                element: <Create />
+                element: <Create tag={"business"} title={"43234234"} subTitle={"5435"} />
               },
             ]
           },
@@ -163,11 +163,11 @@ const routes: RouteObject[] = [
             children: [
               {
                 path: 'simple',
-                element: <Simple />
+                element: <Simple tag={"simple"} title={"234"} subTitle={"5432"} />
               },
               {
                 path: 'deep',
-                element: <Deep />
+                element: <Deep tag={"deep"} title={"324"} subTitle={"453435"} />
               },
             ]
           },

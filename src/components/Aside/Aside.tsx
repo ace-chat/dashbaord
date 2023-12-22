@@ -1,10 +1,8 @@
-import { Menu, MenuProps } from "antd";
-import { useState } from 'react'
 import { toggle } from "@/reducers/menu.ts";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Layout } from 'antd';
+import { Layout, Menu } from 'antd';
 
 import Icon from "@/components/Icon/Icon.tsx";
 import Avatar from '@/assets/avatar.png'
@@ -12,6 +10,7 @@ import Avatar from '@/assets/avatar.png'
 import type { RootState } from "@/store";
 import type { Key, ReactNode } from "react";
 import type { MenuInfo } from "@/types";
+import type { MenuProps } from "antd"
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -36,7 +35,6 @@ const Aside = () => {
   const open = useSelector((state: RootState) => state.menu.open)
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const [openKeys, setOpenKeys]: any = useState([]);
 
   const items: MenuProps['items'] = [
     getItem(t('Home'), "home", <Icon name={"home"} />),

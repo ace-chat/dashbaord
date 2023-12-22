@@ -1,13 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux';
+import { useState, useRef } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
-import { Button, Input, Select, message } from 'antd'
+import { Button, Input, Select } from 'antd'
 import { pxToVw } from '@/utils'
-
-import axios from 'axios'
-import { base_url } from '@/utils/constants'
-import { RootState } from '@/store';
 
 type Prop = {
   title: string;
@@ -18,10 +13,9 @@ type Prop = {
 
 const Deep = (props: Prop) => {
   const { t } = useTranslation()
-  const { token } = useSelector((state: RootState) => state.token)
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
 
-  const [generatedResult, setGeneratedResult] = useState();
+  const [generatedResult] = useState();
 
   const [history] = useState([
     { key: '1', time: 'Today', children: [

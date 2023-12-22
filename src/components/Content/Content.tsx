@@ -1,35 +1,18 @@
-import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux';
+import { useState, useEffect, useMemo } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
-import { Button, message } from 'antd'
+import {Button, Input, InputNumber, message, Select} from 'antd'
 import { pxToVw } from '@/utils'
+import moment from 'moment-timezone'
 
 //components
-import { AdsComp } from './Ads'
-import { ToneComp } from './Tone'
-import { SummarizeComp } from './Summarize'
-import { ParaphraseComp } from './Paraphrase'
-import { AudienceComp } from './Audience'
-import { EmailComp } from './Email'
-import { IntroOutlineComp } from './IntroOutline'
-import { EntireComp } from './Entire'
-
-import axios from 'axios'
-import { base_url } from '@/utils/constants'
-import { RootState } from '@/store';
 import { CreateBrandVoice } from '../Modal/CreateBrandVoice';
 
-type Prop = {
-  title: string;
-  flow?: string;
-  subTitle: string;
-  tag: string;
-}
+import { getAllRegions, getAllVoices, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType } from "@/request";
+import type { ContentHistoryChildren, ContentHistory, Prop, Tone, Platform, Language, Region, Gender, Option, Voice, Type } from "@/types";
 
 const Content = (props: Prop) => {
   const { t } = useTranslation()
-  const { token } = useSelector((state: RootState) => state.token)
   const [loading, setLoading] = useState(false);
 
   //modal for creating brand voice 
@@ -39,391 +22,418 @@ const Content = (props: Prop) => {
   };
   const [brandVoiceText, setBrandVoiceText] = useState();
   const [brandVoiceTitle, setBrandVoiceTitle] = useState();
+  const [countries, setCountries] = useState<Array<Option>>([]);
+  const [brandVoices, setBrandVoices] = useState<Array<Option>>([]);
+  const [platforms, setPlatforms] = useState<Array<Option>>([]);
+  const [tones, setTones] = useState<Array<Option>>([]);
+  const [languages, setLanguages] = useState<Array<Option>>([]);
+  const [genders, setGenders] = useState<Array<Option>>([]);
+  const [types, setTypes] = useState<Array<Option>>([]);
+  const [history, setHistory] = useState<Array<ContentHistory>>([]);
 
-
-  const [countries, setCountries] = useState([]);
-  const [brandVoices, setBrandVoices] = useState([
-    { value: 'none', label: t('None') },
-    { value: 'new', label: t('Create New') }
-  ]);
-
-  function createFormData() {
-    const formData = new URLSearchParams();
-    formData.append('language', language);
-  
-    if (props.tag === "media" || props.tag === "engine") {
-      formData.append('platform', platform);
-      formData.append('brand_name', brandName);
-      formData.append('service_name', productName);
-      formData.append('service_desc', productDesc);
-      formData.append('tones', tone);
-      formData.append('brand_voice', brandVoice);
-      //optional
-      if(country)
-        formData.append('region', country);
-      if(gender)
-        formData.append('gender', gender);
-      if(minAge)
-        formData.append('min_age', minAge);
-      if(maxAge)
-        formData.append('max_age', maxAge);
-    }
-
-    if(props.tag == "tone"){
-      formData.append('text', text);
-      formData.append('tones', tone);
-    }
-
-    if(props.tag == "summarize"){
-      formData.append('text', text);
-      formData.append('word_count', wordCount);
-    }
-
-    if(props.tag == "paraphrase"){
-      formData.append('text', text);
-    }
-
-    if(props.tag == "brandvoice"){
-      formData.append('text', text);
-      //optional
-      if(brandVoice)
-        formData.append('brand_voice', brandVoice);
-    }
-
-    if(props.tag == "audience"){
-      formData.append('text', text);
-      //optional
-      if(country)
-        formData.append('region', country);
-      if(gender)
-        formData.append('gender', gender);
-      if(minAge)
-        formData.append('min_age', minAge);
-      if(maxAge)
-        formData.append('max_age', maxAge);
-    }
-
-    if(props.tag == "freestyle"){
-      formData.append('detail', text);
-      formData.append('tones', tone);
-      //optional
-      if(brandVoice)
-        formData.append('brand_voice', brandVoice);
-      if(country)
-        formData.append('region', country);
-      if(gender)
-        formData.append('gender', gender);
-      if(minAge)
-        formData.append('min_age', minAge);
-      if(maxAge)
-        formData.append('max_age', maxAge);
-    }
-
-    if(props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds"){
-      formData.append('brand_name', brandName);
-      formData.append('service_desc', productDesc);
-      formData.append('brand_desc', brandDesc);
-      formData.append('tones', tone);
-      //optional
-      if(brandVoice)
-       formData.append('brand_voice', brandVoice);
-      if(country)
-       formData.append('region', country);
-      if(gender)
-        formData.append('gender', gender);
-      if(minAge)
-        formData.append('min_age', minAge);
-      if(maxAge)
-        formData.append('max_age', maxAge);
-      if(productName)
-        formData.append('service_name', productName);
-    }
-
-    if(props.tag == "intro" || props.tag == "outline"){
-      formData.append('topic', text);
-      formData.append('tones', tone);
-      //optional
-      if(brandVoice)
-        formData.append('brand_voice', brandVoice);
-      if(minAge)
-        formData.append('min_age', minAge);
-      if(maxAge)
-        formData.append('max_age', maxAge);
-    }
-
-    if(props.tag == "entire"){
-      formData.append('topic', text);
-      formData.append('tones', tone);
-      formData.append('type', type);
-      formData.append('word_count', wordCount);
-      formData.append('other_details', details);
-      //optional
-      if(brandVoice)
-       formData.append('brand_voice', brandVoice);
-      if(minAge)
-       formData.append('min_age', minAge);
-      if(maxAge)
-       formData.append('max_age', maxAge);
-    }
-
-
-    return formData;
-  };
-
-  function createUrlTag() {
-    //url tag depending on which page we are focused on in Content Generation
-    let url_tag = "";
-  
-    switch (props.tag) {
-      case "media":
-        url_tag = "content/media/generator";
-        break;
-      case "engine":
-        url_tag = "content/engine/generator";
-        break;
-      case "tone":
-        url_tag = "content/optimized/tone/generator";
-        break;
-      case "summarize":
-        url_tag = "content/optimized/summarize/generator";
-        break;
-      case "paraphrase":
-        url_tag = "content/optimized/paraphrase/generator";
-        break;
-      case "brandvoice":
-        url_tag = "content/optimized/voice/generator";
-        break;
-      case "audience":
-        url_tag = "content/optimized/audience/generator";
-        break;
-      case "freestyle":
-        url_tag = "content/email/freestyle/generator";
-        break;
-      case "marketing":
-        url_tag = "content/email/marketing/generator";
-        break;
-      case "welcome":
-        url_tag = "content/email/welcome/generator";
-        break;
-      case "odds":
-        url_tag = "content/email/advantage/generator";
-        break;
-      case "intro":
-        url_tag = "content/blog/intro/generator";
-        break;
-      case "outline":
-        url_tag = "content/blog/outline/generator";
-        break;
-      case "entire":
-        url_tag = "content/blog/entire/generator";
-        break;
-      default:
-        // Handle a default case if needed
-        break;
-    }
-  
-    return url_tag;
+  const getTones = async () => {
+    let res: Array<Tone> = await getAllTone(1);
+    let arr: Array<Option> = [];
+    res.forEach(item => {
+      arr.push({
+        label: item.name,
+        value: item.id,
+      })
+    })
+    setTones(arr);
   }
-  
-  
-  async function getAllRegions(){
-    try {
-      const response = await axios.get(`${base_url}/common/regions`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
 
-      if(response.data.code == 200){ //request success
-        const formattedData = response.data.data.map((item: any) => ({
-          label: item.country,
-          value: item.id,
-        }));
-        setCountries(formattedData);
-      }
-    } catch (error) {
-      // Handle errors (e.g., show an error message)
-      console.error('Error:', error);
-    }
+  const getPlatforms = async () => {
+    let res: Array<Platform> = await getAllPlatform(props.tag === "media" ? 1 : props.tag === "engine" ? 2 : 0);
+    let arr: Array<Option> = [];
+    res.forEach(item => {
+      arr.push({
+        label: item.name,
+        value: item.id,
+      })
+    })
+    setPlatforms(arr);
+  }
+
+  const getLanguages = async () => {
+    let res: Array<Language> = await getAllLanguage();
+    let arr: Array<Option> = [];
+    res.forEach((item) => {
+      arr.push({
+        label: item.name,
+        value: item.id,
+      })
+    });
+    setLanguages(arr);
+  }
+
+  const getRegions = async() =>{
+    const res: Array<Region> = await getAllRegions();
+
+    let arr: Array<Option> = [];
+    res.forEach(item => {
+      arr.push({
+        label: item.country,
+        value: item.id,
+      })
+    });
+    setCountries(arr);
   };
 
-  async function getAllVoices(){
-    try {
-      const response = await axios.get(`${base_url}/common/voices`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+  async function getVoices(){
+    const res: Array<Voice> = await getAllVoices()
 
-      if(response.data.code == 200){ //request success
-        const formattedData = response.data.data.map((item: any) => ({
-          label: item.name,
-          value: item.id,
-        }));
-        setBrandVoices([...brandVoices, ...formattedData]);
+    let arr: Array<Option> = [];
+    res.forEach(item => {
+      arr.push({
+        label: item.name,
+        value: item.id,
+      })
+    });
+    arr.unshift({ value: 'none', label: t('None') },
+      { value: 'new', label: t('Create New') });
+    setBrandVoices(arr);
+  }
+
+  const getGenders = async () => {
+    const res: Array<Gender> = await getAllGender();
+
+    let arr: Array<Option> = [];
+    res.forEach(item => {
+      arr.push({
+        label: item.name,
+        value: item.id,
+      })
+    });
+    setGenders(arr);
+  }
+
+  const getTypes = async () => {
+    const res: Array<Type> = await getAllType();
+
+    let arr: Array<Option> = [];
+    res.forEach(item => {
+      arr.push({
+        label: item.name,
+        value: item.id,
+      })
+    });
+    setTypes(arr);
+  }
+
+  const getAllHistory = async () => {
+    let res: Array<ContentHistoryChildren> = await getHistory(props.url.history);
+
+    let arr: Map<string, Array<ContentHistoryChildren>> = new Map();
+    res.forEach(item => {
+      let time = moment(item.created_at).local().format("MMMM Do YYYY");
+
+      if(arr.has(time)){
+        let a = arr.get(time) || [];
+        a.push(item);
+        arr.set(time, a);
+      }else{
+        arr.set(time, [item])
       }
-    } catch (error) {
-      // Handle errors (e.g., show an error message)
-      console.error('Error:', error);
-    }
-  };
+    })
+
+    let a: Array<ContentHistory> = [];
+    arr.forEach((value, key) => {
+      a.push({
+        time: key,
+        children: value,
+      })
+    })
+
+    setHistory(a.reverse());
+  }
 
   useEffect(() => {
-    Promise.all([
-      getAllRegions(),
-      getAllVoices()
-    ])
+    switch (props.tag) {
+      case "media": case "engine":
+        Promise.all([
+          getRegions(),
+          getVoices(),
+          getTones(),
+          getPlatforms(),
+          getGenders(),
+          getAllHistory(),
+        ]).then()
+        break;
+      case "tone":
+        Promise.all([
+          getTones(),
+        ]).then()
+        break;
+      case "voice":
+        Promise.all([
+          getVoices(),
+        ]).then()
+        break;
+      case "audience":
+        Promise.all([
+          getRegions(),
+          getGenders(),
+        ]).then()
+        break;
+      case "freestyle": case "marketing": case "welcome": case "odds":
+        Promise.all([
+          getTones(),
+          getRegions(),
+          getGenders(),
+          getVoices(),
+        ]).then()
+        break;
+      case "intro": case "outline":
+        Promise.all([
+          getTones(),
+          getVoices(),
+        ]).then()
+        break;
+      case "entire":
+        Promise.all([
+          getTypes(),
+          getTones(),
+          getVoices(),
+        ]).then();
+    }
+    getLanguages().then()
   },[]);
-
-  const [platformMapping]: any = useState({
-    media: [
-      { value: 1, label: t('Facebook') },
-      { value: 2, label: t('Instagram') },
-      { value: 3, label: t('X') },
-      { value: 4, label: t('LinkedIn') }
-    ],
-    engine : [
-      { value: 5, label: t('Google Ads') }
-    ]
-  });
-
-  const [platforms] = useState(platformMapping[props.tag] || []);
-
-  const [tones] = useState([
-    { value: 1, label: t('Luxury') },
-    { value: 2, label: t('Persuasive') },
-    { value: 3, label: t('Professional') },
-    { value: 4, label: t('Funny') },
-    { value: 5, label: t('Narrative') },
-    { value: 6, label: t('Conversational') }
-  ])
-
-  const [history] = useState([
-    { key: '1', time: 'Today', children: [
-        { key: '1-1', text: 'Borem ipsum dolordict ImahBorem ipsum d' },
-        { key: '1-2', text: 'Borem ipsum dolordict ImahBorem ipsum d' }
-      ] },
-    { key: '2', time: 'Oct, 10st', children: [
-        { key: '2-1', text: 'Borem ipsum dolordict ImahBorem ipsum d' },
-        { key: '2-2', text: 'Borem ipsum dolordict ImahBorem ipsum d' }
-      ] }
-  ]);
-
-  const [types] = useState([
-    { value: 'news', label: t('News-based') },
-    { value: 'opinion', label: t('Opinion Piece') },
-    { value: 'storytelling', label: t('Storytelling') },
-    { value: 'interactive', label: t('Interactive') },
-  ]);
-
-  const [genders] = useState([
-    { value: 1, label: t('Male') },
-    { value: 2, label: t('Female') },
-    { value: 3, label: t('Other') }
-  ]);
-
-  const [languages] = useState([
-    { value: 1, label: t('English') },
-    { value: 2, label: t('French') },
-    { value: 3, label: t('German') },
-    { value: 4, label: t('Arabic') },
-    { value: 5, label: t('Chineese') },
-    { value: 6, label: t('Dutch') },
-    { value: 7, label: t('Italian') },
-    { value: 8, label: t('Portuguese') },
-    { value: 9, label: t('Spanish') },
-    { value: 10, label: t('Russian') }
-  ]);
 
   //generated text
   const [generatedText, setGeneratedText] = useState("");
 
   //state variables
-  const [platform, setPlatform]: any = useState();
-  const [brandName, setBrandName]: any = useState();
-  const [productName, setProductName]: any = useState();
-  const [productDesc, setProdDesc]: any = useState();
-  const [brandDesc, setBrandDesc]: any = useState();
-  const [tone, setTone]: any = useState();
-  const [brandVoice, setBrandVoice]: any = useState();
-  const [country, setCountry]: any = useState();
-  const [gender, setGender]: any = useState();
-  const [minAge, setMinAge]: any = useState();
-  const [maxAge, setMaxAge]: any = useState();
-  const [language, setLanguage]: any = useState(1);
-  const [text, setText]: any = useState();
-  const [wordCount, setWordCount]: any = useState();
-  const [details, setDetails]: any = useState();
-  const [type, setType]: any = useState();
+  const [text, setText] = useState<string>();
+  const [wordCount, setWordCount] = useState<number>();
+  const [platform, setPlatform] = useState<number>();
+  const [brandName, setBrandName] = useState<string>("");
+  const [productName, setProductName] = useState<string>("");
+  const [productDesc, setProdDesc] = useState<string>("");
+  const [brandDesc, setBrandDesc] = useState<string>("");
+  const [tone, setTone] = useState<number>();
+  const [brandVoice, setBrandVoice] = useState<number>();
+  const [country, setCountry] = useState<number>();
+  const [gender, setGender] = useState<number>();
+  const [minAge, setMinAge] = useState<number>();
+  const [maxAge, setMaxAge] = useState<number>();
+  const [language, setLanguage] = useState<number>();
+  const [type, setType] = useState<number>();
+  const [keyword, setKeyword] = useState<string>();
+  const [details, setDetails] = useState<string>();
 
-  function canGenerate(){
-    //social media ads & search engine validation
-    if (props.tag == 'engine' || props.tag == 'media') {
-      if (platform && brandName && productName && productDesc && tone && language) {
-        return false;
-      } else {
-        return true;
-      }
+  const canGenerate = useMemo(() => {
+    let status = true;
+    switch(props.tag){
+      case "media":
+        if(!!platform && !!brandName && !!productName && !!productDesc && !!tone && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "engine":
+        if(!!platform && !!brandName && !!productName && !!productDesc && !!tone && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "tone":
+        if(!!text && !!tone && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "summarize":
+        if(!!text && !!wordCount && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "paraphrase":
+        if(!!text && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "voice":
+        if(!!text && !!brandVoice && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "audience":
+        if(!!text && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "freestyle":
+        if(!!text && !!tone && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "marketing": case "welcome": case "odds":
+        if(!!brandName && !!tone && !!language){
+          status = false;
+          break;
+        }
+        break
+      case "intro": case "outline":
+        if(!!text && !!tone && !!language){
+          status = false;
+          break;
+        }
+        break;
+      case "entire":
+        if(!!text && !!tone && !!type && !!wordCount && !!language){
+          status = false;
+          break;
+        }
+        break;
+      default:
+        break;
     }
-    //Optimized content change tone, freestyle email, intro and outline blog validation
-    if(props.tag ==  "tone"|| props.tag == "freestyle" || props.tag == "intro" || props.tag == "outline"){
-      if(text && tone && language){
-        return false;
-      } else {
-        return true;
-      }
-    }
-    //Optimized content match brand voice , paraphrase and target audience validation
-    if(props.tag ==  "brandvoice" || props.tag == "paraphrase" || props.tag == "audience"){
-      if(text && language){
-        return false;
-      } else {
-        return true;
-      }
-    }
-    //Optimized content summarize validation
-    if(props.tag == "summarize"){
-      if(text && wordCount && language){
-        return false;
-      } else {
-        return true;
-      }
-    }
-    //cold marketing, welcome and odds email validation
-    if(props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds"){
-      if(brandName && productDesc && brandDesc && tone && language){
-        return false;
-      } else {
-        return true;
-      }
-    }
-    //entire bog validation
-    if(props.tag == "entire"){
-      if(text && tone && wordCount && details && type){
-        return false;
-      } else {
-        return true;
-      }
-    }
-  };
+    return status;
+  }, [platform, brandName, productName, productDesc, tone, language])
 
-  async function generateText(){
+  const createFormData = () => {
+    let form: Record<string, any> = {};
+    switch (props.tag) {
+      case "media":
+        form = {
+          platform: platform,
+          brand_name: brandName,
+          service_name: productName,
+          service_desc: productDesc,
+          tones: tone,
+          brand_voice: brandVoice,
+          region: country,
+          gender: gender,
+          min_age: minAge,
+          max_age: maxAge,
+          language: language,
+        }
+        break
+      case "engine":
+        form = {
+          platform: platform,
+          brand_name: brandName,
+          service_name: productName,
+          service_desc: productDesc,
+          tones: tone,
+          brand_voice: brandVoice,
+          region: country,
+          gender: gender,
+          min_age: minAge,
+          max_age: maxAge,
+          language: language,
+        }
+        break
+      case "tone":
+        form = {
+          text: text,
+          tones: tone,
+          language: language,
+        }
+        break;
+      case "summarize":
+        form = {
+          text: text,
+          word_count: wordCount,
+          language: language,
+        }
+        break;
+      case "paraphrase":
+        form = {
+          text: text,
+          language: language
+        }
+        break;
+      case "voice":
+        form = {
+          text: text,
+          brand_voice: brandVoice,
+          language: language
+        }
+        break;
+      case "audience":
+        form = {
+          text: text,
+          region: country,
+          gender: gender,
+          max_age: maxAge,
+          min_age: minAge,
+          language: language,
+        }
+        break;
+      case "freestyle":
+        form = {
+          detail: text,
+          tones: tone,
+          brand_voice: brandVoice,
+          region: country,
+          gender: gender,
+          max_age: maxAge,
+          min_age: minAge,
+          language: language,
+        }
+        break;
+      case "marketing": case "welcome": case "odds":
+        form = {
+          brand_name: brandName,
+          brand_desc: brandDesc,
+          service_name: productName,
+          service_desc: productDesc,
+          tones: tone,
+          brand_voice: brandVoice,
+          region: country,
+          gender: gender,
+          max_age: maxAge,
+          min_age: minAge,
+          language: language,
+        }
+        break;
+      case "intro": case "outline":
+        form = {
+          topic: text,
+          tones: tone,
+          brand_voice: brandVoice,
+          max_age: maxAge,
+          min_age: minAge,
+          language: language,
+        }
+        break;
+      case "entire":
+        form = {
+          topic: text,
+          tones: tone,
+          type: type,
+          brand_voice: brandVoice,
+          keyword: keyword,
+          max_age: maxAge,
+          min_age: minAge,
+          word_count: wordCount,
+          other_details: details,
+          language: language,
+        }
+        break;
+      default:
+        break;
+    }
+    return form;
+  }
+
+  const generateText = async () => {
     const formData = createFormData();
-    const url_tag = createUrlTag();
 
     try {
       setLoading(true);
-      const response = await axios.post(`${base_url}/${url_tag}`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
+      const res = await generator(props.url.generator, formData)
 
-      if(response.data.code == 200){ //request success
-        setLoading(false);
-        setGeneratedText(response.data.data.text);
-      }
+      setGeneratedText(res.text);
+      await getAllHistory();
+      setLoading(false);
     } catch (error: any) {
       // Handle errors (e.g., show an error message)
       setLoading(false);
@@ -431,6 +441,13 @@ const Content = (props: Prop) => {
       message.error(error.message);
     }
   };
+
+  const getHistoryById = async (id: number) => {
+    setLoading(true);
+    const res = await getDetailById(props.url.content, id);
+    setGeneratedText(res.content);
+    setLoading(false);
+  }
 
   return <>
     <div className={`flex flex-col`}>
@@ -444,198 +461,354 @@ const Content = (props: Prop) => {
     </div>
     <div className={`bg-white rounded-8 mt-14`} style={{ width: pxToVw(1389), marginLeft: pxToVw(29), boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
       <div className={`flex justify-around`}>
-        <div className={`w-300 p-24`} style={{ fontFamily: "PingFang SC Regular" }}>
+        <div className={`w-300 p-24`} style={{fontFamily: "PingFang SC Regular"}}>
+          {/* Topic start */}
+          {
+            props.optional?.topic && <div>
+                  <div className={`flex items-center`}>
+                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Topic')}</span>
+                      <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                  </div>
+                  <div className={`mt-12`}>
+                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10)}}}
+                                      placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
+                  </div>
+              </div>
+          }
+          {/* Topic end */}
 
-          {(props.tag == "engine" || props.tag == "media") && 
-            <AdsComp t={t} platforms={platforms} tones={tones} genders={genders} languages={languages} 
-              platform={platform} 
-              countries={countries}
-              setPlatform={setPlatform}
-              brandName={brandName}
-              setBrandName={setBrandName} 
-              productName={productName}
-              setProductName={setProductName}
-              productDesc={productDesc} 
-              setProdDesc={setProdDesc}
-              tone={tone}
-              setTone={setTone} 
-              brandVoices={brandVoices}
-              brandVoice={brandVoice}
-              setBrandVoice={setBrandVoice}
-              country={country}
-              setCountry={setCountry} 
-              gender={gender} 
-              setGender={setGender}
-              minAge={minAge} 
-              setMinAge={setMinAge}
-              maxAge={maxAge} 
-              setMaxAge={setMaxAge}
-              language={language} 
-              setLanguage={setLanguage}
-              toggleCreateBrandVoice={toggleCreateBrandVoice}
-            />
+          {/* Text start */}
+          {
+            props.optional?.text && <div>
+                  <div className={`flex items-center`}>
+                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Text')}</span>
+                      <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                  </div>
+                  <div className={`mt-12`}>
+                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10)}}}
+                                      placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
+                  </div>
+              </div>
           }
-          {(props.tag == "tone" || props.tag == "brandvoice") && 
-            <ToneComp 
-                t={t} tag={props.tag} tones={tones} brandVoices={brandVoices} languages={languages} 
-                text={text}
-                setText={setText} 
-                tone={tone} 
-                setTone={setTone} 
-                brandVoice={brandVoice} 
-                setBrandVoice={setBrandVoice}
-                language={language} 
-                setLanguage={setLanguage}
-                toggleCreateBrandVoice={toggleCreateBrandVoice}
-            />
-          }
-          {props.tag == "summarize" && 
-            <SummarizeComp 
-                t={t} languages={languages} 
-                text={text}
-                setText={setText}
-                wordCount={wordCount}
-                setWordCount={setWordCount}
-                language={language} 
-                setLanguage={setLanguage}
-            />
-          }
-          {props.tag == "paraphrase" && 
-            <ParaphraseComp 
-                t={t} languages={languages} 
-                text={text}
-                setText={setText}
-                language={language} 
-                setLanguage={setLanguage}
-          />}
-          {props.tag == "audience" && 
-            <AudienceComp t={t} genders={genders} languages={languages} 
-                text={text}
-                countries={countries}
-                setText={setText}
-                country={country}
-                setCountry={setCountry} 
-                gender={gender} 
-                setGender={setGender}
-                minAge={minAge} 
-                setMinAge={setMinAge}
-                maxAge={maxAge} 
-                setMaxAge={setMaxAge}
-                language={language} 
-                setLanguage={setLanguage}
-          />}
-          {(props.tag == "freestyle" || props.tag == "marketing" || props.tag == "welcome" || props.tag == "odds") &&
-            <EmailComp t={t} tag={props.tag} tones={tones} genders={genders} languages={languages} 
-              text={text}
-              countries={countries}
-              setText={setText}
-              brandName={brandName}
-              setBrandName={setBrandName} 
-              productName={productName}
-              setProductName={setProductName}
-              productDesc={productDesc} 
-              setProdDesc={setProdDesc}
-              tone={tone}
-              setTone={setTone} 
-              brandVoices={brandVoices}
-              brandVoice={brandVoice}
-              setBrandVoice={setBrandVoice}
-              country={country}
-              setCountry={setCountry} 
-              gender={gender} 
-              setGender={setGender}
-              minAge={minAge} 
-              setMinAge={setMinAge}
-              maxAge={maxAge} 
-              setMaxAge={setMaxAge}
-              language={language} 
-              setLanguage={setLanguage}
-              brandDesc={brandDesc}
-              setBrandDesc={setBrandDesc}
-              toggleCreateBrandVoice={toggleCreateBrandVoice}
-            />
-          }
-          
-          {(props.tag == "intro" || props.tag == "outline") && 
-            <IntroOutlineComp t={t} tones={tones} languages={languages} 
-              text={text}
-              setText={setText}
-              tone={tone}
-              setTone={setTone} 
-              brandVoices={brandVoices}
-              brandVoice={brandVoice}
-              setBrandVoice={setBrandVoice}
-              minAge={minAge} 
-              setMinAge={setMinAge}
-              maxAge={maxAge} 
-              setMaxAge={setMaxAge}
-              language={language} 
-              setLanguage={setLanguage}
-              toggleCreateBrandVoice={toggleCreateBrandVoice}
-            />
-          }
+          {/* Text end */}
 
-          {props.tag == "entire" && 
-            <EntireComp t={t} tones={tones} languages={languages} 
-              text={text}
-              setText={setText}
-              tone={tone}
-              setTone={setTone} 
-              brandVoices={brandVoices}
-              brandVoice={brandVoice}
-              setBrandVoice={setBrandVoice}
-              minAge={minAge} 
-              setMinAge={setMinAge}
-              maxAge={maxAge} 
-              setMaxAge={setMaxAge}
-              wordCount={wordCount}
-              setWordCount={setWordCount}
-              details={details}
-              setDetails={setDetails}
-              language={language} 
-              setLanguage={setLanguage}
-              types={types}
-              type={type}
-              setType={setType}
-              toggleCreateBrandVoice={toggleCreateBrandVoice}
-            />
+          {/* WordCount start */}
+          {
+            props.optional?.word_count && <div className={`mt-24`}>
+                  <div className={`flex items-center`}>
+                      <Icon name={'second'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Word Count')}</span>
+                      <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                  </div>
+                  <div className={`mt-12`}>
+                      <div>
+                          <InputNumber
+                              className='w-240 text-10 items-center'
+                              style={{paddingTop: 5, paddingBottom: 5}}
+                              min={0}
+                              placeholder={t('Word Count')}
+                              controls={true}
+                              value={wordCount}
+                              onChange={(value) => setWordCount(value || 0)}
+                          />
+                      </div>
+                  </div>
+              </div>
           }
+          {/* WordCount end */}
+
+          {/* Detail text start */}
+          {
+            props.optional?.details?.text && <div className={`mt-12`}>
+                <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10)}}}
+                                placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
+            </div>
+          }
+          {/* Detail text end */}
+
+          {/* Platform start */}
+          {
+            props.optional?.platform && <div>
+                  <div className={`flex items-center`}>
+                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Platform')}</span>
+                      <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                  </div>
+                  <div className={`mt-12`}>
+                      <Select style={{width: pxToVw(252), height: pxToVw(36)}} options={platforms}
+                              placeholder={t("Platform")}
+                              value={platform} onSelect={(value) => setPlatform(value)}/>
+                  </div>
+              </div>
+          }
+          {/* Platform end */}
+
+          {/* Details start */}
+          {
+            props.optional?.details && <div className={`mt-24`}>
+                  <div className={`flex items-center`}>
+                      <Icon name={'second'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Details')}</span>
+                      <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                  </div>
+                  <div className={`mt-12`}>
+                    {/* brand name start */}
+                    {
+                      props.optional?.details.brand_name && <div>
+                            <Input styles={{input: {width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}}
+                                   placeholder={t('Type Brand Name')} value={brandName}
+                                   onChange={(e) => setBrandName(e.target.value)}/>
+                        </div>
+                    }
+                    {/* brand name end */}
+
+                    {/* brand desc start */}
+                    {
+                      props.optional?.details.brand_name && <div className={`mt-12`}>
+                        <Input.TextArea
+                          styles={{textarea: {width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10)}}}
+                          placeholder={t('Brand Description')}
+                          value={brandDesc} onChange={(e) => setBrandDesc(e.target.value)}/>
+                      </div>
+                    }
+                    {/* brand desc end */}
+
+                    {/* service/product name start */}
+                    {
+                      props.optional?.details.service_name && <div className={`mt-12`}>
+                            <Input styles={{input: {width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}}
+                                   placeholder={t('Type Service/Product Name')} value={productName}
+                               onChange={(e) => setProductName(e.target.value)}/>
+                      </div>
+                    }
+                    {/* service/product name end */}
+
+                    {/* service/product desc end */}
+                    {
+                      props.optional?.details.service_desc && <div className={`mt-12`}>
+                            <Input.TextArea
+                                styles={{textarea: {width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10)}}}
+                          placeholder={t('Service/Product Description')}
+                          value={productDesc} onChange={(e) => setProdDesc(e.target.value)}
+                        />
+                      </div>
+                    }
+                    {/* service/product desc end */}
+                  </div>
+              </div>
+          }
+          {/* Details end */}
+
+          {/* Style start */}
+          {
+            props.optional?.style && <div className={`mt-24`}>
+                  <div className={`flex items-center`}>
+                      <Icon name={'third'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                    <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Style')}</span>
+                      <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                  </div>
+                  <div className={`mt-12`}>
+                    {/* tone start */}
+                    {
+                      props.optional?.style.tones && <div>
+                            <Select placeholder={t('Tones')}
+                                    style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}} options={tones}
+                                    value={tone} onSelect={(value) => setTone(value)}/>
+                        </div>
+                    }
+                    {/* tone end */}
+
+                    {/* voice start */}
+                    {
+                      props.optional?.style.voice && <div className={`mt-12`}>
+                            <Select
+                                placeholder={t('Brand Voice (Optional)')}
+                                style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
+                                options={brandVoices}
+                                value={brandVoice} onSelect={(value) => setBrandVoice(value)}
+                                optionRender={(option) => {
+                                  return (
+                                    <div className={`flex items-center justify-between`}
+                                         onClick={() => {
+                                           option.value == "new" ? toggleCreateBrandVoice() : null;
+                                         }}>
+                                      <span style={{fontFamily: "PingFang SC Regular"}}>{option.label}</span>
+                                      {option.value !== "none" &&
+                                          <Icon name={option.value == "new" ? 'add' : 'trash'}
+                                                style={{'width': pxToVw(8), 'height': pxToVw(8)}}/>
+                                      }
+                                    </div>
+                                  );
+                                }}
+                            />
+                        </div>
+                    }
+                    {/* voice end */}
+
+                    {/* type start */}
+                    {
+                      props.optional.style.type && <div className={`mt-12`}>
+                            <Select placeholder={t('Type')}
+                                    style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}} options={types}
+                                    value={type} onSelect={(value) => setType(value)}/>
+                        </div>
+                    }
+                    {/* type end */}
+
+                    {/* keyword start */}
+                    {
+                      props.optional.style.keyword && <div className={`mt-12`}>
+                            <Input placeholder={t('Keyword')}
+                                    style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
+                                    value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
+                        </div>
+                    }
+                    {/* keyword end */}
+                  </div>
+              </div>
+          }
+          {/* Style end */}
+
+          {/* Audience start */}
+          {
+            props.optional?.audience && <div className={`mt-24`}>
+                  <div className={`flex items-center`}>
+                      <Icon name={'fourth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Audience')}</span>
+              </div>
+              <div className={`mt-12`}>
+                {/* region start */}
+                {
+                  props.optional.audience.region && <div>
+                        <Select placeholder={t('Region (Optional)')} style={{width: pxToVw(252), height: pxToVw(36)}}
+                              options={countries} value={country} onSelect={(value) => setCountry(value)}/>
+                  </div>
+                }
+                {/* region end */}
+
+                {/* gender start */}
+                {
+                  props.optional.audience.region && <div className={`mt-12`}>
+                    <Select placeholder={t('Gender (Optional)')} style={{width: pxToVw(252), height: pxToVw(36)}}
+                            options={genders} value={gender} onSelect={(value) => setGender(value)}/>
+                  </div>
+                }
+                {/* gender end */}
+
+                {/* age start */}
+                {
+                  props.optional.audience.age && <div className={`flex items-center justify-between mt-12`}>
+                    <InputNumber
+                        className='w-120 text-10 items-center'
+                        style={{paddingTop: 3, paddingBottom: 3}}
+                        min={12} // Minimum age
+                        max={100} // Maximum age
+                        placeholder={t('Min Age (Optional)')}
+                        controls={true}
+                        value={minAge}
+                        onChange={(value) => setMinAge(value || 0)}
+                    />
+                    <InputNumber
+                        className='w-120 text-10 items-center'
+                        style={{paddingTop: 3, paddingBottom: 3}}
+                        min={12} // Minimum age
+                        max={100} // Maximum age
+                        placeholder={t('Max Age (Optional)')}
+                        controls={true}
+                        value={maxAge}
+                        onChange={(value) => setMaxAge(value || 0)}
+                    />
+                  </div>
+                }
+                {/* age end */}
+              </div>
+              </div>
+          }
+          {/* Audience end */}
+
+          {/* Other Details start */}
+          {
+            props.optional?.other_detail && <div className={`mt-24`}>
+                  <div className={`flex items-center`}>
+                      <Icon name={'fifth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Other Details')}</span>
+                      <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                  </div>
+                  <div className={`mt-12`}>
+                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10)}}}
+                                      placeholder={t('Type Here')} value={details}
+                                      onChange={(e) => setDetails(e.target.value)}/>
+                  </div>
+              </div>
+          }
+          {/* Other Details end */}
+
+          {/* Language start */}
+          <div className={`mt-24`}>
+            <div className={`flex items-center`}>
+              <Icon name={'fifth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+              <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Language')}</span>
+              <Icon name={'require'}
+                    style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+            </div>
+            <div className={`mt-12`}>
+              <Select placeholder={t('Select the language')} style={{width: pxToVw(252), height: pxToVw(36)}}
+                      options={languages} value={language} onSelect={(value) => setLanguage(value)}/>
+            </div>
+          </div>
+          {/* Language end */}
 
           <div className={`mt-24`}>
             <Button
               type="default"
               loading={loading}
-              disabled={canGenerate()}
-              onClick={() => generateText()}
+              disabled={canGenerate}
+              onClick={generateText}
               className={`w-251 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
             >
-              <div style={{ fontFamily: "PingFang SC Regular" }}>{t('Generate')}</div>
+              <div style={{fontFamily: "PingFang SC Regular"}}>{t('Generate')}</div>
             </Button>
           </div>
 
         </div>
-          
-        {generatedText.length == 0 ? 
+
+        {generatedText.length == 0 ?
           <div>
-            <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
-              <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
-              <p className="text-18 text-[#C4C4C4] mt-14" style={{ fontFamily: "PingFang SC Light" }}>{t("Let's Get Started!")}</p>
-              <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{ fontFamily: "PingFang SC Light" }}>{t("Choose the service to generate content")}</p>
+            <div style={{
+              'width': pxToVw(682),
+              'height': pxToVw(750),
+              display: "flex",
+              flexDirection: "column",
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Icon name={'generate'} style={{'width': pxToVw(62), 'height': pxToVw(40)}}/>
+              <p className="text-18 text-[#C4C4C4] mt-14"
+                 style={{fontFamily: "PingFang SC Light"}}>{t("Let's Get Started!")}</p>
+              <p className="text-12 text-[#C4C4C4] font-light mt-10"
+                 style={{fontFamily: "PingFang SC Light"}}>{t("Choose the service to generate content")}</p>
             </div>
           </div>
-        :
-        <div>
-          <div className={`items-start justify-between rounded-10 mt-14 p-14`} style={{ backgroundColor: "#F6F7F8", 'width': pxToVw(682), 'height': pxToVw(750), display: 'flex', flexDirection: 'column' }}>
-            <div className="scrollable-content" style={{ flex: 1, maxHeight: "100%", overflowY: "auto"}}>
-              <div className='pl-4'>
-                {generatedText.split('\n').map((paragraph, index) => {
-                  return(
-                    <p key={index} className={`leading-normal text-12 pr-16 mt-16`} style={{ fontFamily: "PingFang SC Regular", width: pxToVw(682) }}>
-                      {paragraph}
-                    </p>
-                  )
-                })}
-              </div>    
+          :
+          <div>
+            <div className={`items-start justify-between rounded-10 mt-14 p-14`} style={{
+              backgroundColor: "#F6F7F8",
+              'width': pxToVw(682),
+              'height': pxToVw(750),
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <div className="scrollable-content" style={{flex: 1, maxHeight: "100%", overflowY: "auto"}}>
+                <div className={'pl-4 text-14 leading-28'} dangerouslySetInnerHTML={{ __html: generatedText }}></div>
             </div>
 
             <div className={`flex items-center justify-end mt-24 self-end`}>
@@ -660,14 +833,14 @@ const Content = (props: Prop) => {
           <div className={`mt-24 scrollable-content`}>
             {
               history.map(item => {
-                return <div key={item.key} className={`mb-30`}>
-                  <div className={`text-10 text-[#787878]`} style={{ fontFamily: "PingFang SC Light" }}>{ t(item.time) }</div>
+                return <div key={item.time} className={`mb-30`}>
+                  <div className={`text-10 text-[#787878]`} style={{ fontFamily: "PingFang SC Light" }}>{ item.time }</div>
                   <div className={`cursor-pointer`}>
                     {
                       item.children.map(it => {
-                        return <div key={it.key} className={`flex items-center mt-18`}>
+                        return <div key={it.created_at} className={`flex items-center mt-18 cursor-pointer`} onClick={() => { getHistoryById(it.id).then() }}>
                           <Icon name={'history'} style={{ 'width': pxToVw(12), 'height': pxToVw(14) }} />
-                          <span className={`text-12 text-black ml-8 truncate`} style={{ fontFamily: "PingFang SC Medium" }}>{ t(it.text) }</span>
+                          <div className={`text-12 text-black ml-8 truncate`} style={{ fontFamily: "PingFang SC Medium" }}>{ it.text }</div>
                         </div>
                       })
                     }

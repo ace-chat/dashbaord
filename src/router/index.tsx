@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createHashRouter, Navigate } from 'react-router-dom'
 import type { RouteObject } from 'react-router-dom'
 import AuthRoute from '@/auth'
 
@@ -158,7 +158,7 @@ const routes: RouteObject[] = [
             ]
           },
           {
-            path: 'analytics',
+            path: 'analytics.tsx',
             element: <Analytics />,
             children: [
               {
@@ -197,7 +197,7 @@ const routes: RouteObject[] = [
   },
 ]
 
-const router = createBrowserRouter(routes, {
+const router = createHashRouter(routes, {
   future: {
     v7_normalizeFormMethod: true
   }

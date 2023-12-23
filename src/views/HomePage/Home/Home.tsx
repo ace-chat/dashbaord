@@ -11,10 +11,10 @@ function Home() {
 
   const [cards] = useState([
     {
-      id: 'analytics',
+      id: 'analytics.tsx',
       icon: analyticsIcon,
       title: t('Data Analytics'),
-      content: t('Dive into the world of data insights. Our AI-driven analytics unveils your customers\' preferences, helping you make informed decisions.')
+      content: t('Dive into the world of data insights. Our AI-driven analytics.tsx unveils your customers\' preferences, helping you make informed decisions.')
     },
     {
       id: 'content',

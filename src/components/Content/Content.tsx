@@ -80,7 +80,7 @@ const Content = (props: Prop) => {
     setCountries(arr);
   };
 
-  async function getVoices(){
+  const getVoices = async() => {
     const res: Array<Voice> = await getAllVoices()
 
     let arr: Array<Option> = [];

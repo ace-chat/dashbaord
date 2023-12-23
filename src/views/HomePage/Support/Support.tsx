@@ -69,7 +69,7 @@ const Support = () => {
         <div className={`mt-30`} style={{ alignSelf: "flex-start", marginLeft: pxToVw(36), color: "#002138", fontSize: pxToVw(20), fontFamily: "PingFang SC Medium" }}>{ t("Tutorials") }</div>
         <div className={`mt-30`} style={{ alignSelf: "center", color: "#002138", fontSize: pxToVw(18), fontFamily: "PingFang SC Medium" }}>{ t("Explore ACE AI") }</div>
         <div className={`custom-div`} style={{ alignSelf: "center", fontSize: pxToVw(25), fontFamily: "PingFang SC Regular" }}>{ t("Just in 5 minutes") }</div>
-        <div className={`mt-5`} style={{ "width": pxToVw(651), alignSelf: "center", textAlign: "center", color: "#404040", fontSize: pxToVw(12), fontFamily: "PingFang SC Regular" }}>{ t("Your hub for mastering every facet of our website's diverse components. From harnessing AI analytics to crafting compelling content and setting up AI-powered chatbots, our tutorials empower you to unleash the full potential of our services.") }</div>
+        <div className={`mt-5`} style={{ "width": pxToVw(651), alignSelf: "center", textAlign: "center", color: "#404040", fontSize: pxToVw(12), fontFamily: "PingFang SC Regular" }}>{ t("Your hub for mastering every facet of our website's diverse components. From harnessing AI analytics.tsx to crafting compelling content and setting up AI-powered chatbots, our tutorials empower you to unleash the full potential of our services.") }</div>
       </div>
       
       <div className={`flex flex-row items-start justify-center`} style={{ marginTop: pxToVw(40) }}>

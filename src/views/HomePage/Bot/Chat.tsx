@@ -3,7 +3,8 @@ import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
 import { pxToVw } from '@/utils'
 import { Button, Input } from 'antd'
-import Avatar from '../../../assets/message_avatar.png'
+import Avatar from '@/assets/message_avatar.png'
+import Loading from "@/assets/chat_loading.gif"
 
 import { getChatList, getChatHistory, createChatBot, askChatBot } from "@/request"
 import {ChatHistory, ChatHistoryChildren, ChatMessage} from "@/types";
@@ -185,22 +186,8 @@ const Chat = () => {
                           <Icon name={"ace_white"}
                                 style={{width: pxToVw(30), height: pxToVw(20), alignSelf: "center"}}/>
                       </div>
-                      <div className={`w-120 text-14 text-black ml-18 flex items-center justify-between`}>
-                          <span className="relative flex h-3 w-3">
-                            <span
-                                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-800 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-600"></span>
-                          </span>
-                          <span className="relative flex h-3 w-3">
-                            <span
-                                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-800 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-600"></span>
-                          </span>
-                          <span className="relative flex h-3 w-3">
-                            <span
-                                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-800 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-violet-600"></span>
-                          </span>
+                      <div className={`w-120 text-14 text-black ml-18`}>
+                          <img src={Loading} alt="loading"/>
                       </div>
                   </div>
                   </div>

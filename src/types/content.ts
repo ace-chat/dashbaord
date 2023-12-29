@@ -1,13 +1,12 @@
+import { Time } from "@/types/common.ts"
+
 export type ContentHistoryChildren = {
   id: number;
   type: number;
   ads_id: number;
   user_id: number;
   text: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-}
+} & Time
 
 export type ContentHistory = {
   time: string;

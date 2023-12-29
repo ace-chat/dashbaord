@@ -174,5 +174,13 @@
   "Email": "Email",
   "Display Name": "Display Name",
   "Ace Support": "Ace Support",
-  "Create Brand Voice! ✨": "Create Brand Voice! ✨"
+  "Create Brand Voice! ✨": "Create Brand Voice! ✨",
+  "Get your data all set with our simple analytics.tsx tool. Just a click away.": "Get your data all set with our simple analytics.tsx tool. Just a click away.",
+  "Simple Analysis In Progress": "Simple Analysis In Progress",
+  "Thank you for your patience. Our AI-bot is preparing a simple analytics report for you based on the data you provided.": "Thank you for your patience. Our AI-bot is preparing a simple analytics report for you based on the data you provided.",
+  "Please wait for a few minutes. Do not refresh the page.": "Please wait for a few minutes. Do not refresh the page.",
+  "Get your data all set with our deep analytics.tsx tool. Just a click away.": "Get your data all set with our deep analytics.tsx tool. Just a click away.",
+  "Thank you for your patience. Our experts have prepared a deep analysis of your data based on the service you chose. Please download the report by clicking on the button below.": "Thank you for your patience. Our experts have prepared a deep analysis of your data based on the service you chose. Please download the report by clicking on the button below.",
+  "Your file is ready": "Your file is ready",
+  "Download": "Download"
 }

@@ -35,11 +35,13 @@ http.interceptors.response.use(
 export const instance = ({
   url,
   method,
+  headers,
   params,
   data,
 }: {
   url: string
   method: Method | string
+  headers?: Record<string, any>
   params?: Record<string, any>
   data?: Record<string, any>
 }) => new Promise<Response>((resolve, reject) => {
@@ -47,6 +49,7 @@ export const instance = ({
       url,
       method,
       headers: {
+        ...headers,
         Authorization: `Bearer ${store.getState().token.token}`,
       },
       params,

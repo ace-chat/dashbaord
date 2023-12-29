@@ -163,11 +163,11 @@ const routes: RouteObject[] = [
             children: [
               {
                 path: 'simple',
-                element: <Simple tag={"simple"} title={"234"} subTitle={"5432"} />
+                element: <Simple />
               },
               {
                 path: 'deep',
-                element: <Deep tag={"deep"} title={"324"} subTitle={"453435"} />
+                element: <Deep />
               },
             ]
           },

@@ -1,197 +1,304 @@
-import { useState, useRef } from 'react'
-import { useSelector } from 'react-redux';
+import { useState, useRef, useEffect } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
-import { Button, message } from 'antd'
+import { Button, message, Select } from 'antd'
 import { pxToVw } from '@/utils'
+import { upload, generatorAnalytics, getAnalyticsHistory, getAnalyticsById } from '@/request'
 
-import axios from 'axios'
-import { base_url } from '@/utils/constants';
-import { RootState } from '@/store';
+import { AnalyticsHistory, AnalyticsHistoryChildren, Option } from "@/types"
+import moment from "moment-timezone";
 
-type Prop = {
-  title: string;
-  flow?: string;
-  subTitle: string;
-  tag: string;
-}
+import Plot from 'react-plotly.js';
 
-const Simple = (props: Prop) => {
+const Simple = () => {
   const { t } = useTranslation()
-  const { token } = useSelector((state: RootState) => state.token)
   const [loading, setLoading] = useState(false);
 
-  const [generatedResult, setGeneratedResult] = useState();
-  const [_, setGeneratedContent] = useState();
+  const [generatedContent, setGeneratedContent] = useState<any>();
+  const [options, setOptions] = useState<Array<Option>>([]);
+  const [mainChartsData, setMainChartsData] = useState<any[]>([]);
+  const [mainChartsLayout, setMainChartsLayout] = useState<any>({});
+  const [negativeChartsData, setNegativeChartsData] = useState<any[]>([]);
+  const [negativeChartsLayout, setNegativeChartsLayout] = useState<any>({});
+  const [positiveChartsData, setPositiveChartsData] = useState<any[]>([]);
+  const [positiveChartsLayout, setPositiveChartsLayout] = useState<any>({});
 
-  const [history] = useState([
-    { key: '1', time: 'Today', children: [
-        { key: '1-1', text: 'Borem ipsum dolordict ImahBorem ipsum d' },
-        { key: '1-2', text: 'Borem ipsum dolordict ImahBorem ipsum d' }
-      ] },
-    { key: '2', time: 'Oct, 10st', children: [
-        { key: '2-1', text: 'Borem ipsum dolordict ImahBorem ipsum d' },
-        { key: '2-2', text: 'Borem ipsum dolordict ImahBorem ipsum d' }
-      ] }
-  ]);
+  const [history, setHistory] = useState<Array<AnalyticsHistory>>([]);
 
   const fileInput: any = useRef();
-  const [selectedFile, setSelectedFile] = useState();
+  const [selectedFile, setSelectedFile] = useState<File | null>();
+  const [contentStatus, setContentStatus] = useState<boolean>(false);
 
   const handleFileInputChange = (e: any) => {
     const chosenFile = e.target.files[0];
     if (chosenFile) {
       setSelectedFile(chosenFile);
-      console.log('Selected File:', chosenFile);
-      const { name, size, type } = chosenFile;
-      console.log('File Details:', { name, size, type });
-
-      // Handle the file as needed (e.g., upload to server)
     }
   };
 
   const generate = async() => {
-    const formData: any = new FormData();
-    formData.append('file', selectedFile);
+    const formData = new FormData();
+    formData.append('file', selectedFile as any);
 
     try {
       setLoading(true);
-      const fileResponse = await axios.post(`${base_url}/common/upload`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      if(fileResponse.data.code == 200){
-        getReport(fileResponse.data.data);
-      } 
-      else{
-        setLoading(false);
-        message.error(JSON.stringify(fileResponse.data));
-      }
-    } catch (error: any) {
-      setLoading(false);
-      message.error(error.message)
-    } 
-  };
-
-  const getReport = async (file_name: any) => {
-    const formData: any = new FormData();
-    formData.append('filename', file_name);
-
-    try {
-      const response = await axios.post(`${base_url}/analytics/simple/generator`, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-      });
-      if(response.data.code == 200){ 
-        setLoading(false);
-        setGeneratedResult(JSON.parse(response.data.data));
-        setGeneratedContent(JSON.parse(response.data.data.content))
-      }
-      else{
-        setLoading(false);
-        message.error(JSON.stringify(response.data));
-      } 
+      const res = await upload(formData);
+      await getReport(res);
     } catch (error: any) {
       setLoading(false);
       message.error(error.message)
     }
   };
+
+  const getReport = async (file_name: any) => {
+    try {
+      const res = await generatorAnalytics(file_name);
+
+      setLoading(false);
+      setContentStatus(true);
+      dealWithData(JSON.parse(res.content));
+      setGeneratedContent(JSON.parse(res.content));
+    } catch (error: any) {
+      setLoading(false);
+      message.error(error.message)
+    }
+  };
+
+  const getHistory = async () => {
+    let res: Array<AnalyticsHistoryChildren> = await getAnalyticsHistory();
+
+    let arr: Map<string, Array<AnalyticsHistoryChildren>> = new Map();
+    res.forEach(item => {
+      let time = moment(item.created_at).local().format("MMMM Do YYYY");
+
+      if(arr.has(time)){
+        let a = arr.get(time) || [];
+        a.push(item);
+        arr.set(time, a);
+      }else{
+        arr.set(time, [item])
+      }
+    })
+
+    let a: Array<AnalyticsHistory> = [];
+    arr.forEach((value, key) => {
+      a.push({
+        time: key,
+        children: value,
+      })
+    })
+
+    setHistory(a.reverse());
+  }
+
+  const getHistoryContent = async (id: number) => {
+    setLoading(true);
+    let res = await getAnalyticsById(id);
+    setGeneratedContent(JSON.parse(res.content));
+    dealWithData(JSON.parse(res.content));
+    console.log(JSON.parse(res.content));
+    setLoading(false);
+    setContentStatus(true);
+  }
+
+  const handleChange = (value: number) => {
+    dealWithData(generatedContent, value);
+  }
+
+  const dealWithData = (data: any, i = 0) => {
+    let options: Option[] = [];
+    data.negative_scatter.forEach((item: any, index: number) => {
+      options.push({
+        label: item.layout.title.text,
+        value: index,
+      });
+    });
+    setOptions(options);
+
+    let dataChartsData: any = undefined;
+    let dataChartsLayout: any = undefined;
+    data.charts.forEach((item: any, index: number) => {
+      if(index === i) {
+        dataChartsData = item.data;
+        dataChartsLayout = item.layout;
+      }
+    });
+    setMainChartsData(dataChartsData);
+    setMainChartsLayout(dataChartsLayout);
+
+    let positiveChartsData: any = undefined;
+    let positiveChartsLayout: any = undefined;
+    data.positive_scatter.forEach((item: any, index: number) => {
+      if(index === i) {
+        positiveChartsData = item.data;
+        positiveChartsLayout = item.layout;
+      }
+    });
+    setPositiveChartsData(positiveChartsData);
+    setPositiveChartsLayout(positiveChartsLayout);
+
+    let negativeChartsData: any = undefined;
+    let negativeChartsLayout: any = undefined;
+    data.negative_scatter.forEach((item: any, index: number) => {
+      if(index === i) {
+        negativeChartsData = item.data;
+        negativeChartsLayout = item.layout;
+      }
+    });
+    setNegativeChartsData(negativeChartsData);
+    setNegativeChartsLayout(negativeChartsLayout);
+  }
+
+  useEffect(() => {
+    setContentStatus(false);
+    Promise.all([
+      getHistory(),
+    ]).then()
+  }, []);
 
   return <>
     <div className={`flex flex-col`}>
       <div className='flex flex-row mt-14' style={{ marginLeft: pxToVw(29) }}>
-        {props?.flow &&
-          <div className={`text-[#545B65]`} style={{ fontFamily: "PingFang SC Regular", fontSize: pxToVw(18)}}>{t(props.flow)}&nbsp;&gt;&nbsp;</div>
-        }
-        <div className={`text-black`} style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(18)}}>{ t("Simple Analytics Tool") }</div>
+        <div className={`text-black text-18`} style={{ fontFamily: "PingFang SC Medium" }}>{ t("Simple Analytics Tool") }</div>
       </div>
-      <div className={`text-[#545B65] mt-4`} style={{ marginLeft: pxToVw(29), fontFamily: "PingFang SC Light", fontSize: pxToVw(14) }}>{ t("Get your data all set with our simple analytics.tsx tool. Just a click away.") }</div>
+      <div className={`text-[#545B65] mt-4 ml-29 text-14`} style={{ fontFamily: "PingFang SC Light" }}>{ t("Get your data all set with our simple analytics tool. Just a click away.") }</div>
     </div>
-    <div className={`bg-white rounded-8 mt-14`} style={{ width: pxToVw(1389), marginLeft: pxToVw(29), boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
-      {generatedResult ? 
-        null
-      :
-      <div className={`flex justify-around`}>
-        <div className={`w-300 p-24`} style={{ fontFamily: "PingFang SC Regular" }}>
-
-          <div>
-            <div className={`flex items-center`}>
-                <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Browse') }</span>
-                <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
-            </div>
-            <div className={`mt-12`}>
-              <div className='flex rounded-8 mt-16 justify-center items-center' 
-                style={{"backgroundColor": "#F4F6FA", "display": "flex", "width": pxToVw(252), "height": pxToVw(144), border: "1px dashed #8B8B8B", flexDirection: "column" }}
-                onClick={() => fileInput.current.click()}>
-                <input
-                    type="file"
-                    id="fileInput"
-                    accept=".csv"
-                    ref={fileInput}
-                    onChange={handleFileInputChange}
-                    style={{ display: "none" }}
-                />
-                <Icon name={'upload'} style={{ 'width': pxToVw(22), 'height': pxToVw(22), 'marginTop': pxToVw(5) }} />
-              <div className={`mt-2`} style={{ color: "#000", opacity: 0.6, fontSize: pxToVw(10), fontFamily: "PingFang SC Bold" }}>{ t("Upload a CSV file here") }</div>
-            </div> 
-            </div>
-          </div>
-            
-
-          <div className={`mt-24`}>
-            <Button
-              type="default"
-              loading={loading}
-              disabled={selectedFile ? false : true}
-              onClick={() => {
-                generate()
-              }}
-              className={`w-251 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
-            >
-              <div style={{ fontFamily: "PingFang SC Regular" }}>{t('Generate')}</div>
-            </Button>
-          </div>
-
-        </div>
-
-        <div>
-          <div style={{ 'width': pxToVw(682), 'height': pxToVw(750), display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center', }}>
-            <Icon name={'generate'} style={{ 'width': pxToVw(62), 'height': pxToVw(40) }} />
-            <p className="text-18 text-[#C4C4C4] mt-14" style={{ fontFamily: "PingFang SC Light" }}>{t("Let's Get Started!")}</p>
-            <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{ fontFamily: "PingFang SC Light", textAlign: "center", width: pxToVw(573) }}>{t("Upload your sales or user data (preferably a .csv file) of your business and generate aggregation charts, correlation analysis charts and interpretations.")}</p>
-          </div>
-        </div>
-
-        <div className={`w-289 p-24 h-821`}>
-          <div className={`text-12`} style={{ fontFamily: "PingFang SC Bold" }} >{ t('History') }</div>
-          <div className={`mt-24 scrollable-content`}>
-            {
-              history.map(item => {
-                return <div key={item.key} className={`mb-30`}>
-                  <div className={`text-10 text-[#787878]`} style={{ fontFamily: "PingFang SC Light" }}>{ t(item.time) }</div>
-                  <div className={`cursor-pointer`}>
-                    {
-                      item.children.map(it => {
-                        return <div key={it.key} className={`flex items-center mt-18`}>
-                          <Icon name={'history'} style={{ 'width': pxToVw(12), 'height': pxToVw(14) }} />
-                          <span className={`text-12 text-black ml-8 truncate`} style={{ fontFamily: "PingFang SC Medium" }}>{ t(it.text) }</span>
-                        </div>
-                      })
-                    }
+    {
+      !loading ? <>
+        <div className={`bg-white rounded-8 mt-14 w-1389 ml-29`}
+             style={{boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
+          {
+            !contentStatus ? <div className={`flex justify-between items-start`}>
+              <div className={`w-300 p-24`} style={{fontFamily: "PingFang SC Regular"}}>
+                <div>
+                  <div className={`flex items-center`}>
+                    <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                    <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Browse')}</span>
+                    <Icon name={'require'}
+                          style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                  </div>
+                  <div className={`mt-12`}>
+                    <div
+                      className='w-252 h-144 flex flex-col rounded-8 mt-16 justify-center items-center bg-[#F4F6FA] cursor-pointer'
+                      style={{border: "1px dashed #8B8B8B"}}
+                      onClick={() => fileInput.current.click()}>
+                      {
+                        selectedFile ? <>
+                          <Icon name={'pdf'} style={{'width': pxToVw(30), 'height': pxToVw(30)}}/>
+                          <span className={`text-12 text-[#555555] mt-12`}>{selectedFile.name}</span>
+                        </> : <>
+                          <input
+                            type="file"
+                            id="fileInput"
+                            accept=".csv"
+                            ref={fileInput}
+                            onChange={handleFileInputChange}
+                            style={{display: "none"}}
+                          />
+                          <Icon name={'upload'}
+                                style={{'width': pxToVw(22), 'height': pxToVw(22), 'marginTop': pxToVw(5)}}/>
+                          <div className={`mt-2`} style={{
+                            color: "#000",
+                            opacity: 0.6,
+                            fontSize: pxToVw(10),
+                            fontFamily: "PingFang SC Bold"
+                          }}>{t("Upload a CSV file here")}</div>
+                        </>
+                      }
+                    </div>
                   </div>
                 </div>
-              })
-            }
+
+
+                <div className={`mt-24`}>
+                  <Button
+                    type="default"
+                    disabled={!selectedFile}
+                    onClick={generate}
+                    className={`w-251 h-36 flex items-center justify-center bg-[#E9E9E9] rounded-8 text-14 text-[#555555] cursor-pointer select-none`}
+                  >
+                    <div style={{fontFamily: "PingFang SC Regular"}}>{t('Generate')}</div>
+                  </Button>
+                </div>
+              </div>
+
+              <div className={`h-821 overflow-y-auto`}>
+                <div className={`w-682 h-750 flex flex-col items-center justify-center`}>
+                  <Icon name={'generate'} style={{'width': pxToVw(62), 'height': pxToVw(40)}}/>
+                  <p className="text-18 text-[#C4C4C4] mt-14"
+                     style={{fontFamily: "PingFang SC Light"}}>{t("Let's Get Started!")}</p>
+                  <p className="text-12 text-[#C4C4C4] font-light mt-10" style={{
+                    fontFamily: "PingFang SC Light",
+                    textAlign: "center",
+                    width: pxToVw(573)
+                  }}>{t("Upload your sales or user data (preferably a .csv file) of your business and generate aggregation charts, correlation analysis charts and interpretations.")}</p>
+                </div>
+              </div>
+
+              <div className={`w-289 p-24 h-821`}>
+                <div className={`text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('History')}</div>
+                <div className={`mt-24 scrollable-content`}>
+                  {
+                    history.map(item => {
+                      return <div key={item.time} className={`mb-30`}>
+                        <div className={`text-10 text-[#787878]`}
+                             style={{fontFamily: "PingFang SC Light"}}>{item.time}</div>
+                        <div className={`cursor-pointer`}>
+                          {
+                            item.children.map(it => {
+                              return <div key={it.id} className={`flex items-center mt-18`} onClick={() => {
+                                getHistoryContent(it.id).then()
+                              }}>
+                                <Icon name={'history'} style={{'width': pxToVw(12), 'height': pxToVw(14)}}/>
+                                <span className={`text-12 text-black ml-8 truncate`}
+                                      style={{fontFamily: "PingFang SC Medium"}}>{it.title}</span>
+                              </div>
+                            })
+                          }
+                        </div>
+                      </div>
+                    })
+                  }
+                </div>
+              </div>
+            </div> : <div className={`py-44`}>
+              <div className={`px-69`}>
+                <Select defaultValue={options[0].value} options={options} onChange={handleChange}></Select>
+              </div>
+              <div className={`pl-30`}>
+                <div>
+                  <Plot data={mainChartsData} layout={mainChartsLayout}/>
+                </div>
+                <div>
+                  <Plot data={positiveChartsData} layout={positiveChartsLayout}/>
+                </div>
+                <div>
+                  <Plot data={negativeChartsData} layout={negativeChartsLayout}/>
+                </div>
+              </div>
+              <div className={`px-69 text-14`}>
+                <div className={`mt-20 leading-28`}
+                     dangerouslySetInnerHTML={{__html: generatedContent.positive_report}}></div>
+                <div className={`mt-20 leading-28`}
+                     dangerouslySetInnerHTML={{__html: generatedContent.negative_report}}></div>
+              </div>
+            </div>
+          }
+        </div>
+      </> : <>
+        <div className={`w-1372 h-809 bg-white rounded-8 mt-28 flex items-center justify-center`}>
+          <div className={`flex flex-col items-center`}>
+            <div className={``}>
+              <Icon name={"logo"} style={{ "width": pxToVw(119), "height": pxToVw(119) }} />
+            </div>
+            <div></div>
+            <div className={`text-[#7B7B7B] text-21 text-center mb-10`}>{ t("Simple Analysis In Progress") }</div>
+            <div className={`text-14 text-[#C4C4C4] w-432 text-center leading-16`}>{ t("Thank you for your patience. Our AI-bot is preparing a simple analytics report for you based on the data you provided.") }</div>
+            <div className={`text-14 text-[#C4C4C4] w-432 text-center leading-16`}>{ t("Please wait for a few minutes. Do not refresh the page.") }</div>
           </div>
         </div>
-      </div>
+      </>
     }
-    </div>
   </>
 }
 

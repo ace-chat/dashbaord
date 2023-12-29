@@ -74,11 +74,14 @@ export const getAllType = () => {
   })
 }
 
-export const uploadFile = (data: FormData) => {
+export const upload = (data: FormData) => {
   return instance({
     url: "/common/upload",
-    method: "GET",
-    data
+    method: "POST",
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: data
   })
 }
 

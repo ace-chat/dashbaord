@@ -65,7 +65,7 @@ const Aside = () => {
       getItem(t('Chat with ACE'), 'bot/chat'),
       getItem(t('Create a Chatbot'), 'bot/create'),
     ]),
-    getItem(t('Analytics'), 'analytics.tsx', <Icon name={'analytics.tsx'} />, [
+    getItem(t('Analytics'), 'analytics.tsx', <Icon name={'analytics'} />, [
       getItem(t('Simple Analytics'), 'analytics.tsx/simple'),
       getItem(t('Deep Analytics'), 'analytics.tsx/deep'),
     ]),

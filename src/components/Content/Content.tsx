@@ -222,6 +222,9 @@ const Content = (props: Prop) => {
   const [keyword, setKeyword] = useState<string>();
   const [details, setDetails] = useState<string>();
 
+  // local vars
+  const countingNames = [ 'sixth', 'fifth', 'fourth', 'third', 'second', 'first' ]
+
   const canGenerate = useMemo(() => {
     let status = true;
     switch(props.tag){
@@ -466,7 +469,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.topic && <div>
                   <div className={`flex items-center`}>
-                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Topic')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -482,8 +488,11 @@ const Content = (props: Prop) => {
           {/* Text start */}
           {
             props.optional?.text && <div>
-                  <div className={`flex items-center`}>
-                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                  <div className={`flex items-center`}>                    
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Text')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -500,7 +509,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.word_count && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'second'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Word Count')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -535,7 +547,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.platform && <div>
                   <div className={`flex items-center`}>
-                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Platform')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -553,7 +568,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.details && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'second'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Details')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -610,7 +628,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.style && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'third'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                     <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Style')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -681,7 +702,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.audience && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'fourth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                 <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Audience')}</span>
               </div>
               <div className={`mt-12`}>
@@ -733,12 +757,15 @@ const Content = (props: Prop) => {
               </div>
           }
           {/* Audience end */}
-
+          
           {/* Other Details start */}
           {
             props.optional?.other_detail && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'fifth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Other Details')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -755,7 +782,10 @@ const Content = (props: Prop) => {
           {/* Language start */}
           <div className={`mt-24`}>
             <div className={`flex items-center`}>
-              <Icon name={'fifth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+              <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+              <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
               <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Language')}</span>
               <Icon name={'require'}
                     style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>

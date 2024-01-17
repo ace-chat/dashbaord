@@ -651,7 +651,7 @@ const Content = (props: Prop) => {
                     {
                       props.optional?.style.voice && <div className={`mt-12`}>
                             <Select
-                                placeholder={t('Brand Voice (Optional)')}
+                                placeholder={t('Brand Voice')}
                                 style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
                                 options={brandVoices}
                                 value={brandVoice} onSelect={(value) => setBrandVoice(value)}
@@ -687,7 +687,7 @@ const Content = (props: Prop) => {
                     {/* keyword start */}
                     {
                       props.optional.style.keyword && <div className={`mt-12`}>
-                            <Input placeholder={t('Keyword')}
+                            <Input placeholder={t('Keyword (Optional)')}
                                     style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
                                     value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
                         </div>
@@ -767,12 +767,12 @@ const Content = (props: Prop) => {
                       {countingNames.pop()}
                       </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Other Details')}</span>
-                      <Icon name={'require'}
-                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                      {/* <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/> */}
                   </div>
                   <div className={`mt-12`}>
                       <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10)}}}
-                                      placeholder={t('Type Here')} value={details}
+                                      placeholder={t('Type Here (Optional)')} value={details}
                                       onChange={(e) => setDetails(e.target.value)}/>
                   </div>
               </div>

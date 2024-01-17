@@ -206,7 +206,7 @@ const Chat = () => {
           </div>
         </div>
 
-        <div className={`w-289 p-24 h-821 overflow-y-auto`}>
+        <div className={`w-289 p-24 h-680 overflow-y-auto`}>
           <Button
             type="default"
             onClick={create}

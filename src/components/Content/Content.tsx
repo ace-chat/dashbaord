@@ -858,7 +858,7 @@ const Content = (props: Prop) => {
         </div>
       }
 
-        <div className={`w-289 p-24 h-821 overflow-y-auto`}>
+        <div className={`w-289 p-24 h-680 overflow-y-auto`}>
           <div className={`text-12`} style={{ fontFamily: "PingFang SC Bold" }} >{ t('History') }</div>
           <div className={`mt-24 scrollable-content`}>
             {

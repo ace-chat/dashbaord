@@ -7,21 +7,30 @@ import moment from 'moment-timezone'
 
 //components
 import { CreateBrandVoice } from '../Modal/CreateBrandVoice';
+import DeleteVoice from '../Modal/DeleteVoice';
 
-import { getAllRegions, getAllVoices, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType } from "@/request";
+import { getAllRegions, getAllVoices, createVoice, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType, deleteVoice } from "@/request";
 import type { ContentHistoryChildren, ContentHistory, Prop, Tone, Platform, Language, Region, Gender, Option, Voice, Type } from "@/types";
 
 const Content = (props: Prop) => {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false);
 
-  //modal for creating brand voice 
+  // modal for creating brand voice 
   const [createBrandVoice, setCreateBrandVoice] = useState(false);
+
+  // modal for confirm delete brand voice
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [id, setId] = useState(0);
+
   const toggleCreateBrandVoice = () => {
     setCreateBrandVoice(!createBrandVoice);
+    createBrandVoice && createNewVoice()
   };
-  const [brandVoiceText, setBrandVoiceText] = useState();
-  const [brandVoiceTitle, setBrandVoiceTitle] = useState();
+
+  const [brandVoiceText, setBrandVoiceText] = useState('');
+  const [brandVoiceTitle, setBrandVoiceTitle] = useState('');
   const [countries, setCountries] = useState<Array<Option>>([]);
   const [brandVoices, setBrandVoices] = useState<Array<Option>>([]);
   const [platforms, setPlatforms] = useState<Array<Option>>([]);
@@ -95,6 +104,25 @@ const Content = (props: Prop) => {
     setBrandVoices(arr);
   }
 
+  const createNewVoice = async () => {
+    const v = {
+      text: brandVoiceText,
+      name: brandVoiceTitle,
+    }
+    try {
+      setLoading(true);
+      await createVoice(v);
+      await getVoices();
+      setLoading(false);
+      setBrandVoiceText("");
+      setBrandVoiceTitle("");
+    } catch (error: any) {
+      setLoading(false);
+      message.error(error.message);
+    }
+  }
+
+
   const getGenders = async () => {
     const res: Array<Gender> = await getAllGender();
 
@@ -108,6 +136,30 @@ const Content = (props: Prop) => {
     setGenders(arr);
   }
 
+  const handleDelete = async (id: number) => {
+    if(id){
+      setId(id);
+      setShowDeleteModal(true);
+    }
+  }
+
+  const onConfirm = async () => {
+    try {
+      await deleteVoice(id);
+       let arr = brandVoices.filter(item => Number(item.value) !== id);
+      setBrandVoices(arr)
+      setBrandVoice(undefined)
+     setShowDeleteModal(false);
+     } catch (error: any) {
+       setLoading(false);
+       message.error(error.message);
+     }
+  }
+
+  const onCancel = async () => {
+    setShowDeleteModal(false)
+  }
+  
   const getTypes = async () => {
     const res: Array<Type> = await getAllType();
 
@@ -663,8 +715,10 @@ const Content = (props: Prop) => {
                                          }}>
                                       <span style={{fontFamily: "PingFang SC Regular"}}>{option.label}</span>
                                       {option.value !== "none" &&
-                                          <Icon name={option.value == "new" ? 'add' : 'trash'}
-                                                style={{'width': pxToVw(8), 'height': pxToVw(8)}}/>
+                                      <div onClick={() => handleDelete(Number(option.value))}>
+                                        <Icon name={option.value == "new" ? 'add' : 'trash'}
+                                              style={{'width': pxToVw(8), 'height': pxToVw(8)}} />
+                                      </div>
                                       }
                                     </div>
                                   );
@@ -883,6 +937,7 @@ const Content = (props: Prop) => {
 
         <CreateBrandVoice t={t} createBrandVoice={createBrandVoice} toggleCreateBrandVoice={toggleCreateBrandVoice}  brandVoiceText={brandVoiceText} setBrandVoiceText={setBrandVoiceText}
           brandVoiceTitle={brandVoiceTitle} setBrandVoiceTitle={setBrandVoiceTitle} setBrandVoices={setBrandVoices} />
+        <DeleteVoice onConfirm={onConfirm} onCancel={onCancel} showDeleteModal={showDeleteModal} />
       </div>
     </div>
   </>

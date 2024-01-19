@@ -50,7 +50,7 @@
   "Gender (Optional)": "Gender (Optional)",
   "Region (Optional)": "Region (Optional)",
   "Audience": "Audience",
-  "Brand Voice (Optional)": "Brand Voice (Optional)",
+  "Brand Voice": "Brand Voice",
   "Tones": "Tones",
   "Style": "Style",
   "Type Service/Product Name": "Type Service/Product Name",
@@ -76,7 +76,7 @@
   "Facebook": "Facebook",
   "Create New": "Create New",
   "None": "None",
-  "Type Here": "Type Here",
+  "Type Here (Optional)": "Type Here (Optional)",
   "Text": "Text",
   "Generate a version of text in a different tone that is Optimized for marketing.": "Generate a version of text in a different tone that is Optimized for marketing.",
   "Word Count": "Word Count",
@@ -186,6 +186,6 @@
   "Are you sure you want to delete this brand voice?": "Are you sure you want to delete this brand voice?",
   "Delete Brand Voice?": "Delete Brand Voice?",
   "Cancel": "Cancel",
-  "Delete": "Delete"
-
+  "Delete": "Delete",
+  "Keyword (Optional)": "Keyword (Optional)"
 }

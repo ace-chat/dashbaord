@@ -22,7 +22,7 @@ export const CreateBrandVoice = ({t, createBrandVoice, toggleCreateBrandVoice, b
                                 brandVoiceText && tag == 0 ? false : brandVoiceTitle && brandVoiceText && tag == 1 ? false : true
                             }
                             onClick={() => {
-                                tag == 0 ? setTag(1) : toggleCreateBrandVoice;
+                                tag == 0 ? setTag(1) : toggleCreateBrandVoice();
                             }}
                             className={`w-167 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 cursor-pointer select-none`}
                         >

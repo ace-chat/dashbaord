@@ -25,7 +25,7 @@ export const getAllVoices = () => {
 
 export const deleteVoice = (id: number) => {
   return instance({
-    url: "/common/voices",
+    url: "/common/deleteVoice",
     method: "DELETE",
     params: {
       id

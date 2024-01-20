@@ -7,21 +7,30 @@ import moment from 'moment-timezone'
 
 //components
 import { CreateBrandVoice } from '../Modal/CreateBrandVoice';
+import DeleteVoice from '../Modal/DeleteVoice';
 
-import { getAllRegions, getAllVoices, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType } from "@/request";
+import { getAllRegions, getAllVoices, createVoice, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType, deleteVoice } from "@/request";
 import type { ContentHistoryChildren, ContentHistory, Prop, Tone, Platform, Language, Region, Gender, Option, Voice, Type } from "@/types";
 
 const Content = (props: Prop) => {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false);
 
-  //modal for creating brand voice 
+  // modal for creating brand voice 
   const [createBrandVoice, setCreateBrandVoice] = useState(false);
+
+  // modal for confirm delete brand voice
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const [id, setId] = useState(0);
+
   const toggleCreateBrandVoice = () => {
     setCreateBrandVoice(!createBrandVoice);
+    createBrandVoice && createNewVoice()
   };
-  const [brandVoiceText, setBrandVoiceText] = useState();
-  const [brandVoiceTitle, setBrandVoiceTitle] = useState();
+
+  const [brandVoiceText, setBrandVoiceText] = useState('');
+  const [brandVoiceTitle, setBrandVoiceTitle] = useState('');
   const [countries, setCountries] = useState<Array<Option>>([]);
   const [brandVoices, setBrandVoices] = useState<Array<Option>>([]);
   const [platforms, setPlatforms] = useState<Array<Option>>([]);
@@ -95,6 +104,25 @@ const Content = (props: Prop) => {
     setBrandVoices(arr);
   }
 
+  const createNewVoice = async () => {
+    const v = {
+      text: brandVoiceText,
+      name: brandVoiceTitle,
+    }
+    try {
+      setLoading(true);
+      await createVoice(v);
+      await getVoices();
+      setLoading(false);
+      setBrandVoiceText("");
+      setBrandVoiceTitle("");
+    } catch (error: any) {
+      setLoading(false);
+      message.error(error.message);
+    }
+  }
+
+
   const getGenders = async () => {
     const res: Array<Gender> = await getAllGender();
 
@@ -108,6 +136,30 @@ const Content = (props: Prop) => {
     setGenders(arr);
   }
 
+  const handleDelete = async (id: number) => {
+    if(id){
+      setId(id);
+      setShowDeleteModal(true);
+    }
+  }
+
+  const onConfirm = async () => {
+    try {
+      await deleteVoice(id);
+       let arr = brandVoices.filter(item => Number(item.value) !== id);
+      setBrandVoices(arr)
+      setBrandVoice(undefined)
+     setShowDeleteModal(false);
+     } catch (error: any) {
+       setLoading(false);
+       message.error(error.message);
+     }
+  }
+
+  const onCancel = async () => {
+    setShowDeleteModal(false)
+  }
+  
   const getTypes = async () => {
     const res: Array<Type> = await getAllType();
 
@@ -221,6 +273,9 @@ const Content = (props: Prop) => {
   const [type, setType] = useState<number>();
   const [keyword, setKeyword] = useState<string>();
   const [details, setDetails] = useState<string>();
+
+  // local vars
+  const countingNames = [ 'sixth', 'fifth', 'fourth', 'third', 'second', 'first' ]
 
   const canGenerate = useMemo(() => {
     let status = true;
@@ -466,7 +521,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.topic && <div>
                   <div className={`flex items-center`}>
-                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Topic')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -482,8 +540,11 @@ const Content = (props: Prop) => {
           {/* Text start */}
           {
             props.optional?.text && <div>
-                  <div className={`flex items-center`}>
-                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                  <div className={`flex items-center`}>                    
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Text')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -500,7 +561,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.word_count && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'second'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Word Count')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -535,7 +599,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.platform && <div>
                   <div className={`flex items-center`}>
-                      <Icon name={'first'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Platform')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -553,7 +620,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.details && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'second'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Details')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -610,7 +680,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.style && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'third'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                     <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Style')}</span>
                       <Icon name={'require'}
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -630,7 +703,7 @@ const Content = (props: Prop) => {
                     {
                       props.optional?.style.voice && <div className={`mt-12`}>
                             <Select
-                                placeholder={t('Brand Voice (Optional)')}
+                                placeholder={t('Brand Voice')}
                                 style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
                                 options={brandVoices}
                                 value={brandVoice} onSelect={(value) => setBrandVoice(value)}
@@ -642,8 +715,10 @@ const Content = (props: Prop) => {
                                          }}>
                                       <span style={{fontFamily: "PingFang SC Regular"}}>{option.label}</span>
                                       {option.value !== "none" &&
-                                          <Icon name={option.value == "new" ? 'add' : 'trash'}
-                                                style={{'width': pxToVw(8), 'height': pxToVw(8)}}/>
+                                      <div onClick={() => handleDelete(Number(option.value))}>
+                                        <Icon name={option.value == "new" ? 'add' : 'trash'}
+                                              style={{'width': pxToVw(8), 'height': pxToVw(8)}} />
+                                      </div>
                                       }
                                     </div>
                                   );
@@ -666,7 +741,7 @@ const Content = (props: Prop) => {
                     {/* keyword start */}
                     {
                       props.optional.style.keyword && <div className={`mt-12`}>
-                            <Input placeholder={t('Keyword')}
+                            <Input placeholder={t('Keyword (Optional)')}
                                     style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
                                     value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
                         </div>
@@ -681,7 +756,10 @@ const Content = (props: Prop) => {
           {
             props.optional?.audience && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'fourth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                 <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Audience')}</span>
               </div>
               <div className={`mt-12`}>
@@ -733,19 +811,22 @@ const Content = (props: Prop) => {
               </div>
           }
           {/* Audience end */}
-
+          
           {/* Other Details start */}
           {
             props.optional?.other_detail && <div className={`mt-24`}>
                   <div className={`flex items-center`}>
-                      <Icon name={'fifth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+                      <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
                       <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Other Details')}</span>
-                      <Icon name={'require'}
-                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
+                      {/* <Icon name={'require'}
+                            style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/> */}
                   </div>
                   <div className={`mt-12`}>
                       <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10)}}}
-                                      placeholder={t('Type Here')} value={details}
+                                      placeholder={t('Type Here (Optional)')} value={details}
                                       onChange={(e) => setDetails(e.target.value)}/>
                   </div>
               </div>
@@ -755,7 +836,10 @@ const Content = (props: Prop) => {
           {/* Language start */}
           <div className={`mt-24`}>
             <div className={`flex items-center`}>
-              <Icon name={'fifth'} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+              <Icon name={`${countingNames[countingNames.length - 1]}`} style={{'width': pxToVw(22), 'height': pxToVw(22)}}/>
+              <div className='hidden'>
+                      {countingNames.pop()}
+                      </div>
               <span className={`ml-8 text-12`} style={{fontFamily: "PingFang SC Bold"}}>{t('Language')}</span>
               <Icon name={'require'}
                     style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
@@ -828,7 +912,7 @@ const Content = (props: Prop) => {
         </div>
       }
 
-        <div className={`w-289 p-24 h-821 overflow-y-auto`}>
+        <div className={`w-289 p-24 h-680 overflow-y-auto`}>
           <div className={`text-12`} style={{ fontFamily: "PingFang SC Bold" }} >{ t('History') }</div>
           <div className={`mt-24 scrollable-content`}>
             {
@@ -853,6 +937,7 @@ const Content = (props: Prop) => {
 
         <CreateBrandVoice t={t} createBrandVoice={createBrandVoice} toggleCreateBrandVoice={toggleCreateBrandVoice}  brandVoiceText={brandVoiceText} setBrandVoiceText={setBrandVoiceText}
           brandVoiceTitle={brandVoiceTitle} setBrandVoiceTitle={setBrandVoiceTitle} setBrandVoices={setBrandVoices} />
+        <DeleteVoice onConfirm={onConfirm} onCancel={onCancel} showDeleteModal={showDeleteModal} />
       </div>
     </div>
   </>

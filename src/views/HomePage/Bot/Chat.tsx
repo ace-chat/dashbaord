@@ -206,7 +206,7 @@ const Chat = () => {
           </div>
         </div>
 
-        <div className={`w-289 p-24 h-821 overflow-y-auto`}>
+        <div className={`w-289 p-24 h-680`}>
           <Button
             type="default"
             onClick={create}
@@ -215,7 +215,7 @@ const Chat = () => {
           <Icon name={'add'} style={{ 'width': pxToVw(11), 'height': pxToVw(11), 'marginRight': '12px' }} />
           <div style={{ fontFamily: "PingFang SC Regular" }}>{t('Create New Chat')}</div>
         </Button>
-          <div className={`mt-24`}>
+          <div className={`mt-24 h-full overflow-y-auto`}>
             {
               history.map(item => {
                 return <div key={item.time} className={`mb-30`}>

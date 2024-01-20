@@ -16,6 +16,8 @@ const Simple = () => {
 
   const [generatedContent, setGeneratedContent] = useState<any>();
   const [options, setOptions] = useState<Array<Option>>([]);
+  const [positiveOptions, setPositiveOptions] = useState<Array<Option>>([]);
+  const [negativeOptions, setNegativeOptions] = useState<Array<Option>>([]);
   const [mainChartsData, setMainChartsData] = useState<any[]>([]);
   const [mainChartsLayout, setMainChartsLayout] = useState<any>({});
   const [negativeChartsData, setNegativeChartsData] = useState<any[]>([]);
@@ -56,7 +58,7 @@ const Simple = () => {
 
       setLoading(false);
       setContentStatus(true);
-      dealWithData(JSON.parse(res.content));
+      dealWithDataCharts(JSON.parse(res.content));
       setGeneratedContent(JSON.parse(res.content));
     } catch (error: any) {
       setLoading(false);
@@ -95,25 +97,54 @@ const Simple = () => {
     setLoading(true);
     let res = await getAnalyticsById(id);
     setGeneratedContent(JSON.parse(res.content));
-    dealWithData(JSON.parse(res.content));
+    dealWithDataCharts(JSON.parse(res.content));
     console.log(JSON.parse(res.content));
     setLoading(false);
     setContentStatus(true);
   }
 
-  const handleChange = (value: number) => {
-    dealWithData(generatedContent, value);
+  // ToDo: avoid repitition in functions
+  const handleChangeCharts = (value: number) => {
+    dealWithDataCharts(generatedContent, value);
+  }
+  const handleChangePositive = (value: number) => {
+    dealWithDataPositive(generatedContent, value);
+  }
+  const handleChangeNegative = (value: number) => {
+    dealWithDataNegative(generatedContent, value);
   }
 
-  const dealWithData = (data: any, i = 0) => {
+  const dealWithDataCharts = (data: any, i = 0) => {
     let options: Option[] = [];
-    data.negative_scatter.forEach((item: any, index: number) => {
+    let positiveOptions: Option[] = [];
+    let negativeOptions: Option[] = [];
+
+    data.charts.forEach((item: any, index: number) => {
       options.push({
         label: item.layout.title.text,
         value: index,
       });
+    }
+    );
+
+    data.negative_scatter.forEach((item: any, index: number) => {
+      negativeOptions.push({
+        label: item.layout.title.text,
+        value: index,
+      });
     });
+
+    data.positive_scatter.forEach((item: any, index: number) => {
+      positiveOptions.push({
+        label: item.layout.title.text,
+        value: index,
+      });
+    });
+
     setOptions(options);
+    setPositiveOptions(positiveOptions);
+    setNegativeOptions(negativeOptions);
+
 
     let dataChartsData: any = undefined;
     let dataChartsLayout: any = undefined;
@@ -148,6 +179,56 @@ const Simple = () => {
     setNegativeChartsData(negativeChartsData);
     setNegativeChartsLayout(negativeChartsLayout);
   }
+  
+  // ToDo: avoid repitition in functions
+  const dealWithDataPositive = (data: any, i = 0) => {
+    let positiveOptions: Option[] = [];
+
+    data.positive_scatter.forEach((item: any, index: number) => {
+      positiveOptions.push({
+        label: item.layout.title.text,
+        value: index,
+      });
+    });
+
+    setPositiveOptions(positiveOptions);
+
+    let positiveChartsData: any = undefined;
+    let positiveChartsLayout: any = undefined;
+    data.positive_scatter.forEach((item: any, index: number) => {
+      if(index === i) {
+        positiveChartsData = item.data;
+        positiveChartsLayout = item.layout;
+      }
+    });
+    setPositiveChartsData(positiveChartsData);
+    setPositiveChartsLayout(positiveChartsLayout);
+  }
+
+  const dealWithDataNegative = (data: any, i = 0) => {
+    let negativeOptions: Option[] = [];
+
+    data.negative_scatter.forEach((item: any, index: number) => {
+      negativeOptions.push({
+        label: item.layout.title.text,
+        value: index,
+      });
+    });
+
+    setNegativeOptions(negativeOptions);
+
+    let negativeChartsData: any = undefined;
+    let negativeChartsLayout: any = undefined;
+    data.negative_scatter.forEach((item: any, index: number) => {
+      if(index === i) {
+        negativeChartsData = item.data;
+        negativeChartsLayout = item.layout;
+      }
+    });
+    setNegativeChartsData(negativeChartsData);
+    setNegativeChartsLayout(negativeChartsLayout);
+  }
+
 
   useEffect(() => {
     setContentStatus(false);
@@ -263,24 +344,35 @@ const Simple = () => {
               </div>
             </div> : <div className={`py-44`}>
               <div className={`px-69`}>
-                <Select defaultValue={options[0].value} options={options} onChange={handleChange}></Select>
+                <Select defaultValue={options[0].value} options={options} onChange={handleChangeCharts}></Select>
               </div>
               <div className={`pl-30`}>
                 <div>
                   <Plot data={mainChartsData} layout={mainChartsLayout}/>
                 </div>
+
+                <hr className="my-12 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50" />
+                <div className={`px-69`}
+                     dangerouslySetInnerHTML={{__html: generatedContent.positive_report}}> 
+                  </div>
+                  
+                <div className={`px-69 pt-40`}>
+                <Select defaultValue={positiveOptions[0].value} options={positiveOptions} onChange={handleChangePositive}></Select>
+              </div>
                 <div>
                   <Plot data={positiveChartsData} layout={positiveChartsLayout}/>
                 </div>
+
+                <hr className="my-12 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50" />
+                <div className={`px-69`}
+                     dangerouslySetInnerHTML={{__html: generatedContent.negative_report}}></div>
+                    
+                <div className={`px-69 pt-40`}>
+                <Select defaultValue={negativeOptions[0].value} options={negativeOptions} onChange={handleChangeNegative}></Select>
+              </div>
                 <div>
                   <Plot data={negativeChartsData} layout={negativeChartsLayout}/>
                 </div>
-              </div>
-              <div className={`px-69 text-14`}>
-                <div className={`mt-20 leading-28`}
-                     dangerouslySetInnerHTML={{__html: generatedContent.positive_report}}></div>
-                <div className={`mt-20 leading-28`}
-                     dangerouslySetInnerHTML={{__html: generatedContent.negative_report}}></div>
               </div>
             </div>
           }

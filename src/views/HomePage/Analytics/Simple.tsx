@@ -344,7 +344,7 @@ const Simple = () => {
               </div>
             </div> : <div className={`py-44`}>
               <div className={`px-69`}>
-                <Select defaultValue={options[0].value} options={options} onChange={handleChangeCharts}></Select>
+                <Select style={{ width: pxToVw(200) }} defaultValue={options[0].value} options={options} onChange={handleChangeCharts}></Select>
               </div>
               <div className={`pl-30`}>
                 <div>
@@ -357,7 +357,7 @@ const Simple = () => {
                   </div>
                   
                 <div className={`px-69 pt-40`}>
-                <Select defaultValue={positiveOptions[0].value} options={positiveOptions} onChange={handleChangePositive}></Select>
+                <Select style={{ width: pxToVw(200) }} defaultValue={positiveOptions[0].value} options={positiveOptions} onChange={handleChangePositive}></Select>
               </div>
                 <div>
                   <Plot data={positiveChartsData} layout={positiveChartsLayout}/>
@@ -368,7 +368,7 @@ const Simple = () => {
                      dangerouslySetInnerHTML={{__html: generatedContent.negative_report}}></div>
                     
                 <div className={`px-69 pt-40`}>
-                <Select defaultValue={negativeOptions[0].value} options={negativeOptions} onChange={handleChangeNegative}></Select>
+                <Select style={{ width: pxToVw(200) }} defaultValue={negativeOptions[0].value} options={negativeOptions} onChange={handleChangeNegative}></Select>
               </div>
                 <div>
                   <Plot data={negativeChartsData} layout={negativeChartsLayout}/>

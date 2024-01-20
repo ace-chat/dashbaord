@@ -17,33 +17,31 @@ const DeleteVoice = ({
       open={showDeleteModal}
       onCancel={onCancel}
       maskClosable={false}
-      footer={() => {
-        return (
-          <div className="w-[331px] h-[209.75px] relative">
-            <div className="left-0 top-[44px] absolute text-neutral-500 text-sm font-normal font-['PingFang SC']">
-              {t('Are you sure you want to delete this brand voice?')}
-            </div>
-            <div className="w-[166.82px] h-[90px] left-[82px] top-[119.75px] absolute">
-              <button
-                className="w-[166.64px] h-[39px] left-[0.18px] top-[51px] absolute bg-slate-200 rounded-[19.50px] text-center text-neutral-500 text-[13px] font-normal font-['PingFang SC']"
-                onClick={onCancel}
-              >
-                {t('Cancel')}
-              </button>
-              <button
-                className="w-[166.64px] h-[39px] left-0 top-0 absolute bg-red-400 rounded-[19.50px] text-center text-white text-[13px] font-normal font-['PingFang SC']"
-                onClick={onConfirm}
-              >
-                {t('Delete')}
-              </button>
-            </div>
-            <div className="left-[34.50px] top-0 absolute text-black text-[27px] font-normal font-['PingFang SC']">
-              {t('Delete Brand Voice?')}
-            </div>
+      footer={null}
+    >
+      <div className="flex flex-col justify-center items-center">
+        <div className="text-black text-27">
+          {t('Delete Brand Voice?')}
+        </div>
+        <div className="text-[#767676] text-14 mt-6">
+          {t('Are you sure you want to delete this brand voice?')}
+        </div>
+        <div className="mt-55 h-90 flex flex-col justify-between items-center">
+          <div
+            className="w-166 h-39 bg-[#EA6969] rounded-20 text-13 flex items-center justify-center text-white cursor-pointer"
+            onClick={onCancel}
+          >
+            {t('Cancel')}
           </div>
-        )
-      }}
-    ></Modal>
+          <div
+            className="w-166 h-39 bg-[#E6E6F4] rounded-20 text-13 flex items-center justify-center text-[#6D6D6D] cursor-pointer"
+            onClick={onConfirm}
+          >
+            {t('Delete')}
+          </div>
+        </div>
+      </div>
+    </Modal>
   )
 }
 

@@ -6,7 +6,7 @@ import store from '@/store'
 import type { Response } from '@/types'
 
 const http = axios.create({
-  baseURL: import.meta.env.DEV ? "http://127.0.0.1:8080/api/v1" : "/api/v1",
+  baseURL: "/api/v1",
   timeout: 200000,
   withCredentials: false,
 })

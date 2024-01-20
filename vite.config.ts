@@ -12,6 +12,12 @@ export default defineConfig({
   server: {
     open: true,
     host: true,
+    proxy: {
+      "/api": {
+        target: "http://178.128.96.65",
+        changeOrigin: true,
+      }
+    }
   },
   resolve: {
     alias: {

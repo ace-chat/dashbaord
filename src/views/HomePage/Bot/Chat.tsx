@@ -51,10 +51,12 @@ const Chat = () => {
     let res = await createChatBot();
     await getHistory(res.chat_id);
     setMessages([]);
+    setLoading(false);
   }
 
   const choose = async (id: string) => {
     await getHistory(id);
+    setLoading(false);
   }
 
   const getList = async () => {
@@ -187,7 +189,7 @@ const Chat = () => {
                                 style={{width: pxToVw(30), height: pxToVw(20), alignSelf: "center"}}/>
                       </div>
                       <div className={`w-120 text-14 text-black ml-18`}>
-                          <img src={Loading} alt="loading"/>
+                          <img className={`w-120`} src={Loading} alt="loading"/>
                       </div>
                   </div>
                   </div>

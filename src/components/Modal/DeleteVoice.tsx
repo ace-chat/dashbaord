@@ -27,17 +27,18 @@ const DeleteVoice = ({
           {t('Are you sure you want to delete this brand voice?')}
         </div>
         <div className="mt-55 h-90 flex flex-col justify-between items-center">
+        <div
+          
+          className="w-166 h-39 bg-[#EA6969] rounded-20 text-13 flex items-center justify-center text-white cursor-pointer"
+          onClick={onConfirm}
+        >
+          {t('Delete')}
+        </div>
           <div
-            className="w-166 h-39 bg-[#EA6969] rounded-20 text-13 flex items-center justify-center text-white cursor-pointer"
+            className="w-166 h-39 bg-[#E6E6F4] rounded-20 text-13 flex items-center justify-center text-[#6D6D6D] cursor-pointer"
             onClick={onCancel}
           >
             {t('Cancel')}
-          </div>
-          <div
-            className="w-166 h-39 bg-[#E6E6F4] rounded-20 text-13 flex items-center justify-center text-[#6D6D6D] cursor-pointer"
-            onClick={onConfirm}
-          >
-            {t('Delete')}
           </div>
         </div>
       </div>

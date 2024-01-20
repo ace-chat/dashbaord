@@ -244,7 +244,9 @@ const Chat = () => {
                           <div
                             className={`w-78 flex items-center justify-between`}
                           >
-                            <div className={`cursor-pointer`}>
+                            <div className={`cursor-pointer`}
+                            onClick={() => navigator.clipboard.writeText(msg.content)}
+                            >
                               <Icon
                                 name={'copied'}
                                 style={{

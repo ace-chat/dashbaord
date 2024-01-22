@@ -23,7 +23,6 @@ const Chat = () => {
 
   const disabled = useMemo(() => {
     return chatId === "";
-
   }, [chatId]);
 
   useEffect(() => {

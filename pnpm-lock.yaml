@@ -41,6 +41,9 @@ dependencies:
   commitlint:
     specifier: ^17.8.1
     version: 17.8.1
+  copy-to-clipboard:
+    specifier: ^3.3.3
+    version: 3.3.3
   eslint-config-airbnb:
     specifier: ^19.0.4
     version: 19.0.4(eslint-plugin-import@2.29.1)(eslint-plugin-jsx-a11y@6.8.0)(eslint-plugin-react-hooks@4.6.0)(eslint-plugin-react@7.33.2)(eslint@8.56.0)

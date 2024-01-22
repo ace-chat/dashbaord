@@ -1,4 +1,5 @@
 import { message } from 'antd'
+import copy from 'copy-to-clipboard'
 
 export * from './format.ts'
 
@@ -7,9 +8,6 @@ export const pxToVw = (n: number) => {
 }
 
 export const copied = (text: string) => {
-  navigator.clipboard.writeText(text).then(() => {
-    message.success("Copied successfully").then()
-  }).catch(() => {
-    message.error("Copied failed").then()
-  })
+  copy(text)
+  message.success("Copied successfully").then()
 }

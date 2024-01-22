@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
-import { pxToVw } from '@/utils'
+import { pxToVw, copied } from '@/utils'
 import { Button, Input } from 'antd'
 import Avatar from '@/assets/message_avatar.png'
 import Loading from "@/assets/chat_loading.gif"
@@ -19,7 +19,12 @@ const Chat = () => {
   const [messages, setMessages] = useState<Array<ChatMessage>>([]);
   const [history, setHistory] = useState<Array<ChatHistory>>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isNewChat, setIsNewChat] = useState<boolean>(false)
+  const [isNewChat, setIsNewChat] = useState<boolean>(false);
+
+  const disabled = useMemo(() => {
+    return chatId === "";
+
+  }, [chatId]);
 
   useEffect(() => {
     if (chatId && isNewChat) {
@@ -32,7 +37,7 @@ const Chat = () => {
 
   const createNewChat = () => {
     setIsNewChat(false)
-    create()
+    create().then()
   }
 
 
@@ -114,6 +119,9 @@ const Chat = () => {
     })
 
     let realArr = a.reverse();
+    if(realArr.length !== 0) {
+      await getHistory(realArr[0].children[0].chat_id)
+    }
     setHistory(realArr);
   };
 
@@ -245,7 +253,7 @@ const Chat = () => {
                             className={`w-78 flex items-center justify-between`}
                           >
                             <div className={`cursor-pointer`}
-                            onClick={() => navigator.clipboard.writeText(msg.content)}
+                            onClick={() => copied(msg.content)}
                             >
                               <Icon
                                 name={'copied'}
@@ -292,7 +300,7 @@ const Chat = () => {
             <div>
               <Input
                 className="message-box"
-                disabled={false}
+                disabled={disabled}
                 styles={{ input: { fontSize: pxToVw(12) } }}
                 placeholder={t('Send a Message')}
                 value={message}

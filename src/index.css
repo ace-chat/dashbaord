@@ -81,6 +81,7 @@
 
 .ant-btn:hover{
   border: transparent !important;
+  outline: transparent !important;
   color: #555555 !important;
 }
 

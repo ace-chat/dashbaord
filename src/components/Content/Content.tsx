@@ -99,7 +99,7 @@ const Content = (props: Prop) => {
         value: item.id,
       })
     });
-    arr.unshift({ value: 'none', label: t('None') },
+    arr.unshift({ value: undefined, label: t('None') },
       { value: 'new', label: t('Create New') });
     setBrandVoices(arr);
   }
@@ -362,7 +362,7 @@ const Content = (props: Prop) => {
           service_name: productName,
           service_desc: productDesc,
           tones: tone,
-          brand_voice: brandVoice,
+          brand_voice: brandVoice ? null : brandVoice,
           region: country,
           gender: gender,
           min_age: minAge,
@@ -377,7 +377,7 @@ const Content = (props: Prop) => {
           service_name: productName,
           service_desc: productDesc,
           tones: tone,
-          brand_voice: brandVoice,
+          brand_voice: brandVoice ? null : brandVoice,
           region: country,
           gender: gender,
           min_age: minAge,
@@ -408,7 +408,7 @@ const Content = (props: Prop) => {
       case "voice":
         form = {
           text: text,
-          brand_voice: brandVoice,
+          brand_voice: brandVoice ? null : brandVoice,
           language: language
         }
         break;
@@ -426,7 +426,7 @@ const Content = (props: Prop) => {
         form = {
           detail: text,
           tones: tone,
-          brand_voice: brandVoice,
+          brand_voice: brandVoice ? null : brandVoice,
           region: country,
           gender: gender,
           max_age: maxAge,
@@ -441,7 +441,7 @@ const Content = (props: Prop) => {
           service_name: productName,
           service_desc: productDesc,
           tones: tone,
-          brand_voice: brandVoice,
+          brand_voice: brandVoice ? null : brandVoice,
           region: country,
           gender: gender,
           max_age: maxAge,
@@ -453,7 +453,7 @@ const Content = (props: Prop) => {
         form = {
           topic: text,
           tones: tone,
-          brand_voice: brandVoice,
+          brand_voice: brandVoice ? null : brandVoice,
           max_age: maxAge,
           min_age: minAge,
           language: language,
@@ -464,7 +464,7 @@ const Content = (props: Prop) => {
           topic: text,
           tones: tone,
           type: type,
-          brand_voice: brandVoice,
+          brand_voice: brandVoice ? null : brandVoice,
           keyword: keyword,
           max_age: maxAge,
           min_age: minAge,

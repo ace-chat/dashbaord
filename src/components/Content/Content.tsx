@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
-import {Button, Input, InputNumber, message, Select} from 'antd'
+import { Button, Input, InputNumber, message, Select, Divider } from 'antd'
 import { pxToVw } from '@/utils'
 import moment from 'moment-timezone'
 
@@ -31,6 +31,10 @@ const Content = (props: Prop) => {
   const confirmBrandVoice = async (id: number) => {
     await getVoices();
     setBrandVoice(id);
+    setOpen(false);
+  }
+
+  const cancelBrandVoice = () => {
     setOpen(false);
   }
 
@@ -102,8 +106,7 @@ const Content = (props: Prop) => {
         value: item.id,
       })
     });
-    arr.unshift({ value: 'none', label: t('None') },
-      { value: 'new', label: t('Create New') });
+    arr.unshift({ value: 'none', label: t('None') });
     setBrandVoices(arr);
   }
 
@@ -691,21 +694,33 @@ const Content = (props: Prop) => {
                                 style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
                                 options={brandVoices}
                                 value={brandVoice} onSelect={(value) => setBrandVoice(value)}
-                                optionRender={(option) => {
-                                  return (
-                                    <div className={`flex items-center justify-between`}
-                                         onClick={() => {
-                                           option.value == "new" ? openBrandVoice() : null;
-                                         }}>
-                                      <span style={{fontFamily: "PingFang SC Regular"}}>{option.label}</span>
-                                      {option.value !== "none" &&
-                                      <div onClick={() => handleDelete(Number(option.value))}>
-                                        <Icon name={option.value == "new" ? 'add' : 'trash'}
-                                              style={{'width': pxToVw(8), 'height': pxToVw(8)}} />
-                                      </div>
-                                      }
+                                dropdownRender={(menu) => (
+                                  <>
+                                    <div>
+                                      <Button type={'text'} style={{ width: '100%', height: 32 }} onClick={openBrandVoice}>
+                                        <div className={`flex items-center justify-between`}>
+                                          <span style={{fontSize: pxToVw(10)}}>{t('Create New')}</span>
+                                          <div>
+                                            <Icon name={'add'}
+                                                  style={{'width': pxToVw(8), 'height': pxToVw(8)}}/>
+                                          </div>
+                                        </div>
+                                      </Button>
                                     </div>
-                                  );
+                                    <Divider style={{marginTop: pxToVw(12), marginBottom: pxToVw(12)}}/>
+                                    {menu}
+                                  </>
+                                )}
+                                optionRender={(option) => {
+                                  return <>
+                                    <div className={`w-full h-full flex items-center justify-between`}>
+                                      <span>{option.label}</span>
+                                      <div onClick={() => handleDelete(Number(option.value))}>
+                                        <Icon name={'trash'}
+                                              style={{'width': pxToVw(8), 'height': pxToVw(8)}}/>
+                                      </div>
+                                    </div>
+                                  </>;
                                 }}
                             />
                         </div>
@@ -919,7 +934,7 @@ const Content = (props: Prop) => {
           </div>
         </div>
 
-        <CreateBrandVoice open={open} confirm={confirmBrandVoice} />
+        <CreateBrandVoice open={open} confirm={confirmBrandVoice} cancel={cancelBrandVoice} />
         <DeleteVoice onConfirm={onConfirm} onCancel={onCancel} showDeleteModal={showDeleteModal} />
       </div>
     </div>

@@ -7,6 +7,7 @@ import { createVoice, saveVoice } from "@/request"
 type Prop = {
   open: boolean;
   confirm: (id: number) => void;
+  cancel: () => void;
 }
 
 export const CreateBrandVoice = (prop: Prop) => {
@@ -59,6 +60,7 @@ export const CreateBrandVoice = (prop: Prop) => {
       open={prop.open}
       maskClosable={false}
       footer={null}
+      onCancel={prop.cancel}
       destroyOnClose
     >
       <div className="flex flex-col justify-center items-start">

@@ -9,7 +9,7 @@ import moment from 'moment-timezone'
 import { CreateBrandVoice } from '../Modal/CreateBrandVoice';
 import DeleteVoice from '../Modal/DeleteVoice';
 
-import { getAllRegions, getAllVoices, createVoice, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType, deleteVoice } from "@/request";
+import { getAllRegions, getAllVoices, createVoice, saveVoice, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType, deleteVoice } from "@/request";
 import type { ContentHistoryChildren, ContentHistory, Prop, Tone, Platform, Language, Region, Gender, Option, Voice, Type } from "@/types";
 
 const Content = (props: Prop) => {
@@ -26,11 +26,15 @@ const Content = (props: Prop) => {
 
   const toggleCreateBrandVoice = () => {
     setCreateBrandVoice(!createBrandVoice);
-    createBrandVoice && createNewVoice()
+    
+    // need them to work
+    // createBrandVoice && createNewVoice()
+    // !createBrandVoice && saveNewVoice()
   };
 
   const [brandVoiceText, setBrandVoiceText] = useState('');
   const [brandVoiceTitle, setBrandVoiceTitle] = useState('');
+  const [brandVoiceContent, setBrandVoiceContent] = useState('');
   const [countries, setCountries] = useState<Array<Option>>([]);
   const [brandVoices, setBrandVoices] = useState<Array<Option>>([]);
   const [platforms, setPlatforms] = useState<Array<Option>>([]);
@@ -104,24 +108,44 @@ const Content = (props: Prop) => {
     setBrandVoices(arr);
   }
 
+  // to generate the voice content
   const createNewVoice = async () => {
     const v = {
       text: brandVoiceText,
-      name: brandVoiceTitle,
     }
     try {
       setLoading(true);
-      await createVoice(v);
-      await getVoices();
+      const resp = await createVoice(v);
+      setBrandVoiceContent(resp)
+
       setLoading(false);
-      setBrandVoiceText("");
-      setBrandVoiceTitle("");
+      toggleCreateBrandVoice();
     } catch (error: any) {
       setLoading(false);
       message.error(error.message);
     }
   }
 
+  // to save the brand voice
+  const saveNewVoice = async () => {
+    const v = {
+      text: brandVoiceText,
+      name: brandVoiceTitle,
+      content: brandVoiceContent,
+    }
+    try {
+      setLoading(true);
+      await saveVoice(v);
+      await getVoices();
+      setLoading(false);
+      setBrandVoiceText("");
+      setBrandVoiceTitle("");
+      toggleCreateBrandVoice();
+    } catch (error: any) {
+      setLoading(false);
+      message.error(error.message);
+    }
+  }
 
   const getGenders = async () => {
     const res: Array<Gender> = await getAllGender();
@@ -936,7 +960,7 @@ const Content = (props: Prop) => {
         </div>
 
         <CreateBrandVoice t={t} createBrandVoice={createBrandVoice} toggleCreateBrandVoice={toggleCreateBrandVoice}  brandVoiceText={brandVoiceText} setBrandVoiceText={setBrandVoiceText}
-          brandVoiceTitle={brandVoiceTitle} setBrandVoiceTitle={setBrandVoiceTitle} setBrandVoices={setBrandVoices} />
+          brandVoiceTitle={brandVoiceTitle} setBrandVoiceTitle={setBrandVoiceTitle} setBrandVoices={setBrandVoices} brandVoiceContent={brandVoiceContent}/>
         <DeleteVoice onConfirm={onConfirm} onCancel={onCancel} showDeleteModal={showDeleteModal} />
       </div>
     </div>

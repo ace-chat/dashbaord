@@ -1,5 +1,5 @@
 import { instance } from "@/plugins";
-import { CreateVoice } from "@/types"
+import { CreateVoice, SaveVoice } from "@/types"
 
 export const getAllRegions = () => {
   return instance({
@@ -11,6 +11,14 @@ export const getAllRegions = () => {
 export const createVoice = (voice: CreateVoice) => {
   return instance({
     url: "/common/createVoice",
+    method: "POST",
+    data: voice
+  });
+}
+
+export const saveVoice = (voice: SaveVoice) => {
+  return instance({
+    url: "/common/saveVoice",
     method: "POST",
     data: voice
   });

@@ -1,126 +1,121 @@
+import { useState, useMemo } from 'react'
 import { Button, Input, Modal } from 'antd'
 import { pxToVw } from '@/utils'
-import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { createVoice, saveVoice } from "@/request"
 
-export const CreateBrandVoice = ({
-  t,
-  createBrandVoice,
-  toggleCreateBrandVoice,
-  brandVoiceText,
-  setBrandVoiceText,
-  brandVoiceTitle,
-  setBrandVoiceTitle,
-  brandVoiceContent,
-}: any) => {
-  const [tag, setTag] = useState(0)
+type Prop = {
+  open: boolean;
+  confirm: (id: number) => void;
+}
+
+export const CreateBrandVoice = (prop: Prop) => {
+  const { t } = useTranslation()
+
+  const [dialog, setDialog] = useState({
+    title: "Create Brand Voice",
+    step: 0,
+    show: false,
+    desc: "Write or paste content that reflects your brand voice. For best results, we recommend between 50-500 words."
+  });
+  const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
+  const [voice, setVoice] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const disabled = useMemo(() => {
+    if(dialog.step === 0){
+      return desc === "";
+    }else{
+      return name === "";
+    }
+  }, [name, desc])
+  const descDisabled = useMemo(() => {
+    return dialog.step !== 0;
+  }, [dialog])
+
+  const toggle = async () => {
+    setLoading(true);
+    if(dialog.step === 0){
+      let res = await createVoice({ text: desc });
+      setVoice(res);
+      setDialog({
+        title: "Save Brand Voice",
+        step: 1,
+        show: true,
+        desc: "Write or paste content that reflects your brand voice. For best results, we recommend between 50-500 words."
+      });
+      setLoading(false);
+    }else{
+      let res = await saveVoice({ name: name, text: desc, content: voice });
+      prop.confirm(res.id);
+    }
+  }
 
   return (
     <Modal
       className="brand_model"
       centered
-      open={createBrandVoice}
-      onCancel={toggleCreateBrandVoice}
+      open={prop.open}
       maskClosable={false}
-      footer={() => {
-        return (
-          <div className="flex items-center justify-center">
-            <Button
-              type="default"
-              style={{
-                borderRadius: pxToVw(20),
-                marginTop: pxToVw(30),
-                marginBottom: pxToVw(30),
-              }}
-              disabled={
-                brandVoiceText && tag == 0
-                  ? false
-                  : brandVoiceTitle && brandVoiceText && tag == 1
-                  ? false
-                  : true
-              }
-              onClick={() => {
-                tag == 0 ? setTag(1) : toggleCreateBrandVoice()
-              }}
-              className={`w-167 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 cursor-pointer select-none`}
-            >
-              <div className="modal-text">
-                {tag == 0
-                  ? t('Create Brand Voice! ✨')
-                  : t('Save Brand Voice!')}
-              </div>
-            </Button>
-          </div>
-        )
-      }}
+      footer={null}
+      destroyOnClose
     >
       <div className="flex flex-col justify-center items-start">
-        <div style={{ fontFamily: 'PingFang SC Medium', fontSize: pxToVw(22) }}>
-          {tag == 0 ? t('Create Brand Voice') : t('Save Brand Voice')}
+        <div className={`text-22`}>
+          {t(dialog.title)}
         </div>
-        <div
-          style={{
-            fontFamily: 'PingFang SC Medium',
-            fontSize: pxToVw(12),
-            color: '#767676',
-          }}
-        >
-          {t(
-            'Write or paste content that reflects your brand voice. For best results, we recommend between 50-500 words.'
-          )}
+        <div className={`text-12 text-[#767676] mt-5`}>
+          {t(dialog.desc)}
         </div>
-        {tag == 1 && (
+        {dialog.step === 1 && (
           <>
             <Input
               styles={{
                 input: {
                   width: '100%',
                   height: pxToVw(40),
-                  fontSize: pxToVw(10),
+                  fontSize: pxToVw(15),
                   marginTop: pxToVw(30),
                   backgroundColor: '#F4F6FA',
                   borderWidth: 0,
                 },
               }}
               placeholder={t('Name your brand voice')}
-              value={brandVoiceTitle}
-              onChange={(e) => setBrandVoiceTitle(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
 
-            <Input.TextArea
-            disabled={true}
-              styles={{
-                textarea: {
-                  width: '100%',
-                  height: pxToVw(200),
-                  fontSize: pxToVw(10),
-                  backgroundColor: '#F4F6FA',
-                  borderWidth: 0,
-                  marginTop: pxToVw(30),
-                },
-              }}
-              placeholder={brandVoiceContent}
-              value={brandVoiceContent}
-            />
+            <div className={`w-full bg-[#F5F5FB] p-18 rounded-9 text-16 text-[#767676] my-15`}>{ desc }</div>
+
+            <div className={`w-full bg-[#F5F5FB] p-18 rounded-9 text-16 text-[#767676]`}>{ voice }</div>
           </>
         )}
-        <Input.TextArea
-        disabled={true}
-          styles={{
-            textarea: {
-              width: pxToVw(680),
-              height: pxToVw(200),
-              fontSize: pxToVw(10),
-              backgroundColor: '#F4F6FA',
-              borderWidth: 0,
-              marginTop: pxToVw(30),
-            },
-          }}
-          placeholder={t(
-            'Add a snippet of an article, blog, or any content so ACE can create a best Brand voice for you.'
-          )}
-          value={brandVoiceText}
-          onChange={(e) => setBrandVoiceText(e.target.value)}
-        />
+        {
+          dialog.step === 0 && <>
+            <Input.TextArea disabled={descDisabled} className={`w-648 !h-294 text-10 bg-[#F4F6FA] border-0 mt-30`}
+                            placeholder={t(
+                              'Add a snippet of an article, blog, or any content so ACE can create a best Brand voice for you.'
+                            )}
+                            value={desc}
+                            onChange={(e) => setDesc(e.target.value)}
+            />
+          </>
+        }
+
+        <div className="w-full flex items-center justify-center">
+          <Button
+            type="default"
+            disabled={disabled}
+            loading={loading}
+            onClick={toggle}
+            className={`w-167 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 cursor-pointer select-none my-30 border-none`}
+          >
+            <div className="modal-text">
+              {dialog.step == 0 ? t('Create Brand Voice! ✨') : t('Save Brand Voice!')}
+            </div>
+          </Button>
+        </div>
       </div>
     </Modal>
   )

@@ -9,7 +9,7 @@ import moment from 'moment-timezone'
 import { CreateBrandVoice } from '../Modal/CreateBrandVoice';
 import DeleteVoice from '../Modal/DeleteVoice';
 
-import { getAllRegions, getAllVoices, createVoice, saveVoice, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType, deleteVoice } from "@/request";
+import { getAllRegions, getAllVoices, generator, getHistory, getDetailById, getAllTone, getAllPlatform, getAllLanguage, getAllGender, getAllType, deleteVoice } from "@/request";
 import type { ContentHistoryChildren, ContentHistory, Prop, Tone, Platform, Language, Region, Gender, Option, Voice, Type } from "@/types";
 
 const Content = (props: Prop) => {
@@ -17,24 +17,23 @@ const Content = (props: Prop) => {
   const [loading, setLoading] = useState(false);
 
   // modal for creating brand voice 
-  const [createBrandVoice, setCreateBrandVoice] = useState(false);
+  const [open, setOpen] = useState(false);
 
   // modal for confirm delete brand voice
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [id, setId] = useState(0);
 
-  const toggleCreateBrandVoice = () => {
-    setCreateBrandVoice(!createBrandVoice);
-    
-    // need them to work
-    // createBrandVoice && createNewVoice()
-    // !createBrandVoice && saveNewVoice()
+  const openBrandVoice = () => {
+    setOpen(true);
   };
+  
+  const confirmBrandVoice = async (id: number) => {
+    await getVoices();
+    setBrandVoice(id);
+    setOpen(false);
+  }
 
-  const [brandVoiceText, setBrandVoiceText] = useState('');
-  const [brandVoiceTitle, setBrandVoiceTitle] = useState('');
-  const [brandVoiceContent, setBrandVoiceContent] = useState('');
   const [countries, setCountries] = useState<Array<Option>>([]);
   const [brandVoices, setBrandVoices] = useState<Array<Option>>([]);
   const [platforms, setPlatforms] = useState<Array<Option>>([]);
@@ -106,45 +105,6 @@ const Content = (props: Prop) => {
     arr.unshift({ value: 'none', label: t('None') },
       { value: 'new', label: t('Create New') });
     setBrandVoices(arr);
-  }
-
-  // to generate the voice content
-  const createNewVoice = async () => {
-    const v = {
-      text: brandVoiceText,
-    }
-    try {
-      setLoading(true);
-      const resp = await createVoice(v);
-      setBrandVoiceContent(resp)
-
-      setLoading(false);
-      toggleCreateBrandVoice();
-    } catch (error: any) {
-      setLoading(false);
-      message.error(error.message);
-    }
-  }
-
-  // to save the brand voice
-  const saveNewVoice = async () => {
-    const v = {
-      text: brandVoiceText,
-      name: brandVoiceTitle,
-      content: brandVoiceContent,
-    }
-    try {
-      setLoading(true);
-      await saveVoice(v);
-      await getVoices();
-      setLoading(false);
-      setBrandVoiceText("");
-      setBrandVoiceTitle("");
-      toggleCreateBrandVoice();
-    } catch (error: any) {
-      setLoading(false);
-      message.error(error.message);
-    }
   }
 
   const getGenders = async () => {
@@ -735,7 +695,7 @@ const Content = (props: Prop) => {
                                   return (
                                     <div className={`flex items-center justify-between`}
                                          onClick={() => {
-                                           option.value == "new" ? toggleCreateBrandVoice() : null;
+                                           option.value == "new" ? openBrandVoice() : null;
                                          }}>
                                       <span style={{fontFamily: "PingFang SC Regular"}}>{option.label}</span>
                                       {option.value !== "none" &&
@@ -959,8 +919,7 @@ const Content = (props: Prop) => {
           </div>
         </div>
 
-        <CreateBrandVoice t={t} createBrandVoice={createBrandVoice} toggleCreateBrandVoice={toggleCreateBrandVoice}  brandVoiceText={brandVoiceText} setBrandVoiceText={setBrandVoiceText}
-          brandVoiceTitle={brandVoiceTitle} setBrandVoiceTitle={setBrandVoiceTitle} setBrandVoices={setBrandVoices} brandVoiceContent={brandVoiceContent}/>
+        <CreateBrandVoice open={open} confirm={confirmBrandVoice} />
         <DeleteVoice onConfirm={onConfirm} onCancel={onCancel} showDeleteModal={showDeleteModal} />
       </div>
     </div>

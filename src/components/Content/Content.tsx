@@ -574,15 +574,6 @@ const Content = (props: Prop) => {
           }
           {/* WordCount end */}
 
-          {/* Detail text start */}
-          {
-            props.optional?.details?.text && <div className={`mt-12`}>
-                <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10)}}}
-                                placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
-            </div>
-          }
-          {/* Detail text end */}
-
           {/* Platform start */}
           {
             props.optional?.platform && <div>
@@ -664,6 +655,15 @@ const Content = (props: Prop) => {
           }
           {/* Details end */}
 
+           {/* Detail text start */}
+           {
+            props.optional?.details?.text && <div className={`mt-12`}>
+                <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10)}}}
+                                placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
+            </div>
+          }
+          {/* Detail text end */}
+
           {/* Style start */}
           {
             props.optional?.style && <div className={`mt-24`}>
@@ -691,7 +691,7 @@ const Content = (props: Prop) => {
                     {
                       props.optional?.style.voice && <div className={`mt-12`}>
                             <Select
-                                placeholder={t('Brand Voice')}
+                                placeholder={props.title === 'Match Brand Voice' ?  t('Brand Voice') : t('Brand Voice (Optional)')}
                                 style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
                                 options={brandVoices}
                                 value={brandVoice} onSelect={(value) => setBrandVoice(value)}

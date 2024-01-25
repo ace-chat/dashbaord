@@ -261,6 +261,12 @@ const Create = (props: Prop) => {
                                     style={{width: pxToVw(324), height: pxToVw(25), fontSize: pxToVw(10) }}
                                     placeholder="Type New Link"
                                     value={typedLink}
+                                    onPressEnter={() => {
+                                        if(typedLink !== ""){
+                                            setWebsiteLinks([...websiteLinks, typedLink.trim()]);
+                                            setTypedLink("");
+                                        }
+                                    }}
                                     onChange={(e) => setTypedLink(e.target.value)}
                                     suffix={
                                         <div

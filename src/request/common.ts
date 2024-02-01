@@ -115,3 +115,11 @@ export const updateUserInfo = (data: any) => {
     data: data
   })
 }
+
+export const updatePassword = (data: any) => {
+  return instance({
+    url: "/user/updatePassword",
+    method: "POST",
+    data: data
+  })
+}

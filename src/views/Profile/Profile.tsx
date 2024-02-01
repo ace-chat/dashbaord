@@ -4,20 +4,16 @@ import Avatar from '../../../src/assets/profile.png'
 import { useEffect, useState } from 'react'
 import { Input, Button } from 'antd'
 import { getUserInfo, updateUserInfo } from '@/request'
+import { ChangePassword } from '@/components/Modal/ChangePassword'
 
 const Profile = () => {
   const { t } = useTranslation()
 
   //state variables
   const [displayName, setDisplayName]: any = useState('')
-
   const [editProfile, setEditProfile] = useState(false)
-
   const [email, setEmail]: any = useState('')
-
-  const [password, setPassword]: any = useState('')
   const [editPassword, setEditPassword]: any = useState(false)
-
   const [phoneNumber, setPhoneNumber]: any = useState()
 
   useEffect(() => {
@@ -45,6 +41,10 @@ const Profile = () => {
       }
     }
     setEditProfile(!editProfile)
+  }
+
+  const toggleChangePassword = () => {
+    setEditPassword(!editPassword)
   }
 
   return (
@@ -222,7 +222,7 @@ const Profile = () => {
             </div>
           </div>
 
-    {/* Edit button */}
+          {/* Edit button */}
           <div
             className="w-full flex justify-between flex-row"
             style={{ borderBottom: '1px solid #DBDBDB', height: pxToVw(89) }}
@@ -264,28 +264,10 @@ const Profile = () => {
               >
                 {t('Password')}
               </div>
-              <Input
-                type="password"
-                readOnly={!editPassword}
-                styles={{
-                  input: {
-                    width: pxToVw(500),
-                    fontSize: pxToVw(15),
-                    color: '#626262',
-                    border: 0,
-                    marginLeft: pxToVw(25),
-                    marginTop: pxToVw(12),
-                    fontWeight: 'lighter',
-                  },
-                }}
-                placeholder={t('Password')}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
             </div>
             <Button
               type="default"
-              onClick={() => {}}
+              onClick={toggleChangePassword}
               className="bg-[#788CA7] rounded-4"
               style={{
                 width: pxToVw(100),
@@ -411,6 +393,10 @@ const Profile = () => {
             </div>
           </Button>
         </div>
+        <ChangePassword
+          changePassword={editPassword}
+          toggleChangePassword={toggleChangePassword}
+        />
       </div>
 
       <div className="flex" style={{ marginTop: pxToVw(20) }} />

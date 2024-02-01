@@ -99,3 +99,19 @@ export const getAllService = () => {
     method: "GET"
   })
 }
+
+export const getUserInfo = () => {
+  return instance({
+    url: "/user/getUserInfo",
+    method: "GET"
+  })
+}
+
+
+export const updateUserInfo = (data: any) => {
+  return instance({
+    url: "/user/updateUserInfo",
+    method: "POST",
+    data: data
+  })
+}

@@ -276,7 +276,7 @@
 }
 
 .ant-select-selector .ant-select-selection-placeholder, .ant-select-selector .ant-select-selection-item {
-  font-size: 10px !important;
+  font-size: max(0.8em, 12px);
   font-family: 'PingFang SC Regular' !important;
 }
 
@@ -299,6 +299,7 @@
 
 .ant-input{
   font-family: 'PingFang SC Regular' !important;
+  font-size: max(0.8em, 12px);
   resize: none !important;
 }
 

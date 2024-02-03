@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { pxToVw, copied } from '@/utils'
 import { Button, Input } from 'antd'
 import Avatar from '@/assets/message_avatar.png'
-import Loading from "@/assets/chat_loading.gif"
+import Loading from "@/assets/wihite.gif"
 
 import { getChatList, getChatHistory, createChatBot, askChatBot } from "@/request"
 import {ChatHistory, ChatHistoryChildren, ChatMessage} from "@/types";

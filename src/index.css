@@ -127,6 +127,8 @@
 
 .ant-menu-title-content{
   font-family: 'PingFang SC Regular';
+  font-size: max(1em, 14px);
+  margin-left: 17px;
 }
 
 .ant-menu{
@@ -180,9 +182,6 @@
   color: white;
 }
 
-.ant-menu-title-content{
-  font-size: 12px !important;
-}
 
 .ant-menu-item-selected{
   background-color: #E7E7E7 !important;
@@ -202,9 +201,6 @@
   outline: #EDEFF2 !important;
 }
 
-.ant-menu-title-content{
-  margin-left: 17px;
-}
 
 .ant-menu-submenu-popup::before{
   display: none; 
@@ -280,7 +276,7 @@
 }
 
 .ant-select-selector .ant-select-selection-placeholder, .ant-select-selector .ant-select-selection-item {
-  font-size: 10px !important;
+  font-size: max(0.8em, 10px);
   font-family: 'PingFang SC Regular' !important;
 }
 
@@ -303,6 +299,7 @@
 
 .ant-input{
   font-family: 'PingFang SC Regular' !important;
+  font-size: max(0.8em, 10px);
   resize: none !important;
 }
 

@@ -91,7 +91,7 @@ const Profile = () => {
             />
              <div style={{ position: 'absolute', width: pxToVw(40), height: pxToVw(40), bottom: 0, cursor: 'pointer' }}>
                     {/* camera svg */}
-                    <img src={Camera} alt="Camera" style={{ width: '70%', height: '70%', objectFit: 'cover', transform: 'translate(15%, 15%)' }} onClick={() => alert("pen clicked")}/>
+                    <img src={Camera} alt="Camera" style={{ width: '70%', height: '70%', objectFit: 'cover', transform: 'translate(15%, 15%)' }} onClick={() => alert("change image")}/>
                 </div>
           </div>
                 {/* Profile Name */}
@@ -159,10 +159,49 @@ const Profile = () => {
             </div>
           </div>
 
+{/* Password */}
+<div
+            className="w-full flex justify-between flex-row"
+            style={{ borderBottom: '1px solid #DBDBDB', height: pxToVw(89) }}
+          >
+            <div className="flex-col">
+              <div
+                className="text-bold"
+                style={{
+                  color: '#626262',
+                  fontSize: pxToVw(16),
+                  marginLeft: pxToVw(0),
+                  marginTop: pxToVw(20),
+                  fontFamily: 'PingFang SC Medium',
+                  fontWeight: 'bold'
+                }}
+              >
+                {t('Password')}
+              </div>
+            </div>
+            <Button
+              type="default"
+              onClick={toggleChangePassword}
+              className="bg-[#788CA7] rounded-4"
+              style={{
+                width: pxToVw(100),
+                height: pxToVw(40),
+                color: 'white',
+                fontSize: pxToVw(16),
+                marginRight: pxToVw(25),
+                marginTop: pxToVw(25),
+              }}
+            >
+              <div style={{ fontFamily: 'PingFang SC Regular' }}>
+                {editPassword ? t('Save') : t('Change')}
+              </div>
+            </Button>
+          </div>
+
           {/* Phone Number */}
           <div
             className="w-full flex justify-between flex-row"
-            style={{ borderBottom: '1px solid #DBDBDB', height: pxToVw(89) }}
+            style={{ height: pxToVw(89) }}
           >
             <div className="flex-col">
               <div
@@ -205,44 +244,6 @@ const Profile = () => {
                 </Button>
           </div>
 
-          {/* Password */}
-          <div
-            className="w-full flex justify-between flex-row"
-            style={{ height: pxToVw(89) }}
-          >
-            <div className="flex-col">
-              <div
-                className="text-bold"
-                style={{
-                  color: '#626262',
-                  fontSize: pxToVw(16),
-                  marginLeft: pxToVw(0),
-                  marginTop: pxToVw(20),
-                  fontFamily: 'PingFang SC Medium',
-                  fontWeight: 'bold'
-                }}
-              >
-                {t('Password')}
-              </div>
-            </div>
-            <Button
-              type="default"
-              onClick={toggleChangePassword}
-              className="bg-[#788CA7] rounded-4"
-              style={{
-                width: pxToVw(100),
-                height: pxToVw(40),
-                color: 'white',
-                fontSize: pxToVw(16),
-                marginRight: pxToVw(25),
-                marginTop: pxToVw(25),
-              }}
-            >
-              <div style={{ fontFamily: 'PingFang SC Regular' }}>
-                {editPassword ? t('Save') : t('Change')}
-              </div>
-            </Button>
-          </div>
         </div>
       </div>
 

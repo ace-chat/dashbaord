@@ -157,7 +157,7 @@ const Chat = () => {
 
   return (
     <>
-      <div className="flex flex-col mt-14 ml-29 overflow-hidden">
+      <div className="flex flex-col mt-14 ml-29">
         <div
           className={`text-black text-18`}
           style={{ fontFamily: 'PingFang SC Medium' }}
@@ -172,16 +172,14 @@ const Chat = () => {
         </div>
       </div>
       <div
-        className={`bg-white rounded-8 mt-14 w-1389 h-748 ml-29`}
-        style={{ boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)' }}
+        className={`bg-white rounded-8 mt-14 w-1389 ml-29 h-screen flex flex-col justify-between`}
+        style={{ boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)', height: 'calc(100vh - 56px)',  overflowY: 'auto', position: 'relative'}}
       >
         <div className={`flex justify-around`}>
           <div className={'flex flex-col h-748'}>
             <div
               ref={mg}
-              className={
-                'p-24 flex flex-col w-1081 h-680 overflow-y-auto items-center'
-              }
+              className={'p-24 flex flex-col w-1081 items-center overflow-y-auto'}
             >
               {messages.length == 0 ? (
                 <div
@@ -289,7 +287,7 @@ const Chat = () => {
                         }}
                       />
                     </div>
-                    <div className={`w-120 text-14 text-black ml-18`}>
+                    <div className={`w-120 text-14 text-black ml-4`}>
                       <img src={Loading} alt="loading" />
                     </div>
                   </div>
@@ -298,7 +296,8 @@ const Chat = () => {
             </div>
             <div>
               <Input
-                className="message-box"
+                className="message-box mb-12"
+                style={{ position: 'absolute', bottom: 0}}
                 disabled={disabled}
                 styles={{ input: { fontSize: pxToVw(12) } }}
                 placeholder={t('Send a Message')}

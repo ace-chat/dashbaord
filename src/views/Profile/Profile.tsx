@@ -18,7 +18,6 @@ const Profile = () => {
   const [email, setEmail]: any = useState('')
   const [editPassword, setEditPassword]: any = useState(false)
   const [editName, setEditName] = useState(true)
-  const [saveName, setSaveName] = useState(false)
   const [editPhoneNumber, setEditPhoneNumber] = useState(true)
   const [phoneNumber, setPhoneNumber] = useState('')
 

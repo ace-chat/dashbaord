@@ -517,7 +517,7 @@ const Content = (props: Prop) => {
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
                   </div>
                   <div className={`mt-12`}>
-                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(80)}}}
+                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10)}}}
                                       placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
                   </div>
               </div>
@@ -537,7 +537,7 @@ const Content = (props: Prop) => {
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/>
                   </div>
                   <div className={`mt-12`}>
-                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(120)}}}
+                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10)}}}
                                       placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
                   </div>
               </div>
@@ -610,7 +610,7 @@ const Content = (props: Prop) => {
                     {/* brand name start */}
                     {
                       props.optional?.details.brand_name && <div>
-                            <Input styles={{input: {width: pxToVw(252), height: pxToVw(36)}}}
+                            <Input styles={{input: {width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}}
                                    placeholder={t('Type Brand Name')} value={brandName}
                                    onChange={(e) => setBrandName(e.target.value)}/>
                         </div>
@@ -621,7 +621,7 @@ const Content = (props: Prop) => {
                     {
                       props.optional?.details.brand_name && <div className={`mt-12`}>
                         <Input.TextArea
-                          styles={{textarea: {width: pxToVw(252), height: pxToVw(63)}}}
+                          styles={{textarea: {width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10)}}}
                           placeholder={t('Brand Description')}
                           value={brandDesc} onChange={(e) => setBrandDesc(e.target.value)}/>
                       </div>
@@ -631,7 +631,7 @@ const Content = (props: Prop) => {
                     {/* service/product name start */}
                     {
                       props.optional?.details.service_name && <div className={`mt-12`}>
-                            <Input styles={{input: {width: pxToVw(252), height: pxToVw(36)}}}
+                            <Input styles={{input: {width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}}
                                    placeholder={t('Type Service/Product Name')} value={productName}
                                onChange={(e) => setProductName(e.target.value)}/>
                       </div>
@@ -642,7 +642,7 @@ const Content = (props: Prop) => {
                     {
                       props.optional?.details.service_desc && <div className={`mt-12`}>
                             <Input.TextArea
-                                styles={{textarea: {width: pxToVw(252), height: pxToVw(63)}}}
+                                styles={{textarea: {width: pxToVw(252), height: pxToVw(63), fontSize: pxToVw(10)}}}
                           placeholder={t('Service/Product Description')}
                           value={productDesc} onChange={(e) => setProdDesc(e.target.value)}
                         />
@@ -657,7 +657,7 @@ const Content = (props: Prop) => {
            {/* Detail text start */}
            {
             props.optional?.details?.text && <div className={`mt-12`}>
-                <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(120)}}}
+                <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(120), fontSize: pxToVw(10)}}}
                                 placeholder={t('Type Here')} value={text} onChange={(e) => setText(e.target.value)}/>
             </div>
           }
@@ -680,7 +680,7 @@ const Content = (props: Prop) => {
                     {
                       props.optional?.style.tones && <div>
                             <Select placeholder={t('Tones')}
-                                    style={{width: pxToVw(252), height: pxToVw(36)}} options={tones}
+                                    style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}} options={tones}
                                     value={tone} onSelect={(value) => setTone(value)}/>
                         </div>
                     }
@@ -691,7 +691,7 @@ const Content = (props: Prop) => {
                       props.optional?.style.voice && <div className={`mt-12`}>
                             <Select
                                 placeholder={props.title === 'Match Brand Voice' ?  t('Brand Voice') : t('Brand Voice (Optional)')}
-                                style={{width: pxToVw(252), height: pxToVw(36)}}
+                                style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
                                 options={brandVoices}
                                 value={brandVoice} onSelect={(value) => setBrandVoice(value)}
                                 dropdownRender={(menu) => (
@@ -731,7 +731,7 @@ const Content = (props: Prop) => {
                     {
                       props.optional.style.type && <div className={`mt-12`}>
                             <Select placeholder={t('Type')}
-                                    style={{width: pxToVw(252), height: pxToVw(36)}} options={types}
+                                    style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}} options={types}
                                     value={type} onSelect={(value) => setType(value)}/>
                         </div>
                     }
@@ -741,7 +741,7 @@ const Content = (props: Prop) => {
                     {
                       props.optional.style.keyword && <div className={`mt-12`}>
                             <Input placeholder={t('Keyword (Optional)')}
-                                    style={{width: pxToVw(252), height: pxToVw(36)}}
+                                    style={{width: pxToVw(252), height: pxToVw(36), fontSize: pxToVw(10)}}
                                     value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
                         </div>
                     }
@@ -824,7 +824,7 @@ const Content = (props: Prop) => {
                             style={{'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px"}}/> */}
                   </div>
                   <div className={`mt-12`}>
-                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(80)}}}
+                      <Input.TextArea styles={{textarea: {width: pxToVw(252), height: pxToVw(80), fontSize: pxToVw(10)}}}
                                       placeholder={t('Type Here (Optional)')} value={details}
                                       onChange={(e) => setDetails(e.target.value)}/>
                   </div>

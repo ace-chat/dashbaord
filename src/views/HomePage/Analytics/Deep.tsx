@@ -228,7 +228,7 @@ const Deep = () => {
             <div>
                 <div className={`flex items-center`}>
                     <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />
-                    <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Busniess Description') }</span>
+                    <span className={`ml-8 text-12`} style={{ fontFamily: "PingFang SC Bold" }}>{ t('Business Description') }</span>
                     <Icon name={'require'} style={{ 'width': pxToVw(8), 'height': pxToVw(8), marginLeft: "3px", marginBottom: "5px" }} />
                 </div>
                 <div className={`mt-12`}>

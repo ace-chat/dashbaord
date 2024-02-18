@@ -106,8 +106,7 @@ const Content = (props: Prop) => {
         value: item.id,
       })
     });
-    arr.unshift({ value: undefined, label: t('None') },
-      { value: 'new', label: t('Create New') });
+    arr.unshift({ value: 'none', label: t('None') });
     setBrandVoices(arr);
   }
 

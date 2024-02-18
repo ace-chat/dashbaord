@@ -171,7 +171,7 @@ const Create = (props: Prop) => {
           {generatedBot ?
               <div className={`flex justify-between`}>
                   <div className={`flex p-24 flex-col`} style={{ width: pxToVw(686), height: pxToVw(748), justifyContent: "center", alignItems: "center" }}>
-                      <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(28.87) }}>{t('Aurpay Chatbot - Initiate Conversation')}</div>
+                      <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(28.87) }}>{t('Initiate Conversation')}</div>
                       <div>
                           <div className={`flex items-center mt-60`}>
                               <Icon name={'first'} style={{ 'width': pxToVw(22), 'height': pxToVw(22) }} />

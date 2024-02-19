@@ -39,7 +39,7 @@ const Chat = () => {
     create().then()
   }
 
-
+  
   const sendMessage = async () => {
     setIsNewChat(true)
     if (chatId === '') {

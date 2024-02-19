@@ -25,7 +25,7 @@ http.interceptors.response.use(
 
     if(err.response.data.code === 20005){
       message.error(i18n.t(err.response.data.message)).then();
-      window.location.href = "/login";
+      window.location.href = "/#/login";
     }
 
     return Promise.reject(err)

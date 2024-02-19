@@ -34,6 +34,16 @@ const Profile = () => {
   }, [])
 
   const handleEditProfile = async () => {
+    if (!editName) {
+      const resp = await updateUserInfo({
+        display_name: displayName,
+      })
+
+      if (resp) {
+        setDisplayName(resp.display_name)
+      }
+    }
+    
     if (editProfile) {
       const resp = await updateUserInfo({
         display_name: displayName,

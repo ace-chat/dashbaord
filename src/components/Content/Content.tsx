@@ -202,17 +202,27 @@ const Content = (props: Prop) => {
       case "tone":
         Promise.all([
           getTones(),
+          getVoices(),
+          getAllHistory(),
+        ]).then()
+        break;
+      case "summarize": case "paraphrase":
+        Promise.all([
+          getLanguages(),
+          getAllHistory(),
         ]).then()
         break;
       case "voice":
         Promise.all([
           getVoices(),
+          getAllHistory(),
         ]).then()
         break;
       case "audience":
         Promise.all([
           getRegions(),
           getGenders(),
+          getAllHistory(),
         ]).then()
         break;
       case "freestyle": case "marketing": case "welcome": case "odds":
@@ -221,12 +231,14 @@ const Content = (props: Prop) => {
           getRegions(),
           getGenders(),
           getVoices(),
+          getAllHistory(),
         ]).then()
         break;
       case "intro": case "outline":
         Promise.all([
           getTones(),
           getVoices(),
+          getAllHistory(),
         ]).then()
         break;
       case "entire":
@@ -234,6 +246,7 @@ const Content = (props: Prop) => {
           getTypes(),
           getTones(),
           getVoices(),
+          getAllHistory(),
         ]).then();
     }
     getLanguages().then()
@@ -486,8 +499,8 @@ const Content = (props: Prop) => {
 
   const getHistoryById = async (id: number) => {
     setLoading(true);
-    const res = await getDetailById(props.url.content, id);
-    setGeneratedText(res.content);
+    const res = await getDetailById(props.url?.content, id);
+    setGeneratedText(res?.content);
     setLoading(false);
   }
 
@@ -864,7 +877,7 @@ const Content = (props: Prop) => {
 
         </div>
 
-        {generatedText.length == 0 ?
+        {generatedText?.length == 0 ?
           <div>
             <div style={{
               'width': pxToVw(682),
@@ -891,7 +904,8 @@ const Content = (props: Prop) => {
               flexDirection: 'column'
             }}>
               <div className="scrollable-content" style={{flex: 1, maxHeight: "100%", overflowY: "auto"}}>
-                <div className={'pl-4 text-14 leading-28'} dangerouslySetInnerHTML={{ __html: generatedText }}></div>
+                {/* <div className={'pl-4 text-14 leading-28'} dangerouslySetInnerHTML={{ __html: generatedText }}></div> */}
+                <div className={'pl-4 text-14 leading-28'}>{generatedText}</div>
             </div>
 
             <div className={`flex items-center justify-end mt-24 self-end`}>
@@ -915,12 +929,12 @@ const Content = (props: Prop) => {
           <div className={`text-12`} style={{ fontFamily: "PingFang SC Bold" }} >{ t('History') }</div>
           <div className={`mt-24 scrollable-content`}>
             {
-              history.map(item => {
+              history?.map(item => {
                 return <div key={item.time} className={`mb-30`}>
                   <div className={`text-10 text-[#787878]`} style={{ fontFamily: "PingFang SC Light" }}>{ item.time }</div>
                   <div className={`cursor-pointer`}>
                     {
-                      item.children.map(it => {
+                      item.children?.map(it => {
                         return <div key={it.created_at} className={`flex items-center mt-18 cursor-pointer`} onClick={() => { getHistoryById(it.id).then() }}>
                           <Icon name={'history'} style={{ 'width': pxToVw(12), 'height': pxToVw(14) }} />
                           <div className={`text-12 text-black ml-8 truncate`} style={{ fontFamily: "PingFang SC Medium" }}>{ it.text }</div>

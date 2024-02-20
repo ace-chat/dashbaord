@@ -4,11 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setToken } from '@/reducers/token.ts'
+import { login } from "@/request"
 
 import styles from './Login.module.css'
-
-import axios from 'axios';
-import { base_url } from '@/utils/constants'
 
 function Login() {
   const navigate = useNavigate()
@@ -26,21 +24,13 @@ function Login() {
       const formData = new URLSearchParams();
       formData.append('username', username);
       formData.append('password', password);
-      try {
-        const response = await axios.post(`${base_url}/login`, formData, {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-        if(response.data.code == 200){ //request success
-          dispatch(setToken(response.data.data.token));
-          navigate("/home");
-          console.log("doneeee")
-        }
-      } catch (error) {
-        // Handle errors (e.g., show an error message)
-        console.error('Error:', error);
+      const params = {
+        username: username,
+        password: password,
       }
+      const response = await login(params);
+      dispatch(setToken(response.token));
+      navigate("/home");
     }
   }
 

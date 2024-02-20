@@ -47,11 +47,17 @@ export const CreateBrandVoice = (prop: Prop) => {
         show: true,
         desc: "Write or paste content that reflects your brand voice. For best results, we recommend between 50-500 words."
       });
-      setLoading(false);
     }else{
       let res = await saveVoice({ name: name, text: desc, content: voice });
       prop.confirm(res.id);
+      setDialog({
+        title: "Create Brand Voice",
+        step: 0,
+        show: false,
+        desc: "Write or paste content that reflects your brand voice. For best results, we recommend between 50-500 words."
+      });
     }
+    setLoading(false);
   }
 
   return (

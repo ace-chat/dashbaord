@@ -24,13 +24,14 @@ export const CreateBrandVoice = (prop: Prop) => {
   const [voice, setVoice] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const disabled = useMemo(() => {
+  const disabled = () => {
     if(dialog.step === 0){
       return desc === "";
     }else{
       return name === "";
     }
-  }, [name, desc])
+  }
+  
   const descDisabled = useMemo(() => {
     return dialog.step !== 0;
   }, [dialog])
@@ -108,7 +109,7 @@ export const CreateBrandVoice = (prop: Prop) => {
         <div className="w-full flex items-center justify-center">
           <Button
             type="default"
-            disabled={disabled}
+            disabled={disabled()}
             loading={loading}
             onClick={toggle}
             className={`w-167 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 cursor-pointer select-none my-30 border-none`}

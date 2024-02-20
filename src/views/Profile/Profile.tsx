@@ -13,10 +13,10 @@ const Profile = () => {
   const { t } = useTranslation()
 
   //state variables
-  const [displayName, setDisplayName]: any = useState('')
+  const [displayName, setDisplayName] = useState('')
   const [editProfile, setEditProfile] = useState(false)
-  const [email, setEmail]: any = useState('')
-  const [editPassword, setEditPassword]: any = useState(false)
+  const [email, setEmail] = useState('')
+  const [editPassword, setEditPassword] = useState(false)
   const [editName, setEditName] = useState(true)
   const [editPhoneNumber, setEditPhoneNumber] = useState(true)
   const [phoneNumber, setPhoneNumber] = useState('')

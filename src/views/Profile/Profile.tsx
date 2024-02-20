@@ -34,7 +34,9 @@ const Profile = () => {
   }, [])
 
   const handleEditProfile = async () => {
-    if (editProfile) {
+    
+
+    if (editProfile || !editName) {
       const resp = await updateUserInfo({
         display_name: displayName,
         phone: phoneNumber,

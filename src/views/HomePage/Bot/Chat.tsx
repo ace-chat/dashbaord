@@ -294,10 +294,10 @@ const Chat = () => {
                 </div>
               )}
             </div>
-            <div>
+            <div>            
               <Input
                 className="message-box mb-12"
-                style={{ position: 'absolute', bottom: 0}}
+                style={{ position: 'fixed', bottom: 0, width: pxToVw(923)}}
                 disabled={disabled}
                 styles={{ input: { fontSize: pxToVw(12) } }}
                 placeholder={t('Send a Message')}

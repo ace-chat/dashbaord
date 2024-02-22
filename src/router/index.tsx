@@ -153,7 +153,7 @@ const routes: RouteObject[] = [
               },
               {
                 path: 'create',
-                element: <Create tag={"business"} title={"43234234"} subTitle={"5435"} />
+                element: <Create />
               },
             ]
           },

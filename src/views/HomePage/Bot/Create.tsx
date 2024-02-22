@@ -268,7 +268,7 @@ const Create = () => {
       <div className={`w-1389 ml-29 bg-white rounded-8 mt-14`}
            style={{boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
         {
-          isActive ? <ChatBot chatBot={chatBot} openChangeNumber={openChangeNumber} openQuestionAnswer={openQuestionAnswer} openSalesPitches={openSalesPitches} refresh={refresh} /> :
+          isActive ? <ChatBot chatBot={chatBot} openChangeNumber={openChangeNumber} openQuestionAnswer={openQuestionAnswer} openSalesPitches={openSalesPitches} refresh={refresh} deleteConfirm={deleteChatBotConfirm} /> :
             <Generator salesPitches={sps} questionAnswer={qas} openSalesPitches={openSalesPitches} openQuestionAnswer={openQuestionAnswer} openActive={openActive}/>
         }
       </div>

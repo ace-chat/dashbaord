@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@chakra-ui/react": "^2.8.2",
     "@commitlint/config-conventional": "^17.8.1",
     "@react-hooks-library/core": "^0.5.1",
     "@reduxjs/toolkit": "^1.9.7",

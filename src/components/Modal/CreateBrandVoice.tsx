@@ -114,7 +114,7 @@ export const CreateBrandVoice = (prop: Prop) => {
             onClick={toggle}
             className={`w-167 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 cursor-pointer select-none my-30 border-none`}
           >
-            <div className="modal-text">
+            <div className={`text-13 text-transparent`} style={{ backgroundImage: "linear-gradient(90deg, #9C34AB -0.02%, #4F6BE8 47.92%, #14B8BC 100.02%)", backgroundClip: 'text' }}>
               {dialog.step == 0 ? t('Create Brand Voice! ✨') : t('Save Brand Voice!')}
             </div>
           </Button>

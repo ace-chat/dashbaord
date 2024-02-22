@@ -1,101 +1,95 @@
-import { Button, Modal } from 'antd'
+import { useMemo } from 'react'
+import type { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Button, Upload } from 'antd'
 import { pxToVw } from '@/utils'
-import Icon from '../Icon/Icon';
+import Icon from '@/components/Icon/Icon.tsx';
 
-export const ManageFiles = ({t, manageFiles, toggleManageFiles, fileInput, handleFileInputChange, selectedFiles, deleteFile}: any) => {
-    return(
-        <Modal
-            className='files_modal'
-            centered
-            open={manageFiles}
-            onCancel={toggleManageFiles}
-            maskClosable={false}
-            footer={() => {
-                return(
-                    <div />
-                )
-            }}
-        >
-            <div className={`flex justify-between`}>
-                <div className={`flex p-24 flex-col`} style={{ width: pxToVw(500), justifyContent: "center" }}>
-                    <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(22) }}>{t("Add More Files")}</div>
-                    <div className={`mt-12`}>
-                        <div className='flex rounded-8 mt-16 justify-center items-center' 
-                        style={{"backgroundColor": "#F4F6FA", "display": "flex", "width": pxToVw(430), "height": pxToVw(293), border: "1px dashed #8B8B8B", flexDirection: "column" }}
-                        onClick={() => fileInput.current.click()}>
-                            <input
-                                type="file"
-                                id="fileInput"
-                                accept=".pdf"
-                                ref={fileInput}
-                                onChange={handleFileInputChange}
-                                style={{ display: "none" }}
-                            />
-                            <Icon name={'upload'} style={{ 'width': pxToVw(22), 'height': pxToVw(22), 'marginTop': pxToVw(5) }} />
-                            <div className={`mt-2`} style={{ color: "#000", opacity: 0.6, fontSize: pxToVw(10), fontFamily: "PingFang SC Light" }}>{ t("Upload more files to knowledge base") }</div>
-                            <div className={`mt-2`} style={{ color: "#000", opacity: 0.6, fontSize: pxToVw(10), fontFamily: "PingFang SC Light" }}>{ t("Drop files here") }</div>
-                        </div> 
-                    </div>
-                    <div className='flex self-center'>
-                        <Button
-                            type="default"
-                            style={{ borderRadius: pxToVw(20), marginTop: pxToVw(30), marginBottom: pxToVw(30) }}
-                            onClick={() => {
-                                toggleManageFiles();
-                            }}
-                            className={`w-120 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 cursor-pointer select-none`}
-                        >
-                            <div className='modal-text'>{t('Submit ✨')}</div>
-                        </Button>
-                    </div>
-                </div>
+import { upload } from '@/request'
 
-                <div className="w-px bg-[#F3F3F3]"></div>
+import type { RcFile } from "antd/es/upload/interface";
+import type { File } from '@/types'
 
-                <div className={`flex p-24 flex-col`} style={{ width: pxToVw(500) }}>
+type Props = {
+  files: Array<string>;
+  onUpload: (file: File) => void;
+  onRemove: (file: File) => void;
+  onConfirm: () => void;
+}
 
-                    <div style={{ fontFamily: "PingFang SC Medium", fontSize: pxToVw(22) }}>{t("Existing Files")}</div>
-                    <div className={`mt-12`}>
-                        <div className='flex flex-row rounded-4 mt-16' 
-                            style={{
-                                "backgroundColor": "white",
-                                "display": "flex",
-                                "width": pxToVw(400),
-                                "height": pxToVw(293),
-                                border: "1px solid #DBDBDB",
-                                flexDirection: "row", 
-                                flexWrap: "wrap",
-                                alignItems: "flex-start", 
-                                alignContent: "flex-start"
-                            }}
-                        >
-                            {selectedFiles.map((file: any, index: number) => {
-                            return (
-                                <div style={{ position: "relative" }}>
-                                <div className='flex flex-col items-center' key={index} style={{ marginTop: pxToVw(10), alignSelf: "self-start", paddingLeft: pxToVw(10), position: 'relative' }}>
-                                    <div className='ellipse'onClick={() => deleteFile(index)}>
-                                        <Icon name={'remove'} style={{ width: pxToVw(5), height: pxToVw(5) }} />
-                                    </div>
-                                    <Icon name='pdf' style={{ width: pxToVw(45), height: pxToVw(45), alignSelf: "center" }} />
-                                    <div className='text' style={{ 
-                                        fontFamily: "PingFang SC Medium", 
-                                        fontSize: pxToVw(6), color: "#818181", 
-                                        marginTop: pxToVw(5), width: pxToVw(35), height: pxToVw(30), 
-                                        textAlign: "center",
-                                    }}
-                                    >
-                                        {file?.name}
-                                    </div>
-                                </div>
-                                </div>
-                            );
-                            })}
-                        </div> 
-                    </div>
+const ManageFiles: FC<Props> = (props) => {
+  const {t} = useTranslation()
 
-                    <div className='flex self-center' style={{ marginTop: pxToVw(30), marginBottom: pxToVw(30), height: pxToVw(39)}} />
-                </div>
+  const files = useMemo(() => {
+    let f: Array<File> = [];
+    props.files.forEach(item => {
+      let it = item.split("/")
+      f.push({
+        name: it[it.length - 1],
+        url: item
+      });
+    })
+    return f;
+  }, [props.files])
+
+  const beforeUpload: (file: RcFile, FileList: RcFile[]) => Promise<boolean> = async (file) => {
+    const data = new FormData();
+    data.append("file", file)
+    let res = await upload(data)
+    props.onUpload({ name: file.name, url: res });
+    return false;
+  }
+
+  const removeFile = (f: File) => {
+    props.onRemove(f)
+  }
+
+  return <>
+    <div className={`w-full h-full flex items-start justify-between`}>
+      <div className={`w-1/2 flex flex-col justify-center p-24`}>
+        <div className={`text-22`}>{t("Add More Files")}</div>
+        <div className={`w-full h-full mt-10`}>
+          <Upload.Dragger multiple={false} beforeUpload={beforeUpload} showUploadList={false} accept={'.pdf'}>
+            <div className='h-294 flex justify-center items-center flex-col'>
+              <Icon name={'upload'} style={{'width': pxToVw(22), 'height': pxToVw(22), 'marginTop': pxToVw(5)}}/>
+              <div className={`mt-2 text-black opacity-60 text-10`}>{t("Upload more files to knowledge base")}</div>
+              <div className={`mt-2 text-black opacity-60 text-10`}>{t("Drop files here")}</div>
             </div>
-      </Modal>
-    )
+          </Upload.Dragger>
+        </div>
+      </div>
+      <div className={`w-1/2 flex p-24 flex-col`}>
+        <div className={`text-22`}>{t("Existing Files")}</div>
+        <div className={`w-full mt-10`}>
+          <div className='w-full h-336 bg-[#FFFFFF] flex flex-wrap items-start content-start rounded-4 border border-[#DBDBDB] border-solid py-12 px-10'>
+            {
+              files.map(f => {
+                return <div key={f.url} className='flex flex-col items-center relative mr-4'>
+                  <div onClick={() => { removeFile(f) }} className={`w-10 h-10 flex items-center justify-center bg-[#FA4848] rounded-full cursor-pointer absolute -top-3 right-1`}>
+                    <Icon name={'remove'} style={{width: pxToVw(4), height: pxToVw(4)}}/>
+                  </div>
+                  <Icon name='pdf' style={{width: pxToVw(45), height: pxToVw(45)}}/>
+                  <div className='text-6 text-[#818181] mt-5 w-30 text-center truncate'>{ f.name }</div>
+                </div>
+              })
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className='w-full flex justify-center'>
+      <Button
+        type="default"
+        onClick={props.onConfirm}
+        className={`w-120 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 my-30 cursor-pointer select-none`}
+      >
+        <div className={`text-13 text-transparent`} style={{
+          backgroundImage: "linear-gradient(90deg, #9C34AB -0.02%, #4F6BE8 47.92%, #14B8BC 100.02%)",
+          backgroundClip: 'text'
+        }}>{t('Submit ✨')}</div>
+      </Button>
+    </div>
+  </>
 };
+
+export default ManageFiles

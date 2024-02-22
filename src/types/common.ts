@@ -61,3 +61,9 @@ export type Option = {
   label: string;
   value: any;
 }
+
+export type Dialog = {
+  show: boolean;
+  title?: string;
+  step: number;
+}

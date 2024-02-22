@@ -1,5 +1,5 @@
 import { instance } from "@/plugins";
-import { CreateVoice, SaveVoice } from "@/types"
+import {CreateVoice, SaveVoice, SendVerifyCode} from "@/types"
 
 export const getAllRegions = () => {
   return instance({
@@ -48,6 +48,13 @@ export const getAllPlatform = (type: number) => {
     params: {
       type: type,
     }
+  })
+}
+
+export const getAllPhoneCode = () => {
+  return instance({
+    url: '/common/codes',
+    method: "GET"
   })
 }
 
@@ -121,5 +128,20 @@ export const updatePassword = (data: any) => {
     url: "/user/updatePassword",
     method: "POST",
     data: data
+  })
+}
+
+export const getOptions = () => {
+  return instance({
+    url: "/common/options",
+    method: "GET"
+  })
+}
+
+export const sendVerifyCode = (data: SendVerifyCode) => {
+  return instance({
+    url: "/common/sendVerifyCode",
+    method: "POST",
+    data
   })
 }

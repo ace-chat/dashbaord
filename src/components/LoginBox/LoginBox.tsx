@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 export default function LoginBox({ flow = 'reset', ...props }) {
   const { t } = useTranslation()
 
-  const [screen, setScreen] = useState('3')
+  const [screen, setScreen] = useState('1')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -103,7 +103,7 @@ export default function LoginBox({ flow = 'reset', ...props }) {
                 width: pxToVw(202),
                 height: pxToVw(46),
               }}
-              onClick={handleSubmit}
+              onClick={handleNext}
             >
               {t('Login')}
             </button>
@@ -158,6 +158,7 @@ export default function LoginBox({ flow = 'reset', ...props }) {
                     backgroundColor: '#FFFFFF',
                     color: '#4F6BE8',
                   }}
+                  onClick={handleNext}
                 >
                   {t('Start 3 Days Trial!')}
                 </button>
@@ -203,6 +204,7 @@ export default function LoginBox({ flow = 'reset', ...props }) {
                     height: pxToVw(46),
                     marginTop: pxToVw(80),
                   }}
+                  onClick={handleNext}
                 >
                   {t('Sign Up')}
                 </button>
@@ -241,6 +243,7 @@ export default function LoginBox({ flow = 'reset', ...props }) {
                     height: pxToVw(46),
                     marginTop: pxToVw(80),
                   }}
+                  onClick={handleNext}
                 >
                   {t('Send Code')}
                 </button>
@@ -279,7 +282,6 @@ export default function LoginBox({ flow = 'reset', ...props }) {
                     ))}
                   </PinInput>
                 </HStack>
-                <h3>{otp}</h3>
                 <Link color="#1273EB" href="#">
                   {t('Resend Code?')}
                 </Link>
@@ -292,6 +294,7 @@ export default function LoginBox({ flow = 'reset', ...props }) {
                     height: pxToVw(46),
                     marginTop: pxToVw(80),
                   }}
+                  onClick={handleNext}
                 >
                   {t('Continue')}
                 </button>
@@ -337,7 +340,7 @@ export default function LoginBox({ flow = 'reset', ...props }) {
                     width: pxToVw(202),
                     height: pxToVw(46),
                   }}
-                  onClick={handleSubmit}
+                  onClick={handleNext}
                 >
                   {t('Reset Password')}
                 </button>

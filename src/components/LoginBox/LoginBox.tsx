@@ -9,6 +9,8 @@ export default function LoginBox({ flow = 'reset', ...props }) {
   const { t } = useTranslation()
 
   const [screen, setScreen] = useState('1')
+  
+  // when intergating, it's better to move these states to props
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -282,7 +284,7 @@ export default function LoginBox({ flow = 'reset', ...props }) {
                     ))}
                   </PinInput>
                 </HStack>
-                <Link color="#1273EB" href="#">
+                <Link className='mt-12' color="#1273EB" href="#">
                   {t('Resend Code?')}
                 </Link>
                 <button

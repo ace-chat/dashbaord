@@ -6,6 +6,7 @@ export type ContentHistoryChildren = {
   ads_id: number;
   user_id: number;
   text: string;
+  topic: string;
 } & Time
 
 export type ContentHistory = {

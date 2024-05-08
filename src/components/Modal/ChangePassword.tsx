@@ -15,6 +15,11 @@ export const ChangePassword = ({
   const [confirmPassword, setConfirmPassword] = useState('')
 
   const handleChangePassword = async () => {
+    if (oldPassword === '' || newPassword === '' || confirmPassword === '') {
+      alert('password can not be empty')
+      return
+    }
+
     if (newPassword === confirmPassword) {
       await updatePassword({
         old_password: oldPassword,
@@ -23,7 +28,7 @@ export const ChangePassword = ({
       toggleChangePassword()
     } else {
       // change this after design
-      alert('Password does not match')
+      alert('Passwords do not match')
     }
   }
 
@@ -47,7 +52,16 @@ export const ChangePassword = ({
               onClick={handleChangePassword}
               className={`w-167 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 cursor-pointer select-none`}
             >
-              <div className={`text-13 text-transparent`} style={{ backgroundImage: "linear-gradient(90deg, #9C34AB -0.02%, #4F6BE8 47.92%, #14B8BC 100.02%)", backgroundClip: 'text' }}>{t('Change Password ✨')}</div>
+              <div
+                className={`text-13 text-transparent`}
+                style={{
+                  backgroundImage:
+                    'linear-gradient(90deg, #9C34AB -0.02%, #4F6BE8 47.92%, #14B8BC 100.02%)',
+                  backgroundClip: 'text',
+                }}
+              >
+                {t('Change Password ✨')}
+              </div>
             </Button>
           </div>
         )

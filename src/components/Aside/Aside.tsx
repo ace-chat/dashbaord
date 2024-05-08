@@ -8,9 +8,10 @@ import Icon from "@/components/Icon/Icon.tsx";
 import Avatar from '@/assets/avatar.png'
 
 import type { RootState } from "@/store";
-import type { Key, ReactNode } from "react";
+import { useEffect, type Key, type ReactNode, useState } from "react";
 import type { MenuInfo } from "@/types";
 import type { MenuProps } from "antd"
+import { getUserInfo } from '@/request'
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -35,6 +36,18 @@ const Aside = () => {
   const open = useSelector((state: RootState) => state.menu.open)
   const dispatch = useDispatch()
   const { t } = useTranslation()
+
+  const [displayName, setDisplayName] = useState('')
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const resp = await getUserInfo()
+      if (resp) {
+        setDisplayName(resp.display_name)
+      }
+    }
+    fetchUserInfo()
+  }, [])
 
   const items: MenuProps['items'] = [
     getItem(t('Home'), "home", <Icon name={"home"} />),
@@ -94,7 +107,7 @@ const Aside = () => {
       >
         <div className={'flex items-center'}>            
           <img className={'w-28 h-28 mr-12'} src={Avatar} alt="avatar" />
-          <div className={'text-12 font-bold text-[white]'} style={{ fontFamily: "PingFang SC Medium" }}>ACE Support</div>
+          <div className={'text-12 font-bold text-[white]'} style={{ fontFamily: "PingFang SC Medium" }}>{displayName}</div>
         </div>
         <div className={`flex items-center`}>
           <Icon name={'more'} />

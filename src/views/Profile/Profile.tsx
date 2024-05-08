@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react'
 import { Input, Button } from 'antd'
 import { getUserInfo, updateUserInfo } from '@/request'
 import { ChangePassword } from '@/components/Modal/ChangePassword'
-import Camera from "../../../src/assets/camera2.svg";
-import Pen from "../../../src/assets/pen.svg";
-import Tick from "../../../src/assets/save.svg";
+import Camera from '../../../src/assets/camera2.svg'
+import Pen from '../../../src/assets/pen.svg'
+import Tick from '../../../src/assets/save.svg'
 
 const Profile = () => {
   const { t } = useTranslation()
@@ -34,9 +34,7 @@ const Profile = () => {
   }, [])
 
   const handleEditProfile = async () => {
-    
-
-    if (editProfile || !editName) {
+    if (editProfile || !editName || !editPhoneNumber) {
       const resp = await updateUserInfo({
         display_name: displayName,
         phone: phoneNumber,
@@ -45,6 +43,8 @@ const Profile = () => {
       if (resp) {
         setDisplayName(resp.display_name)
         setPhoneNumber(resp.phone)
+
+        alert("update completed")
       }
     }
     setEditProfile(!editProfile)
@@ -90,26 +90,81 @@ const Profile = () => {
               alt="Profile Image"
               style={{ width: '90%', height: '90%', objectFit: 'cover' }}
             />
-             <div style={{ position: 'absolute', width: pxToVw(40), height: pxToVw(40), bottom: 0, cursor: 'pointer' }}>
-                    {/* camera svg */}
-                    <img src={Camera} alt="Camera" style={{ width: '70%', height: '70%', objectFit: 'cover', transform: 'translate(15%, 15%)' }} onClick={() => alert("change image")}/>
-                </div>
+            <div
+              style={{
+                position: 'absolute',
+                width: pxToVw(40),
+                height: pxToVw(40),
+                bottom: 0,
+                cursor: 'pointer',
+              }}
+            >
+              {/* camera svg */}
+              <img
+                src={Camera}
+                alt="Camera"
+                style={{
+                  width: '70%',
+                  height: '70%',
+                  objectFit: 'cover',
+                  transform: 'translate(15%, 15%)',
+                }}
+                onClick={() => alert('change image')}
+              />
+            </div>
           </div>
-                {/* Profile Name */}
-                {editName ?
-                    <div style={{ color: "black", fontSize: pxToVw(22), marginLeft: pxToVw(60), marginTop: pxToVw(25), fontFamily: "PingFang SC Medium"}}>{ t(displayName) }
-                    <img src={Pen} alt="Pen" style={{ width: pxToVw(12), height: pxToVw(12), marginLeft: pxToVw(8), cursor: 'pointer' }} onClick={() => setEditName(!editName)}/>
-                </div> :
-                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                 <Input
-                     style={{ color: "black", fontSize: pxToVw(15), marginLeft: pxToVw(50), marginTop: pxToVw(25), fontFamily: "PingFang SC Medium"}}
-                     placeholder={t('Display Name')}
-                     value={displayName}
-                     onChange={(e) => setDisplayName(e.target.value)}
-                 /> 
-                 <img src={Tick} alt="Pen" style={{ width: pxToVw(14), height: pxToVw(14), marginLeft: pxToVw(8), marginTop: pxToVw(25), cursor: 'pointer' }} onClick={handleEditProfile}/> 
-             </div>
-                }
+          {/* Profile Name */}
+          {editName ? (
+            <div
+              style={{
+                color: 'black',
+                fontSize: pxToVw(22),
+                marginLeft: pxToVw(60),
+                marginTop: pxToVw(25),
+                fontFamily: 'PingFang SC Medium',
+              }}
+            >
+              {t(displayName)}
+              <img
+                src={Pen}
+                alt="Pen"
+                style={{
+                  width: pxToVw(12),
+                  height: pxToVw(12),
+                  marginLeft: pxToVw(8),
+                  cursor: 'pointer',
+                }}
+                onClick={() => setEditName(!editName)}
+              />
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Input
+                style={{
+                  color: 'black',
+                  fontSize: pxToVw(15),
+                  marginLeft: pxToVw(50),
+                  marginTop: pxToVw(25),
+                  fontFamily: 'PingFang SC Medium',
+                }}
+                placeholder={t('Display Name')}
+                value={displayName}
+                onChange={(e: any) => setDisplayName(e.target.value)}
+              />
+              <img
+                src={Tick}
+                alt="Pen"
+                style={{
+                  width: pxToVw(14),
+                  height: pxToVw(14),
+                  marginLeft: pxToVw(8),
+                  marginTop: pxToVw(25),
+                  cursor: 'pointer',
+                }}
+                onClick={handleEditProfile}
+              />
+            </div>
+          )}
         </div>
         {/* Profile Info */}
         <div
@@ -121,7 +176,6 @@ const Profile = () => {
             marginLeft: pxToVw(38),
           }}
         >
-
           {/* Email */}
           <div
             className="w-full flex justify-between flex-row"
@@ -136,7 +190,7 @@ const Profile = () => {
                   marginLeft: pxToVw(0),
                   marginTop: pxToVw(20),
                   fontFamily: 'PingFang SC Medium',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
                 }}
               >
                 {t('Email')}
@@ -155,13 +209,13 @@ const Profile = () => {
                 }}
                 placeholder={t('Email')}
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: any) => setEmail(e.target.value)}
               />
             </div>
           </div>
 
-{/* Password */}
-<div
+          {/* Password */}
+          <div
             className="w-full flex justify-between flex-row"
             style={{ borderBottom: '1px solid #DBDBDB', height: pxToVw(89) }}
           >
@@ -174,7 +228,7 @@ const Profile = () => {
                   marginLeft: pxToVw(0),
                   marginTop: pxToVw(20),
                   fontFamily: 'PingFang SC Medium',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
                 }}
               >
                 {t('Password')}
@@ -213,7 +267,7 @@ const Profile = () => {
                   marginLeft: pxToVw(0),
                   marginTop: pxToVw(20),
                   fontFamily: 'PingFang SC Medium',
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
                 }}
               >
                 {t('Phone Number')}
@@ -232,19 +286,31 @@ const Profile = () => {
                 }}
                 placeholder={t('Add your phone number for better security')}
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(e: any) => setPhoneNumber(e.target.value)}
               />
             </div>
             <Button
-                    type="default"
-                    onClick={() => !editPhoneNumber ? handleEditProfile() : setEditPhoneNumber(!editPhoneNumber)}
-                    className='bg-[#788CA7] rounded-4'
-                    style={{ width: pxToVw(100), height: pxToVw(40), color: "white", fontSize: pxToVw(16), marginRight: pxToVw(25), marginTop: pxToVw(25) }}
-                >
-                    <div style={{ fontFamily: "PingFang SC Regular" }}>{editPhoneNumber ? t('Edit') : t('Save')}</div>
-                </Button>
+              type="default"
+              onClick={async () =>
+                editPhoneNumber
+                  ? setEditPhoneNumber(!editPhoneNumber)
+                  : await handleEditProfile()
+              }
+              className="bg-[#788CA7] rounded-4"
+              style={{
+                width: pxToVw(100),
+                height: pxToVw(40),
+                color: 'white',
+                fontSize: pxToVw(16),
+                marginRight: pxToVw(25),
+                marginTop: pxToVw(25),
+              }}
+            >
+              <div style={{ fontFamily: 'PingFang SC Regular' }}>
+                {editPhoneNumber ? t('Edit') : t('Save')}
+              </div>
+            </Button>
           </div>
-
         </div>
       </div>
 

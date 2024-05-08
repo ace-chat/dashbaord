@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Form, Input } from 'antd'
+import { Button, Input } from 'antd'
 import styles from './Signup.module.css'
 import AceText from '@/assets/login/ace_text.svg'
 import Bot from '@/assets/login/bot.svg'
-import Content from '@/assets/login/content.svg'
+// import Content from '@/assets/login/content.svg'
 import Logo from '@/assets/login/logo.svg'
-import SquareOne from '@/assets/login/square_one.svg'
-import SquareTwo from '@/assets/login/square_two.svg'
+// import SquareOne from '@/assets/login/square_one.svg'
+// import SquareTwo from '@/assets/login/square_two.svg'
 import { pxToVw } from '@/utils'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+// import { useNavigate } from 'react-router-dom'
+// import { useDispatch } from 'react-redux'
 
 function Signup() {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  // const navigate = useNavigate()
+  // const dispatch = useDispatch()
   const { t } = useTranslation()
 
   const [isEnableSign, setIsEnableSign] = useState(false)

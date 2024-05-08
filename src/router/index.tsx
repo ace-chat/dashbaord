@@ -4,22 +4,20 @@ import AuthRoute from '@/auth'
 
 import HomePage from '@/views/HomePage/HomePage.tsx'
 
-import Login from '@/views/Login/Login.tsx'
-
 import Home from '@/views/HomePage/Home/Home.tsx'
 
 import Content from '@/views/HomePage/Content/Content.tsx'
-import Optimized from "@/views/HomePage/Content/Optimized/Optimized.tsx";
-import Engine from "@/views/HomePage/Content/Engine/Engine.tsx";
-import Media from "@/views/HomePage/Content/Media/Media.tsx";
-import Email from "@/views/HomePage/Content/Email/Email.tsx";
-import Blogs from "@/views/HomePage/Content/Blogs/Blogs.tsx";
+import Optimized from '@/views/HomePage/Content/Optimized/Optimized.tsx'
+import Engine from '@/views/HomePage/Content/Engine/Engine.tsx'
+import Media from '@/views/HomePage/Content/Media/Media.tsx'
+import Email from '@/views/HomePage/Content/Email/Email.tsx'
+import Blogs from '@/views/HomePage/Content/Blogs/Blogs.tsx'
 
 import Bot from '@/views/HomePage/Bot/Bot.tsx'
 
-import Analytics from "@/views/HomePage/Analytics/Analytics.tsx";
+import Analytics from '@/views/HomePage/Analytics/Analytics.tsx'
 
-import Support from "@/views/HomePage/Support/Support.tsx";
+import Support from '@/views/HomePage/Support/Support.tsx'
 
 import Oops from '@/views/Oops/Oops.tsx'
 
@@ -45,6 +43,9 @@ import Create from '@/views/HomePage/Bot/Create'
 import Simple from '@/views/HomePage/Analytics/Simple'
 import Deep from '@/views/HomePage/Analytics/Deep'
 import Profile from '@/views/Profile/Profile'
+import Login from '@/views/Login/Login'
+import Signup from '@/views/Signup/Signup'
+import ForgetPassword from '@/views/ForgetPassword/ForgetPassword'
 
 const routes: RouteObject[] = [
   {
@@ -73,55 +74,55 @@ const routes: RouteObject[] = [
                 children: [
                   {
                     path: 'tone',
-                    element: <Tone />
+                    element: <Tone />,
                   },
                   {
                     path: 'summarize',
-                    element: <Summarize />
+                    element: <Summarize />,
                   },
                   {
                     path: 'paraphrase',
-                    element: <Paraphrase />
+                    element: <Paraphrase />,
                   },
                   {
                     path: 'brandvoice',
-                    element: <BrandVoice />
+                    element: <BrandVoice />,
                   },
                   {
                     path: 'audience',
-                    element: <Audience />
+                    element: <Audience />,
                   },
-                ]
+                ],
               },
               {
                 path: 'engine',
-                element: <Engine />
+                element: <Engine />,
               },
               {
                 path: 'media',
-                element: <Media />
+                element: <Media />,
               },
               {
                 path: 'email',
                 element: <Email />,
-                children:[
+                children: [
                   {
                     path: 'freestyle',
-                    element: <Freestyle />
+                    element: <Freestyle />,
                   },
                   {
                     path: 'marketing',
-                    element: <Marketing />
+                    element: <Marketing />,
                   },
                   {
                     path: 'welcome',
-                    element: <Welcome />
+                    element: <Welcome />,
                   },
                   {
                     path: 'odds',
-                    element: <Odds />
+                    element: <Odds />,
                   },
-                ]
+                ],
               },
               {
                 path: 'blogs',
@@ -129,19 +130,19 @@ const routes: RouteObject[] = [
                 children: [
                   {
                     path: 'intro',
-                    element: <Intro />
+                    element: <Intro />,
                   },
                   {
                     path: 'outline',
-                    element: <Outline />
+                    element: <Outline />,
                   },
                   {
                     path: 'entire',
-                    element: <Entire />
+                    element: <Entire />,
                   },
-                ]
-              }
-            ]
+                ],
+              },
+            ],
           },
           {
             path: 'bot',
@@ -149,13 +150,13 @@ const routes: RouteObject[] = [
             children: [
               {
                 path: 'chat',
-                element: <Chat />
+                element: <Chat />,
               },
               {
                 path: 'create',
-                element: <Create />
+                element: <Create />,
               },
-            ]
+            ],
           },
           {
             path: 'analytics.tsx',
@@ -163,17 +164,17 @@ const routes: RouteObject[] = [
             children: [
               {
                 path: 'simple',
-                element: <Simple />
+                element: <Simple />,
               },
               {
                 path: 'deep',
-                element: <Deep />
+                element: <Deep />,
               },
-            ]
+            ],
           },
           {
             path: 'support',
-            element: <Support />
+            element: <Support />,
           },
           {
             path: 'profile',
@@ -184,6 +185,14 @@ const routes: RouteObject[] = [
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'signup',
+        element: <Signup />,
+      },
+      {
+        path: 'forgetpassword',
+        element: <ForgetPassword />,
       },
       {
         path: '*',
@@ -199,8 +208,8 @@ const routes: RouteObject[] = [
 
 const router = createHashRouter(routes, {
   future: {
-    v7_normalizeFormMethod: true
-  }
+    v7_normalizeFormMethod: true,
+  },
 })
 
 export default router

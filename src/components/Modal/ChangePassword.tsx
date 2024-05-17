@@ -1,7 +1,10 @@
-import { Button, Input, Modal } from 'antd'
+import { Button, Input, Modal, message } from 'antd'
 import { pxToVw } from '@/utils'
 import { useState } from 'react'
-import { updatePassword } from '@/request'
+import {
+  innerResetPasswordCode,
+  updatePassword,
+} from '@/request'
 import { useTranslation } from 'react-i18next'
 
 export const ChangePassword = ({
@@ -10,25 +13,53 @@ export const ChangePassword = ({
 }: any) => {
   const { t } = useTranslation()
 
-  const [oldPassword, setOldPassword] = useState('')
+  // const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [code, setCode] = useState('')
 
   const handleChangePassword = async () => {
-    if (oldPassword === '' || newPassword === '' || confirmPassword === '') {
-      alert('password can not be empty')
+    if (
+      newPassword === '' ||
+      confirmPassword === '' ||
+      code === '' ||
+      newPassword !== confirmPassword
+    ) {
+      message.error(
+        t('Please confirm that the information is filled in correctly')
+      )
       return
     }
 
-    if (newPassword === confirmPassword) {
-      await updatePassword({
-        old_password: oldPassword,
-        new_password: newPassword,
+    try {
+      const result = await updatePassword({
+        code: code,
+        password: newPassword,
       })
-      toggleChangePassword()
-    } else {
-      // change this after design
-      alert('Passwords do not match')
+
+      if (result.code === 20000) {
+        message.success(t('Update completed'))
+        toggleChangePassword()
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const onClickGetCode = async () => {
+    try {
+      const result = await innerResetPasswordCode()
+      if (result.code === 20000) {
+        message.success(
+          t('Verification code sent successfully, please check your email')
+        )
+      } else {
+        message.error(
+          t('Verification code failed to be sent, please try again')
+        )
+      }
+    } catch (e) {
+      console.error(e)
     }
   }
 
@@ -70,9 +101,8 @@ export const ChangePassword = ({
       <div style={{ fontFamily: 'PingFang SC Medium', fontSize: pxToVw(22) }}>
         {t('Change Password')}
       </div>
-      {/* old password */}
       <div className="flex flex-row" style={{ marginTop: pxToVw(24) }}>
-        <Input
+        {/* <Input
           styles={{
             input: {
               width: pxToVw(422),
@@ -85,7 +115,31 @@ export const ChangePassword = ({
           type="password"
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
+        /> */}
+        <Input
+          styles={{
+            input: {
+              width: pxToVw(422),
+              height: pxToVw(35),
+              fontSize: pxToVw(10),
+              marginLeft: pxToVw(18),
+              marginRight: pxToVw(18),
+            },
+          }}
+          placeholder="Enter your code"
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
         />
+        <Button
+          style={{
+            height: pxToVw(35),
+          }}
+          type="primary"
+          onClick={onClickGetCode}
+        >
+          {t('Get Code')}
+        </Button>
       </div>
 
       {/* new password */}

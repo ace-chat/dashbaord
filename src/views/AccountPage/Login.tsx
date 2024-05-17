@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Button, Input } from 'antd'
+import { Button, Input, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setToken } from '@/reducers/token.ts'
 import { login } from '@/request'
 
-import styles from './Login.module.css'
+import styles from './AccountPage.module.css'
 
 import AceText from '@/assets/login/ace_text.svg'
 import Bot from '@/assets/login/bot.svg'
@@ -16,31 +16,47 @@ import Logo from '@/assets/login/logo.svg'
 // import SquareTwo from '@/assets/login/square_two.svg'
 import { pxToVw } from '@/utils'
 import { UserOutlined } from '@ant-design/icons'
+import { LoginRequest } from '@/types'
 
 function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  // const [form] = Form.useForm()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  // const [key, setKey] = useState('')
 
-  const [username, setUsername] = useState('test@test1.com')
-  const [password, setPassword] = useState('abcd123456')
-  const [key, setKey] = useState('testgooglekey')
+  const clearField = () => {
+    setEmail("")
+    setPassword("")
+  }
+
   const onClickLogin = async () => {
-    // const valid = await form.validateFields()
-    // if (valid) {
-    const formData = new URLSearchParams()
-    formData.append('username', username)
-    formData.append('password', password)
-    const params = {
-      username: username,
-      password: password,
+
+    if (email === '' || password === '') {
+      message.error(
+        t('Please confirm that the information is filled in correctly')
+      )
+      return
     }
-    const response = await login(params)
-    dispatch(setToken(response.token))
-    navigate('/home')
-    // }
+
+    try {
+      const params: LoginRequest = {
+        email: email,
+        password: password,
+      }
+      const response = await login(params)
+      if (response.code === 20000) {
+        clearField()
+        dispatch(setToken(response.data.token))
+        navigate('/home')
+      } else {
+        message.error(t('Login failed, please confirm account validity'))
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (
@@ -142,9 +158,9 @@ function Login() {
               size="large"
               placeholder="Email ID"
               prefix={<UserOutlined />}
-              name="username"
-              onChange={(val) => setUsername(val.target.value)}
-              value={username}
+              name="email"
+              onChange={(val) => setEmail(val.target.value)}
+              value={email}
             />
             <Input.Password
               size="large"
@@ -153,8 +169,7 @@ function Login() {
               onChange={(val) => setPassword(val.target.value)}
               value={password}
             />
-
-            <Input
+            {/* <Input
               size="large"
               placeholder="Google Key"
               style={{ marginTop: 20 }}
@@ -162,7 +177,7 @@ function Login() {
               name="key"
               onChange={(val) => setKey(val.target.value)}
               value={key}
-            />
+            /> */}
           </div>
 
           <div style={{ marginTop: 20 }}>
@@ -175,6 +190,7 @@ function Login() {
                 fontSize: 14,
                 marginLeft: 10,
                 color: '#1273EB',
+                cursor: 'pointer',
               }}
             >
               {t('Forgot Password?')}
@@ -203,6 +219,7 @@ function Login() {
                 fontSize: 14,
                 marginLeft: 10,
                 color: '#1273EB',
+                cursor: 'pointer',
               }}
             >
               {t('Sign up')}

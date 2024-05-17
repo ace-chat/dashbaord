@@ -72,81 +72,111 @@ const Content = (props: Prop) => {
   const [history, setHistory] = useState<Array<ContentHistory>>([])
 
   const getTones = async () => {
-    let res: Array<Tone> = await getAllTone(1)
-    let arr: Array<Option> = []
-    res.forEach((item) => {
-      arr.push({
-        label: item.name,
-        value: item.id,
+    try {
+      const result = await getAllTone(1)
+      let res: Array<Tone> = result.data
+      let arr: Array<Option> = []
+      res.forEach((item) => {
+        arr.push({
+          label: item.name,
+          value: item.id,
+        })
       })
-    })
-    setTones(arr)
+      setTones(arr)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const getPlatforms = async () => {
-    let res: Array<Platform> = await getAllPlatform(
-      props.tag === 'media' ? 1 : props.tag === 'engine' ? 2 : 0
-    )
-    let arr: Array<Option> = []
-    res.forEach((item) => {
-      arr.push({
-        label: item.name,
-        value: item.id,
+    try {
+      const result = await getAllPlatform(
+        props.tag === 'media' ? 1 : props.tag === 'engine' ? 2 : 0
+      )
+
+      let res: Array<Platform> = result.data
+      let arr: Array<Option> = []
+      res.forEach((item) => {
+        arr.push({
+          label: item.name,
+          value: item.id,
+        })
       })
-    })
-    setPlatforms(arr)
+      setPlatforms(arr)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const getLanguages = async () => {
-    let res: Array<Language> = await getAllLanguage()
-    let arr: Array<Option> = []
-    res.forEach((item) => {
-      arr.push({
-        label: item.name,
-        value: item.id,
+    try {
+      const result = await getAllLanguage()
+      let res: Array<Language> = result.data
+      let arr: Array<Option> = []
+      res.forEach((item) => {
+        arr.push({
+          label: item.name,
+          value: item.id,
+        })
       })
-    })
-    setLanguages(arr)
+      setLanguages(arr)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const getRegions = async () => {
-    const res: Array<Region> = await getAllRegions()
-
-    let arr: Array<Option> = []
-    res.forEach((item) => {
-      arr.push({
-        label: item.country,
-        value: item.id,
+    try {
+      const result = await getAllRegions()
+      const res: Array<Region> = result.data
+      let arr: Array<Option> = []
+      res.forEach((item) => {
+        arr.push({
+          label: item.country,
+          value: item.id,
+        })
       })
-    })
-    setCountries(arr)
+      setCountries(arr)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const getVoices = async () => {
-    const res: Array<Voice> = await getAllVoices()
+    try {
+      const result = await getAllVoices()
+      const res: Array<Voice> = result.data
 
-    let arr: Array<Option> = []
-    res.forEach((item) => {
-      arr.push({
-        label: item.name,
-        value: item.id,
+      let arr: Array<Option> = []
+      res.forEach((item) => {
+        arr.push({
+          label: item.name,
+          value: item.id,
+        })
       })
-    })
-    arr.unshift({ value: 'none', label: t('None') })
-    setBrandVoices(arr)
+      arr.unshift({ value: 'none', label: t('None') })
+      setBrandVoices(arr)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const getGenders = async () => {
-    const res: Array<Gender> = await getAllGender()
+    try {
+      const result = await getAllGender()
+      const res: Array<Gender> = result.data
 
-    let arr: Array<Option> = []
-    res.forEach((item) => {
-      arr.push({
-        label: item.name,
-        value: item.id,
+      let arr: Array<Option> = []
+      res.forEach((item) => {
+        arr.push({
+          label: item.name,
+          value: item.id,
+        })
       })
-    })
-    setGenders(arr)
+      setGenders(arr)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const handleDelete = async (id: number) => {
@@ -174,43 +204,56 @@ const Content = (props: Prop) => {
   }
 
   const getTypes = async () => {
-    const res: Array<Type> = await getAllType()
+    try {
+      const result = await getAllType()
+      const res: Array<Type> = result.data
 
-    let arr: Array<Option> = []
-    res.forEach((item) => {
-      arr.push({
-        label: item.name,
-        value: item.id,
+      let arr: Array<Option> = []
+      res.forEach((item) => {
+        arr.push({
+          label: item.name,
+          value: item.id,
+        })
       })
-    })
-    setTypes(arr)
+      setTypes(arr)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   const getAllHistory = async () => {
-    let res: Array<ContentHistoryChildren> = await getHistory(props.url.history)
+    try {
+      const result = await getHistory(props.url.history)
 
-    let arr: Map<string, Array<ContentHistoryChildren>> = new Map()
-    res.forEach((item) => {
-      let time = moment(item.created_at).local().format('MMMM Do YYYY')
+      if (result.code === 20000) {
+        let res: Array<ContentHistoryChildren> = result.data
 
-      if (arr.has(time)) {
-        let a = arr.get(time) || []
-        a.push(item)
-        arr.set(time, a)
-      } else {
-        arr.set(time, [item])
+        let arr: Map<string, Array<ContentHistoryChildren>> = new Map()
+        res.forEach((item) => {
+          let time = moment(item.created_at).local().format('MMMM Do YYYY')
+
+          if (arr.has(time)) {
+            let a = arr.get(time) || []
+            a.push(item)
+            arr.set(time, a)
+          } else {
+            arr.set(time, [item])
+          }
+        })
+
+        let a: Array<ContentHistory> = []
+        arr.forEach((value, key) => {
+          a.push({
+            time: key,
+            children: value,
+          })
+        })
+
+        setHistory(a.reverse())
       }
-    })
-
-    let a: Array<ContentHistory> = []
-    arr.forEach((value, key) => {
-      a.push({
-        time: key,
-        children: value,
-      })
-    })
-
-    setHistory(a.reverse())
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   useEffect(() => {
@@ -520,22 +563,31 @@ const Content = (props: Prop) => {
       setLoading(true)
       const res = await generator(props.url.generator, formData)
 
-      setGeneratedText(res.text)
-      await getAllHistory()
-      setLoading(false)
+      if (res.code === 20000) {
+        setGeneratedText(res.data.text)
+        await getAllHistory()
+      }
     } catch (error: any) {
       // Handle errors (e.g., show an error message)
-      setLoading(false)
       console.error('Error:', error)
       message.error(error.message)
+    } finally {
+      setLoading(false)
     }
   }
 
   const getHistoryById = async (id: number) => {
-    setLoading(true)
-    const res = await getDetailById(props.url?.content, id)
-    setGeneratedText(res?.content)
-    setLoading(false)
+    try {
+      setLoading(true)
+      const res = await getDetailById(props.url?.content, id)
+      if (res.code === 20000) {
+        setGeneratedText(res?.data.content)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -1282,51 +1334,59 @@ const Content = (props: Prop) => {
           )}
 
           <div className={`w-289 p-24 h-680 overflow-y-auto`}>
-            <div
-              className={`text-12`}
-              style={{ fontFamily: 'PingFang SC Bold' }}
-            >
-              {t('History')}
-            </div>
-            <div className={`mt-24 scrollable-content`}>
-              {history?.map((item) => {
-                return (
-                  <div key={item.time} className={`mb-30`}>
-                    <div
-                      className={`text-10 text-[#787878]`}
-                      style={{ fontFamily: 'PingFang SC Light' }}
-                    >
-                      {item.time}
-                    </div>
-                    <div className={`cursor-pointer`}>
-                      {item.children?.map((it) => {
-                        console.log('it', it)
-                        return (
-                          <div
-                            key={it.created_at}
-                            className={`flex items-center mt-18 cursor-pointer`}
-                            onClick={() => {
-                              getHistoryById(it.id).then()
-                            }}
-                          >
-                            <Icon
-                              name={'history'}
-                              style={{ width: pxToVw(12), height: pxToVw(14) }}
-                            />
-                            <div
-                              className={`text-12 text-black ml-8 truncate`}
-                              style={{ fontFamily: 'PingFang SC Medium' }}
-                            >
-                              {it?.topic?.length > 20 ? it?.topic.substring(0, 20) : it?.topic}
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
+            {history && history.length > 0 && (
+              <>
+                <div
+                  className={`text-12`}
+                  style={{ fontFamily: 'PingFang SC Bold' }}
+                >
+                  {t('History')}
+                </div>
+                <div className={`mt-24 scrollable-content`}>
+                  {history?.map((item) => {
+                    return (
+                      <div key={item.time} className={`mb-30`}>
+                        <div
+                          className={`text-10 text-[#787878]`}
+                          style={{ fontFamily: 'PingFang SC Light' }}
+                        >
+                          {item.time}
+                        </div>
+                        <div className={`cursor-pointer`}>
+                          {item.children?.map((it) => {
+                            return (
+                              <div
+                                key={it.created_at}
+                                className={`flex items-center mt-18 cursor-pointer`}
+                                onClick={() => {
+                                  getHistoryById(it.id).then()
+                                }}
+                              >
+                                <Icon
+                                  name={'history'}
+                                  style={{
+                                    width: pxToVw(12),
+                                    height: pxToVw(14),
+                                  }}
+                                />
+                                <div
+                                  className={`text-12 text-black ml-8 truncate`}
+                                  style={{ fontFamily: 'PingFang SC Medium' }}
+                                >
+                                  {it?.topic?.length > 20
+                                    ? it?.topic.substring(0, 20)
+                                    : it?.topic}
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
+            )}
           </div>
 
           <CreateBrandVoice

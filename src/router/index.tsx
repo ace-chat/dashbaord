@@ -43,9 +43,15 @@ import Create from '@/views/HomePage/Bot/Create'
 import Simple from '@/views/HomePage/Analytics/Simple'
 import Deep from '@/views/HomePage/Analytics/Deep'
 import Profile from '@/views/Profile/Profile'
-import Login from '@/views/Login/Login'
-import Signup from '@/views/Signup/Signup'
-import ForgetPassword from '@/views/ForgetPassword/ForgetPassword'
+
+//Account
+import Login from '@/views/AccountPage/Login'
+import Signup from '@/views/AccountPage/Signup'
+import ForgetPassword from '@/views/AccountPage/ForgetPassword'
+import ResetPassword from '@/views/AccountPage/ResetPassword'
+import VerifyCode from '@/views/AccountPage/VerifyCode'
+import Confirm from '@/views/AccountPage/Confirm'
+import MerchantBot from '@/views/HomePage/Bot/MerchantBot'
 
 const routes: RouteObject[] = [
   {
@@ -156,6 +162,10 @@ const routes: RouteObject[] = [
                 path: 'create',
                 element: <Create />,
               },
+              {
+                path: 'merchantbot',
+                element: <MerchantBot />,
+              },
             ],
           },
           {
@@ -182,27 +192,39 @@ const routes: RouteObject[] = [
           },
         ],
       },
-      {
-        path: 'login',
-        element: <Login />,
-      },
-      {
-        path: 'signup',
-        element: <Signup />,
-      },
-      {
-        path: 'forgetpassword',
-        element: <ForgetPassword />,
-      },
-      {
-        path: '*',
-        element: <Navigate to="404" replace />,
-      },
-      {
-        path: '404',
-        element: <Oops />,
-      },
     ],
+  },
+  {
+    path: 'login',
+    element: <Login />,
+  },
+  {
+    path: 'signup',
+    element: <Signup />,
+  },
+  {
+    path: 'forgetpassword',
+    element: <ForgetPassword />,
+  },
+  {
+    path: 'verifycode',
+    element: <VerifyCode />,
+  },
+  {
+    path: 'resetpassword',
+    element: <ResetPassword />,
+  },
+  {
+    path: 'confirm',
+    element: <Confirm />,
+  },
+  {
+    path: '*',
+    element: <Navigate to="404" replace />,
+  },
+  {
+    path: '404',
+    element: <Oops />,
   },
 ]
 

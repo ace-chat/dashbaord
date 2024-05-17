@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Input } from 'antd'
-import styles from './Signup.module.css'
+import { Button, Input, message } from 'antd'
+import styles from './AccountPage.module.css'
 import AceText from '@/assets/login/ace_text.svg'
 import Bot from '@/assets/login/bot.svg'
 // import Content from '@/assets/login/content.svg'
@@ -9,6 +9,8 @@ import Logo from '@/assets/login/logo.svg'
 // import SquareOne from '@/assets/login/square_one.svg'
 // import SquareTwo from '@/assets/login/square_two.svg'
 import { pxToVw } from '@/utils'
+import { RegisterRequest } from '@/types'
+import { register } from '@/request'
 // import { useNavigate } from 'react-router-dom'
 // import { useDispatch } from 'react-redux'
 
@@ -17,21 +19,63 @@ function Signup() {
   // const dispatch = useDispatch()
   const { t } = useTranslation()
 
-  const [isEnableSign, setIsEnableSign] = useState(false)
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [isEnableSign, setIsEnableSign] = useState<boolean>(false)
+  const [name, setName] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [confirmPassword, setConfirmPassword] = useState<string>('')
+  const [kind, setKind] = useState<number>(0)
 
   const onClickPayPlan = () => {
+    setKind(1)
     setIsEnableSign(true)
   }
 
   const onClickFreeTrial = () => {
+    setKind(2)
     setIsEnableSign(true)
   }
 
-  const onClickSignup = () => {}
+  const clearField = () => {
+    setName('')
+    setEmail('')
+    setPassword('')
+    setConfirmPassword('')
+    setKind(0)
+    setIsEnableSign(false)
+  }
+
+  const onClickSignup = async () => {
+    if (kind === 0 || name === "" || email === "" || password === "" || confirmPassword === "") {
+      message.error(t("Please confirm that the information is filled in correctly"))
+      return
+    }
+
+    if (password !== confirmPassword) {
+      message.error(t("Passwords are inconsistent"))
+      return
+    }
+
+    try {
+      const params: RegisterRequest = {
+        name: name,
+        email: email,
+        password: password,
+        plan: kind,
+      }
+      const response = await register(params)
+      if (response.code === 20000) {
+        message.success(
+          t('Registration successful, please go to your email to confirm')
+        )
+        clearField()
+      } else {
+        message.error(t('Registration failed, please try it again'))
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   return (
     <div className={styles.box}>
@@ -124,7 +168,7 @@ function Signup() {
               marginTop: 50,
             }}
           >
-            {t('Sign in')}
+            {t('Sign up')}
           </div>
 
           <div style={{ width: 400, margin: 'auto', marginTop: 50 }}>
@@ -146,7 +190,7 @@ function Signup() {
                   onChange={(val) => setEmail(val.target.value)}
                   value={email}
                 />
-                <Input
+                <Input.Password
                   size="large"
                   placeholder="Enter Password"
                   style={{ marginTop: 20 }}
@@ -154,7 +198,7 @@ function Signup() {
                   onChange={(val) => setPassword(val.target.value)}
                   value={password}
                 />
-                <Input
+                <Input.Password
                   size="large"
                   placeholder="Confirm Password"
                   style={{ marginTop: 20 }}

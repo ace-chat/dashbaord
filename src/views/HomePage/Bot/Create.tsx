@@ -1,153 +1,185 @@
 import { useState, useEffect } from 'react'
 import type { Key } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Spin } from 'antd'
+import { Modal, Spin, message } from 'antd'
 import { pxToVw } from '@/utils'
 import { cloneDeep } from 'lodash-es'
 
-import { getBusinessChatBot, changePhoneNumber, sendVerifyCode, changeQuestionAnswer, changeSalesPitches, changeUploadFiles, deleteChatBot } from "@/request"
+import {
+  getBusinessChatBot,
+  changePhoneNumber,
+  sendVerifyCode,
+  changeQuestionAnswer,
+  changeSalesPitches,
+  changeUploadFiles,
+  deleteChatBot,
+} from '@/request'
 
-import ChangeNumber from '@/components/Modal/ChangeNumber';
-import Verify from '@/components/Modal/Verify';
-import ManageFiles from '@/components/Modal/ManageFiles';
-import QuestionAnswer from '@/components/Modal/QuesionAnswer.tsx';
-import SalesPitch from '@/components/Modal/SalesPitch';
-import Generator from "@/components/BusinessChatBot/Generator.tsx";
-import ChatBot from "@/components/BusinessChatBot/ChatBot.tsx";
+import ChangeNumber from '@/components/Modal/ChangeNumber'
+import Verify from '@/components/Modal/Verify'
+import ManageFiles from '@/components/Modal/ManageFiles'
+import QuestionAnswer from '@/components/Modal/QuestionAnswer'
+import SalesPitch from '@/components/Modal/SalesPitch'
+import Generator from '@/components/BusinessChatBot/Generator'
+import ChatBot from '@/components/BusinessChatBot/ChatBot'
 
-import {SP, QA, BusinessChat, Dialog, QuestionAndAnswer, SalesAndPitches, File} from "@/types";
+import {
+  SP,
+  QA,
+  BusinessChat,
+  Dialog,
+  QuestionAndAnswer,
+  SalesAndPitches,
+  File,
+} from '@/types'
 
 const Create = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isActive, setIsActive] = useState<boolean>(false);
-  const [chatBot, setChatBot] = useState<BusinessChat & { platform: Array<{ id: number, name: string, status: boolean }> }>({
+  const [loading, setLoading] = useState<boolean>(false)
+  const [isActive, setIsActive] = useState<boolean>(false)
+  const [chatBot, setChatBot] = useState<
+    BusinessChat & {
+      platform: Array<{ id: number; name: string; status: boolean }>
+    }
+  >({
     id: 0,
-    company_name: "",
+    company_name: '',
     links: [],
-    company_introduction: "",
+    company_introduction: '',
     platform: [],
-    phone_number: "",
+    phone_number: '',
     tone: 0,
     qa: [],
     sales_pitches: [],
-    files: []
-  });
+    files: [],
+    created_time: 0,
+    ended_time: 0,
+  })
 
-  const [questionAnswerOpen, setQuestionAnswerOpen] = useState(false);
-  const [qas, setQas] = useState<Array<QA>>([]);
+  const [questionAnswerOpen, setQuestionAnswerOpen] = useState(false)
+  const [qas, setQas] = useState<Array<QA>>([])
 
   const qaChange = (text: string, key: Key, type: 'question' | 'answer') => {
-    let qasCopy = cloneDeep(qas);
-    let index = qasCopy.findIndex(elem => elem.key === key);
+    let qasCopy = cloneDeep(qas)
+    let index = qasCopy.findIndex((elem) => elem.key === key)
     switch (type) {
-      case "question":
-        qasCopy[index].question = text;
+      case 'question':
+        qasCopy[index].question = text
         break
-      case "answer":
-        qasCopy[index].answer = text;
-        break;
+      case 'answer':
+        qasCopy[index].answer = text
+        break
       default:
-        break;
+        break
     }
-    setQas(qasCopy);
+    setQas(qasCopy)
   }
 
   const qaAdd = () => {
-    let qasCopy = cloneDeep(qas);
+    let qasCopy = cloneDeep(qas)
     qasCopy.push({
       key: `sp ${new Date().getTime()}`,
-      question: "",
-      answer: ""
-    });
-    setQas(qasCopy);
+      question: '',
+      answer: '',
+    })
+    setQas(qasCopy)
   }
 
   const qaRemove = (key: Key) => {
-    let qasCopy = cloneDeep(qas);
-    let index = qasCopy.findIndex(elem => elem.key === key);
+    let qasCopy = cloneDeep(qas)
+    let index = qasCopy.findIndex((elem) => elem.key === key)
     qasCopy.splice(index, 1)
-    setQas(qasCopy);
+    setQas(qasCopy)
   }
 
   const qaConfirm = async () => {
-    if(isActive){
-      let qa: Array<QuestionAndAnswer> = [];
-      qas.forEach(item => {
+    if (isActive) {
+      let qa: Array<QuestionAndAnswer> = []
+      qas.forEach((item) => {
         qa.push({
           question: item.question,
-          answer: item.answer
+          answer: item.answer,
         })
       })
-      await changeQuestionAnswer({ id: chatBot.id, qa });
+      try {
+        await changeQuestionAnswer({ id: chatBot.id, qa })
+      } catch (e) {
+        console.error(e)
+      }
     }
-    setQuestionAnswerOpen(false);
+    setQuestionAnswerOpen(false)
   }
 
-  const [salesPitchesOpen, setSalesPitchesOpen] = useState(false);
-  const [sps, setSps] = useState<Array<SP>>([]);
+  const [salesPitchesOpen, setSalesPitchesOpen] = useState(false)
+  const [sps, setSps] = useState<Array<SP>>([])
 
   const spChange = (text: string, key: Key, type: 'topic' | 'value') => {
-    let spsCopy = cloneDeep(sps);
-    let index = spsCopy.findIndex(elem => elem.key === key);
+    let spsCopy = cloneDeep(sps)
+    let index = spsCopy.findIndex((elem) => elem.key === key)
     switch (type) {
-      case "topic":
-        spsCopy[index].topic = text;
+      case 'topic':
+        spsCopy[index].topic = text
         break
-      case "value":
-        spsCopy[index].input = text;
-        break;
+      case 'value':
+        spsCopy[index].input = text
+        break
       default:
-        break;
+        break
     }
-    setSps(spsCopy);
+    setSps(spsCopy)
   }
 
   const spAdd = () => {
-    let spsCopy = cloneDeep(sps);
+    let spsCopy = cloneDeep(sps)
     spsCopy.push({
       key: `sales pitches ${new Date().getTime()}`,
-      topic: "",
-      input: ""
-    });
-    setSps(spsCopy);
+      topic: '',
+      input: '',
+    })
+    setSps(spsCopy)
   }
 
   const spRemove = (key: Key) => {
-    let spsCopy = cloneDeep(sps);
-    let index = spsCopy.findIndex(elem => elem.key === key);
+    let spsCopy = cloneDeep(sps)
+    let index = spsCopy.findIndex((elem) => elem.key === key)
     spsCopy.splice(index, 1)
-    setSps(spsCopy);
+    setSps(spsCopy)
   }
 
   const spConfirm = async () => {
-    if(isActive){
-      let s: Array<SalesAndPitches> = [];
-      sps.forEach(item => {
+    if (isActive) {
+      let s: Array<SalesAndPitches> = []
+      sps.forEach((item) => {
         s.push({
           topic: item.topic,
           input: item.input,
         })
       })
-      await changeSalesPitches({ id: chatBot.id, sales_pitches: s });
+      try {
+        await changeSalesPitches({ id: chatBot.id, sales_pitches: s })
+      } catch (e) {
+        console.error(e)
+      }
     }
-    setSalesPitchesOpen(false);
+    setSalesPitchesOpen(false)
   }
 
-  const [changeNumberOpen, setChangeNumberOpen] = useState<Dialog & { phoneNumber: string }>({
+  const [changeNumberOpen, setChangeNumberOpen] = useState<
+    Dialog & { phoneNumber: string }
+  >({
     show: false,
-    phoneNumber: "",
+    phoneNumber: '',
     step: 2,
-  });
+  })
 
-  const [uploadedFileOpen, setUploadedFileOpen] = useState(false);
+  const [uploadedFileOpen, setUploadedFileOpen] = useState(false)
 
   /* Generator component prop functions */
   const openSalesPitches = (status: boolean) => {
-    if(isActive){
-      let s: Array<SP> = [];
-      chatBot.sales_pitches.forEach(item => {
+    if (isActive) {
+      let s: Array<SP> = []
+      chatBot.sales_pitches.forEach((item) => {
         s.push({
           key: new Date().getTime(),
           topic: item.topic,
@@ -156,13 +188,13 @@ const Create = () => {
       })
       setSps(s)
     }
-    setSalesPitchesOpen(status);
+    setSalesPitchesOpen(status)
   }
 
   const openQuestionAnswer = (status: boolean) => {
-    if(isActive){
-      let s: Array<QA> = [];
-      chatBot.qa.forEach(item => {
+    if (isActive) {
+      let s: Array<QA> = []
+      chatBot.qa.forEach((item) => {
         s.push({
           key: new Date().getTime(),
           question: item.question,
@@ -171,7 +203,7 @@ const Create = () => {
       })
       setQas(s)
     }
-    setQuestionAnswerOpen(status);
+    setQuestionAnswerOpen(status)
   }
 
   const openActive = (status: boolean) => {
@@ -181,16 +213,20 @@ const Create = () => {
   const openChangeNumber = (status: boolean) => {
     setChangeNumberOpen({
       show: status,
-      phoneNumber: "",
+      phoneNumber: '',
       step: 1,
     })
   }
 
   const inputPhoneNumberConfirm = async (phoneNumber: string) => {
-    await sendVerifyCode({
-      type: "phone",
-      target: phoneNumber,
-    });
+    try {
+      await sendVerifyCode({
+        type: 'phone',
+        target: phoneNumber,
+      })
+    } catch (e) {
+      console.error(e)
+    }
     setChangeNumberOpen({
       show: true,
       phoneNumber,
@@ -199,15 +235,26 @@ const Create = () => {
   }
 
   const VerifyConfirm = async (code: string) => {
-    await changePhoneNumber({
-      id: chatBot.id,
-      phone: changeNumberOpen.phoneNumber,
-      verifyCode: code
-    })
-    openChangeNumber(false);
+    try {
+      await changePhoneNumber({
+        id: chatBot.id,
+        phone: changeNumberOpen.phoneNumber,
+        verifyCode: code,
+      })
+    } catch (e) {
+      console.error(e)
+    }
+    openChangeNumber(false)
   }
 
   const filesUpload = (file: File) => {
+    const fileExtension = file.name.split('.').pop()?.toLowerCase()
+
+    if (fileExtension !== 'pdf') {
+      message.error('Only PDF files are supported.')
+      return
+    }
+
     let chatBotCopy = cloneDeep(chatBot)
     chatBotCopy.files.push(file.url)
     setChatBot(chatBotCopy)
@@ -215,7 +262,7 @@ const Create = () => {
 
   const filesRemove = (file: File) => {
     let chatBotCopy = cloneDeep(chatBot)
-    const index = chatBotCopy.files.findIndex(f => f === file.url)
+    const index = chatBotCopy.files.findIndex((f) => f === file.url)
     chatBotCopy.files.splice(index, 1)
     setChatBot(chatBotCopy)
   }
@@ -225,13 +272,24 @@ const Create = () => {
       id: chatBot.id,
       urls: chatBot.files,
     }
-    await changeUploadFiles(params)
+    try {
+      await changeUploadFiles(params)
+    } catch (e) {
+      console.error(e)
+    }
     setUploadedFileOpen(false)
   }
 
   const deleteChatBotConfirm = async () => {
-    await deleteChatBot({ id: chatBot.id });
-    await getActive()
+    try {
+      const result = await deleteChatBot({ id: chatBot.id })
+      if (result.code === 20000) {
+        message.success(t('successfully deleted'))
+        await getActive()
+      }
+    } catch (e) {
+      console.error(e)
+    }
   }
   /* Generator component prop functions */
 
@@ -241,65 +299,154 @@ const Create = () => {
 
   const getActive = async () => {
     setLoading(true)
-    let res = await getBusinessChatBot()
-    console.log(res)
-    if(res){
-      setChatBot(res);
-      setIsActive(true);
-    }else{
-      setIsActive(false);
+
+    try {
+      let result = await getBusinessChatBot()
+      if (result.code === 20000) {
+        setChatBot(result.data)
+        if (result.data.status === 1) {
+          setIsActive(true)
+        }
+      } else {
+        setIsActive(false)
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   useEffect(() => {
-    getActive().then();
-  }, []);
+    getActive().then()
+  }, [])
 
-  return <>
-    <Spin spinning={loading}>
-      <div className={`flex flex-col`}>
-        <div className='flex flex-row mt-14' style={{marginLeft: pxToVw(29)}}>
-          <div className={`text-black text-18`}>{t("Ready To Generate AI Chatbot For Your Business?")}</div>
+  return (
+    <>
+      <Spin spinning={loading}>
+        <div className={`flex flex-col`}>
+          <div
+            className="flex flex-row mt-14"
+            style={{ marginLeft: pxToVw(29) }}
+          >
+            <div className={`text-black text-18`}>
+              {t('Ready To Generate AI Chatbot For Your Business?')}
+            </div>
+          </div>
+          <div className={`text-[#545B65] mt-4 ml-29 text-14`}>
+            {t(
+              'Get your best customer support chatbot for your business. Just a click away.'
+            )}
+          </div>
         </div>
         <div
-          className={`text-[#545B65] mt-4 ml-29 text-14`}>{t("Get your best customer support chatbot for your business. Just a click away.")}</div>
-      </div>
-      <div className={`w-1389 ml-29 bg-white rounded-8 mt-14`}
-           style={{boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)'}}>
-        {
-          isActive ? <ChatBot chatBot={chatBot} openChangeNumber={openChangeNumber} openQuestionAnswer={openQuestionAnswer} openSalesPitches={openSalesPitches} refresh={refresh} deleteConfirm={deleteChatBotConfirm} /> :
-            <Generator salesPitches={sps} questionAnswer={qas} openSalesPitches={openSalesPitches} openQuestionAnswer={openQuestionAnswer} openActive={openActive}/>
-        }
-      </div>
-    </Spin>
+          className={`w-1389 ml-29 bg-white rounded-8 mt-14`}
+          style={{ boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)' }}
+        >
+          {isActive ? (
+            <ChatBot
+              chatBot={chatBot}
+              openChangeNumber={openChangeNumber}
+              openQuestionAnswer={openQuestionAnswer}
+              openSalesPitches={openSalesPitches}
+              refresh={refresh}
+              deleteConfirm={deleteChatBotConfirm}
+            />
+          ) : (
+            <Generator
+              salesPitches={sps}
+              questionAnswer={qas}
+              openSalesPitches={openSalesPitches}
+              openQuestionAnswer={openQuestionAnswer}
+              openActive={openActive}
+            />
+          )}
+        </div>
+      </Spin>
 
-    {/* Modals Import */}
-    <Modal width={`70vw`} style={{padding: '40px 60px'}} centered open={uploadedFileOpen} onCancel={() => {
-      setUploadedFileOpen(false)
-    }} destroyOnClose footer={null}>
-      <ManageFiles files={chatBot.files} onUpload={filesUpload} onRemove={filesRemove} onConfirm={fileConfirm} />
-    </Modal>
-    <Modal width={`40vw`} style={{padding: '40px 60px'}} centered open={changeNumberOpen.show} onCancel={() => {
-      setChangeNumberOpen({
-        show: false,
-        phoneNumber: "",
-        step: 1,
-      })
-    }} destroyOnClose footer={null}>
-      { changeNumberOpen.step === 1 ? <ChangeNumber onConfirm={inputPhoneNumberConfirm} /> : <Verify phone={changeNumberOpen.phoneNumber} onConfirm={VerifyConfirm} /> }
-    </Modal>
-    <Modal width={`55vw`} style={{padding: '40px 60px'}} centered open={questionAnswerOpen} onCancel={() => {
-      setQuestionAnswerOpen(false)
-    }} destroyOnClose footer={null}>
-      <QuestionAnswer qas={qas} onChange={qaChange} onAdd={qaAdd} onRemove={qaRemove} onConform={qaConfirm}/>
-    </Modal>
-    <Modal width={`55vw`} style={{padding: '40px 60px'}} centered open={salesPitchesOpen} onCancel={() => {
-      setSalesPitchesOpen(false)
-    }} destroyOnClose footer={null}>
-      <SalesPitch sps={sps} onChange={spChange} onAdd={spAdd} onRemove={spRemove} onConform={spConfirm}/>
-    </Modal>
-  </>
+      {/* Modals Import */}
+      <Modal
+        width={`70vw`}
+        style={{ padding: '40px 60px' }}
+        centered
+        open={uploadedFileOpen}
+        onCancel={() => {
+          setUploadedFileOpen(false)
+        }}
+        destroyOnClose
+        footer={null}
+      >
+        <ManageFiles
+          files={chatBot.files}
+          onUpload={filesUpload}
+          onRemove={filesRemove}
+          onConfirm={fileConfirm}
+        />
+      </Modal>
+      <Modal
+        width={`40vw`}
+        style={{ padding: '40px 60px' }}
+        centered
+        open={changeNumberOpen.show}
+        onCancel={() => {
+          setChangeNumberOpen({
+            show: false,
+            phoneNumber: '',
+            step: 1,
+          })
+        }}
+        destroyOnClose
+        footer={null}
+      >
+        {changeNumberOpen.step === 1 ? (
+          <ChangeNumber onConfirm={inputPhoneNumberConfirm} />
+        ) : (
+          <Verify
+            phone={changeNumberOpen.phoneNumber}
+            onConfirm={VerifyConfirm}
+          />
+        )}
+      </Modal>
+      <Modal
+        width={`55vw`}
+        style={{ padding: '40px 60px' }}
+        centered
+        open={questionAnswerOpen}
+        onCancel={() => {
+          setQuestionAnswerOpen(false)
+        }}
+        destroyOnClose
+        footer={null}
+      >
+        <QuestionAnswer
+          qas={qas}
+          onChange={qaChange}
+          onAdd={qaAdd}
+          onRemove={qaRemove}
+          onConform={qaConfirm}
+        />
+      </Modal>
+      <Modal
+        width={`55vw`}
+        style={{ padding: '40px 60px' }}
+        centered
+        open={salesPitchesOpen}
+        onCancel={() => {
+          setSalesPitchesOpen(false)
+        }}
+        destroyOnClose
+        footer={null}
+      >
+        <SalesPitch
+          sps={sps}
+          onChange={spChange}
+          onAdd={spAdd}
+          onRemove={spRemove}
+          onConform={spConfirm}
+        />
+      </Modal>
+    </>
+  )
 }
 
 export default Create

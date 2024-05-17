@@ -1,16 +1,27 @@
 import { useTranslation } from 'react-i18next'
 import { pxToVw } from '@/utils'
-import Avatar from '../../../src/assets/profile.png'
 import { useEffect, useState } from 'react'
-import { Input, Button } from 'antd'
-import { getUserInfo, updateUserInfo } from '@/request'
+// import { useEffect, useRef, useState } from 'react'
+import { Input, Button, Upload, message } from 'antd'
+import {
+  getUserInfo,
+  updateUserAvatar,
+  updateUserInfo,
+} from '@/request'
 import { ChangePassword } from '@/components/Modal/ChangePassword'
 import Camera from '../../../src/assets/camera2.svg'
 import Pen from '../../../src/assets/pen.svg'
 import Tick from '../../../src/assets/save.svg'
+import { useDispatch } from 'react-redux'
+import { setToken } from '@/reducers/token.ts'
+import { useNavigate } from 'react-router-dom'
+import ProfileTop from '../../../src/assets/profile_top.svg'
+import type { RcFile } from 'antd/es/upload/interface'
 
 const Profile = () => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   //state variables
   const [displayName, setDisplayName] = useState('')
@@ -21,39 +32,87 @@ const Profile = () => {
   const [editPhoneNumber, setEditPhoneNumber] = useState(true)
   const [phoneNumber, setPhoneNumber] = useState('')
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
+  // const fileInput: any = useRef()
+  // const [selectedFile, setSelectedFile] = useState<File | null>()
+  const [profileImg, setProfileImg] = useState<string>('')
+
+  const fetchUserInfo = async () => {
+    try {
       const resp = await getUserInfo()
-      if (resp) {
-        setDisplayName(resp.display_name)
-        setEmail(resp.email)
-        setPhoneNumber(resp.phone)
+      if (resp.code === 20000) {
+        setDisplayName(resp.data.display_name)
+        setEmail(resp.data.email)
+        setPhoneNumber(resp.data.phone)
+        setProfileImg(resp.data.avatar)
       }
+    } catch (e) {
+      console.error(e)
     }
+  }
+
+  useEffect(() => {
     fetchUserInfo()
   }, [])
 
   const handleEditProfile = async () => {
-    if (editProfile || !editName || !editPhoneNumber) {
-      const resp = await updateUserInfo({
-        display_name: displayName,
-        phone: phoneNumber,
-      })
+    try {
+      if (editProfile || !editName || !editPhoneNumber) {
+        const result = await updateUserInfo({
+          display_name: displayName,
+          phone: phoneNumber,
+        })
 
-      if (resp) {
-        setDisplayName(resp.display_name)
-        setPhoneNumber(resp.phone)
+        const resp = result.data
 
-        alert("update completed")
+        if (resp) {
+          setDisplayName(resp.display_name)
+          setPhoneNumber(resp.phone)
+
+          alert('update completed')
+        }
       }
+      setEditProfile(!editProfile)
+      setEditName(true)
+      setEditPhoneNumber(true)
+    } catch (e) {
+      console.error(e)
     }
-    setEditProfile(!editProfile)
-    setEditName(true)
-    setEditPhoneNumber(true)
   }
 
   const toggleChangePassword = () => {
     setEditPassword(!editPassword)
+  }
+
+  const onClickLogout = async () => {
+    dispatch(setToken(''))
+    navigate('/login')
+  }
+
+  const beforeUpload: (
+    file: RcFile,
+    FileList: RcFile[]
+  ) => Promise<boolean> = async (file) => {
+    const validExtensions = ['png', 'gif', 'jpg', 'jpeg', 'svg'];
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+    if (!fileExtension || !validExtensions.includes(fileExtension)) {
+      message.error(t("Only png, gif, jpg and jpeg files are allowed!"));
+      return false;
+    }
+
+    const data = new FormData()
+    data.append('file', file)
+    try {
+      const result = await updateUserAvatar(data)
+      if (result.code === 20000) {
+        message.success(t('Update completed'))
+        await fetchUserInfo()
+      }
+    } catch (e) {
+      console.error(e)
+    }
+
+    return false
   }
 
   return (
@@ -65,14 +124,18 @@ const Profile = () => {
           boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)',
         }}
       >
-        <div
-          className={`items-center`}
+        <img
+          className={`items-center rounded-t-8`}
+          src={ProfileTop}
+          alt="ProfileTop"
           style={{
             width: pxToVw(1110),
             height: pxToVw(165),
             backgroundColor: '#CAD0DA',
+            backgroundSize: 'cover',
           }}
         />
+
         <div className="flex flex-row" style={{ height: pxToVw(73) }}>
           {/* Profile Photo */}
           <div
@@ -85,32 +148,42 @@ const Profile = () => {
               backgroundColor: 'white',
             }}
           >
-            <img
-              src={Avatar}
-              alt="Profile Image"
-              style={{ width: '90%', height: '90%', objectFit: 'cover' }}
-            />
+            {profileImg ? (
+              <img
+                src={profileImg}
+                alt="Profile Image"
+                style={{ width: '90%', height: '90%', objectFit: 'cover' }}
+              />
+            ) : (
+              <></>
+            )}
             <div
               style={{
                 position: 'absolute',
-                width: pxToVw(40),
-                height: pxToVw(40),
-                bottom: 0,
+                height: pxToVw(45),
+                width: pxToVw(60),
+                // bottom: 0,
                 cursor: 'pointer',
               }}
             >
-              {/* camera svg */}
-              <img
-                src={Camera}
-                alt="Camera"
-                style={{
-                  width: '70%',
-                  height: '70%',
-                  objectFit: 'cover',
-                  transform: 'translate(15%, 15%)',
-                }}
-                onClick={() => alert('change image')}
-              />
+              <Upload.Dragger
+                name="avatar"
+                listType="picture-card"
+                className="avatar-uploader"
+                multiple={false}
+                beforeUpload={beforeUpload}
+                showUploadList={false}
+                accept=".png,.gif,.jpg,.jpeg,.svg"
+              >
+                <img
+                  src={Camera}
+                  alt="Camera"
+                  style={{
+                    width: pxToVw(22),
+                    height: pxToVw(22),
+                  }}
+                />
+              </Upload.Dragger>
             </div>
           </div>
           {/* Profile Name */}
@@ -173,7 +246,8 @@ const Profile = () => {
             alignSelf: 'center',
             width: pxToVw(1062),
             marginTop: pxToVw(20),
-            marginLeft: pxToVw(38),
+            marginLeft: pxToVw(48),
+            paddingBottom: 30,
           }}
         >
           {/* Email */}
@@ -205,6 +279,7 @@ const Profile = () => {
                     border: 0,
                     marginTop: pxToVw(12),
                     fontWeight: 'lighter',
+                    paddingLeft: 0,
                   },
                 }}
                 placeholder={t('Email')}
@@ -233,7 +308,20 @@ const Profile = () => {
               >
                 {t('Password')}
               </div>
+              <div
+                style={{
+                  width: pxToVw(500),
+                  fontSize: pxToVw(15),
+                  color: '#626262',
+                  border: 0,
+                  marginTop: pxToVw(12),
+                  fontWeight: 'lighter',
+                }}
+              >
+                **********************
+              </div>
             </div>
+
             <Button
               type="default"
               onClick={toggleChangePassword}
@@ -282,6 +370,7 @@ const Profile = () => {
                     border: 0,
                     marginTop: pxToVw(12),
                     fontWeight: 'lighter',
+                    paddingLeft: 0,
                   },
                 }}
                 placeholder={t('Add your phone number for better security')}
@@ -319,6 +408,7 @@ const Profile = () => {
         style={{
           width: pxToVw(1110),
           marginTop: pxToVw(25),
+          paddingBlock: 20,
           boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)',
         }}
       >
@@ -328,7 +418,7 @@ const Profile = () => {
             style={{
               color: '#626262',
               fontSize: pxToVw(22),
-              marginLeft: pxToVw(30),
+              marginLeft: pxToVw(48),
               marginTop: pxToVw(20),
               fontFamily: 'PingFang SC Medium',
             }}
@@ -337,7 +427,7 @@ const Profile = () => {
           </div>
           <div
             className="flex flex-row items-center"
-            style={{ marginLeft: pxToVw(25) }}
+            style={{ marginLeft: pxToVw(48) }}
           >
             <div
               style={{
@@ -424,6 +514,33 @@ const Profile = () => {
           changePassword={editPassword}
           toggleChangePassword={toggleChangePassword}
         />
+      </div>
+
+      <div
+        className={`bg-white items-center rounded-8 mt-40 ml-20 flex justify-between flex-row`}
+        style={{
+          width: pxToVw(1110),
+          marginTop: pxToVw(25),
+          boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)',
+          padding: 20,
+          justifyContent: 'right',
+        }}
+      >
+        <Button
+          type="default"
+          className="bg-[#4F6BE8] rounded-4"
+          style={{
+            width: pxToVw(167),
+            height: pxToVw(39),
+            color: 'white',
+            fontSize: pxToVw(16),
+          }}
+          onClick={onClickLogout}
+        >
+          <div style={{ fontFamily: 'PingFang SC Regular' }}>
+            {t('Log out')}
+          </div>
+        </Button>
       </div>
 
       <div className="flex" style={{ marginTop: pxToVw(20) }} />

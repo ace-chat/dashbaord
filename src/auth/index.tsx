@@ -7,7 +7,7 @@ const AuthRoute: FC = () => {
   const location = useLocation()
   const token = useSelector((state: RootState) => state.token.token)
 
-  if (location.pathname == '/login') return <Outlet />
+  if (location.pathname === '/login') return <Outlet />
 
   if (token) return <Outlet />
 

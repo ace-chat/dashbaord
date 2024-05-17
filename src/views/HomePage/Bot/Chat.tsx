@@ -4,26 +4,31 @@ import { useTranslation } from 'react-i18next'
 import { pxToVw, copied } from '@/utils'
 import { Button, Input } from 'antd'
 import Avatar from '@/assets/message_avatar.png'
-import Loading from "@/assets/wihite.gif"
+import Loading from '@/assets/wihite.gif'
 
-import { getChatList, getChatHistory, createChatBot, askChatBot } from "@/request"
-import {ChatHistory, ChatHistoryChildren, ChatMessage} from "@/types";
-import moment from "moment-timezone";
-import { cloneDeep } from "lodash-es"
+import {
+  getChatList,
+  getChatHistory,
+  createChatBot,
+  askChatBot,
+} from '@/request'
+import { ChatHistory, ChatHistoryChildren, ChatMessage } from '@/types'
+import moment from 'moment-timezone'
+import { cloneDeep } from 'lodash-es'
 
 const Chat = () => {
   const { t } = useTranslation()
-  const mg = useRef<null | HTMLDivElement>(null);
-  const [chatId, setChatId] = useState<string>("");
-  const [message, setMessage]: any = useState("");
-  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
-  const [history, setHistory] = useState<Array<ChatHistory>>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isNewChat, setIsNewChat] = useState<boolean>(false);
+  const mg = useRef<null | HTMLDivElement>(null)
+  const [chatId, setChatId] = useState<string>('')
+  const [message, setMessage]: any = useState('')
+  const [messages, setMessages] = useState<Array<ChatMessage>>([])
+  const [history, setHistory] = useState<Array<ChatHistory>>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [isNewChat, setIsNewChat] = useState<boolean>(false)
 
   const disabled = useMemo(() => {
-    return chatId === "";
-  }, [chatId]);
+    return chatId === ''
+  }, [chatId])
 
   useEffect(() => {
     if (chatId && isNewChat) {
@@ -39,7 +44,6 @@ const Chat = () => {
     create().then()
   }
 
-  
   const sendMessage = async () => {
     setIsNewChat(true)
     if (chatId === '') {
@@ -51,109 +55,123 @@ const Chat = () => {
     setIsNewChat(false)
   }
 
-  const messaging = () => {
+  const messaging = async () => {
     setLoading(true)
-    let m = cloneDeep(messages)
-    m.push({
-      key: Math.random() * 10000,
-      type: 'human',
-      content: message,
-      time: moment().local().format(),
-    })
-    setMessages(m)
-    setMessage('')
 
-    askChatBot({ id: chatId, content: message })
-      .then((res) => {
-        let mCopy = cloneDeep(m)
-        mCopy.push({
-          key: Math.random() * 10000,
-          type: 'ai',
-          content: res,
-          time: moment().local().format(),
-        })
-        setMessages(mCopy)
-        setLoading(false)
+    try {
+      let m = cloneDeep(messages)
+      m.push({
+        key: Math.random() * 10000,
+        type: 'human',
+        content: message,
+        time: moment().local().format(),
       })
-      .catch(() => {
-        setLoading(false)
+      setMessages(m)
+      setMessage('')
+
+      const result = await askChatBot({ id: chatId, content: message })
+      let mCopy = cloneDeep(m)
+      mCopy.push({
+        key: Math.random() * 10000,
+        type: 'ai',
+        content: result.data,
+        time: moment().local().format(),
       })
+      setMessages(mCopy)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const create = async () => {
-    setChatId('')
-    let res = await createChatBot();
-    await getHistory(res.chat_id);
-    setMessages([]);
-    setLoading(false);
+    try {
+      setChatId('')
+      let res = await createChatBot()
+      await getHistory(res.data.chat_id)
+      setMessages([])
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const choose = async (id: string) => {
-    await getHistory(id);
-    setLoading(false);
+    await getHistory(id)
+    setLoading(false)
   }
 
   const getList = async () => {
-    let response: Array<ChatHistoryChildren> = await getChatList();
+    try {
+      const result = await getChatList()
+      let response: Array<ChatHistoryChildren> = result.data
 
-    let arr: Map<string, Array<ChatHistoryChildren>> = new Map();
-    response.forEach(item => {
-      let time = moment(item.created_at).local().format("MMMM Do YYYY");
+      let arr: Map<string, Array<ChatHistoryChildren>> = new Map()
+      response.forEach((item) => {
+        let time = moment(item.created_at).local().format('MMMM Do YYYY')
 
-      if(arr.has(time)){
-        let a = arr.get(time) || [];
-        a.push(item);
-        arr.set(time, a);
-      }else{
-        arr.set(time, [item])
-      }
-    })
-
-    let a: Array<ChatHistory> = [];
-    arr.forEach((value, key) => {
-      a.push({
-        time: key,
-        children: value,
+        if (arr.has(time)) {
+          let a = arr.get(time) || []
+          a.push(item)
+          arr.set(time, a)
+        } else {
+          arr.set(time, [item])
+        }
       })
-    })
 
-    let realArr = a.reverse();
-    if(realArr.length !== 0) {
-      await getHistory(realArr[0].children[0].chat_id)
+      let a: Array<ChatHistory> = []
+      arr.forEach((value, key) => {
+        a.push({
+          time: key,
+          children: value,
+        })
+      })
+
+      let realArr = a.reverse()
+      if (realArr.length !== 0) {
+        await getHistory(realArr[0].children[0].chat_id)
+      }
+      setHistory(realArr)
+    } catch (e) {
+      console.error(e)
     }
-    setHistory(realArr);
-  };
+  }
 
   const getHistory = async (id: string) => {
-    setChatId(id);
-    let res: Array<ChatMessage> = await getChatHistory(id);
+    try {
+      setChatId(id)
+      const result = await getChatHistory(id)
+      let res: Array<ChatMessage> = result.data
 
-    let m: Array<ChatMessage> = [];
-    res.forEach(item => {
-      m.push({
-        key: Math.random() * 10000,
-        type: item.type,
-        content: item.content,
-        time: item.time
+      let m: Array<ChatMessage> = []
+      res.forEach((item) => {
+        m.push({
+          key: Math.random() * 10000,
+          type: item.type,
+          content: item.content,
+          time: item.time,
+        })
       })
-    })
 
-    setMessages(m);
+      setMessages(m)
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   useEffect(() => {
-    setLoading(false);
-    Promise.all([
-      getList()
-    ]).then();
-  }, []);
+    setLoading(false)
+    Promise.all([getList()]).then()
+  }, [])
 
   useEffect(() => {
     mg.current?.scrollTo({
       top: 10000000,
-      behavior: 'smooth'
-    });
-  }, [messages]);
+      behavior: 'smooth',
+    })
+  }, [messages])
 
   return (
     <>
@@ -173,13 +191,20 @@ const Chat = () => {
       </div>
       <div
         className={`bg-white rounded-8 mt-14 w-1389 ml-29 h-screen flex flex-col justify-between`}
-        style={{ boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)', height: 'calc(100vh - 56px)',  overflowY: 'auto', position: 'relative'}}
+        style={{
+          boxShadow: '0px 2px 10px rgba(11.79, 0.59, 140.60, 0.04)',
+          height: 'calc(100vh - 56px)',
+          overflowY: 'auto',
+          position: 'relative',
+        }}
       >
         <div className={`flex justify-around`}>
           <div className={'flex flex-col h-748'}>
             <div
               ref={mg}
-              className={'p-24 flex flex-col w-1081 items-center overflow-y-auto'}
+              className={
+                'p-24 flex flex-col w-1081 items-center overflow-y-auto'
+              }
             >
               {messages.length == 0 ? (
                 <div
@@ -249,8 +274,9 @@ const Chat = () => {
                           <div
                             className={`w-78 flex items-center justify-between`}
                           >
-                            <div className={`cursor-pointer`}
-                            onClick={() => copied(msg.content)}
+                            <div
+                              className={`cursor-pointer`}
+                              onClick={() => copied(msg.content)}
                             >
                               <Icon
                                 name={'copied'}
@@ -294,10 +320,10 @@ const Chat = () => {
                 </div>
               )}
             </div>
-            <div>            
+            <div>
               <Input
                 className="message-box mb-12"
-                style={{ position: 'fixed', bottom: 0, width: pxToVw(923)}}
+                style={{ position: 'fixed', bottom: 0, width: pxToVw(923) }}
                 disabled={disabled}
                 styles={{ input: { fontSize: pxToVw(12) } }}
                 placeholder={t('Send a Message')}

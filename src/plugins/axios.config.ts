@@ -6,7 +6,7 @@ import store from '@/store'
 import type { Response } from '@/types'
 
 const http = axios.create({
-  baseURL: "/api/v1",
+  baseURL: '/api/v1',
   timeout: 200000,
   withCredentials: false,
 })
@@ -17,16 +17,22 @@ http.interceptors.request.use(
 )
 
 http.interceptors.response.use(
-  (res) => res.data,
-  (err) => {
-    if (!window.navigator.onLine) {
-      message.error(i18n.t('Please check network connection')).then();
+  async (res) => {
+    // if (res.data.code !== 20000) {
+    //   await message.error(i18n.t(res.data.message))
+    // }
+
+    if (res.data.code === 20005) {
+      window.location.href = '/#/login'
     }
 
-    if(err.response.data.code === 20005){
-      message.error(i18n.t(err.response.data.message)).then();
-      window.location.href = "/#/login";
-    }
+    return Promise.resolve(res)
+  },
+  async (err) => {
+    // if (!window.navigator.onLine) {
+    //   await message.error(i18n.t('Please check network connection'))
+    // }
+    await message.error(i18n.t('Network connection error, please check the network connection status'))
 
     return Promise.reject(err)
   }
@@ -44,7 +50,8 @@ export const instance = ({
   headers?: Record<string, any>
   params?: Record<string, any>
   data?: Record<string, any>
-}) => new Promise<Response>((resolve, reject) => {
+}) =>
+  new Promise<Response>((resolve, reject) => {
     http({
       url,
       method,

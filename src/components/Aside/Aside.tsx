@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Layout, Menu } from 'antd'
 
-import Icon from '@/components/Icon/Icon.tsx'
+import Icon from '@/components/Icon/Icon'
 import Avatar from '@/assets/avatar.png'
 
 import type { RootState } from '@/store'
@@ -87,6 +87,7 @@ const Aside = () => {
     getItem(t('Analytics'), 'analytics.tsx', <Icon name={'analytics'} />, [
       getItem(t('Simple Analytics'), 'analytics.tsx/simple'),
       getItem(t('Deep Analytics'), 'analytics.tsx/deep'),
+      getItem(t('Deep Analytics Tool'), 'analytics.tsx/deeptool'),
     ]),
     getItem(t('Support'), 'support', <Icon name={'support'} />),
   ]

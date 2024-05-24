@@ -14,7 +14,8 @@ export default defineConfig({
     host: true,
     proxy: {
       "/api": {
-        target: "https://t.aceai.live",
+        // target: "https://t.aceai.live",
+        target: "http://178.128.96.65",
         changeOrigin: true,
       }
     }

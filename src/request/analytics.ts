@@ -51,3 +51,10 @@ export const getDeepAnalyticsById = (id: number) => {
     }
   })
 }
+
+export const getDeepAnalyticList = () => {
+  return instance({
+    url: "/analytics/deep/getDeepAnalyticList",
+    method: "GET",
+  })
+}

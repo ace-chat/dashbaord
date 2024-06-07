@@ -52,6 +52,7 @@ import ResetPassword from '@/views/AccountPage/ResetPassword'
 import VerifyCode from '@/views/AccountPage/VerifyCode'
 import Confirm from '@/views/AccountPage/Confirm'
 import MerchantBot from '@/views/HomePage/Bot/MerchantBot'
+import DeepTool from '@/views/HomePage/Analytics/DeepTool'
 
 const routes: RouteObject[] = [
   {
@@ -180,6 +181,10 @@ const routes: RouteObject[] = [
                 path: 'deep',
                 element: <Deep />,
               },
+              {
+                path: 'deeptool',
+                element: <DeepTool />,
+              }
             ],
           },
           {

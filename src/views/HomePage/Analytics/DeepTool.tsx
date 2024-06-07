@@ -17,6 +17,13 @@ const DeepTool = () => {
   const getList = async () => {
     setLoading(true)
     const result = await getDeepAnalyticList()
+    if (result.code === 20000) {
+      if (result.data.list && result.data.list.length > 0) {
+        result.data.list.forEach((item: any) => {
+          console.log('item', item)
+        })
+      }
+    }
     try {
     } catch (e) {
       console.error(e)
@@ -149,7 +156,7 @@ const DeepTool = () => {
             }}
           >
             <a>
-              {text.status === 1 ? 'Active' : 'Inactive'}
+              {text.status === 1 ? 'Down' : 'Pending'}
               <DownOutlined style={{ marginLeft: 10 }} />
             </a>
           </Dropdown>

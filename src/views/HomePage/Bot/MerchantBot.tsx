@@ -1,12 +1,12 @@
 import FileDetail from '@/components/Modal/FileDetail'
-import InformationDetail from '@/components/Modal/InformationDetail'
+import InformationDetail from '@/components/Modal/ChatBotInformationDetail'
 import QuestionAnswerDetail from '@/components/Modal/QuestionAnswerDetail'
 import SalesPitchDetail from '@/components/Modal/SalesPitchDetail'
 import { changeStatus, getBusinessChatBotList } from '@/request'
 import {
-  BusinessMerchantChatBox,
-  BusinessMerchantChatBoxInformation,
-  BusinessMerchantChatBoxStatus,
+  BusinessMerchantChatBot,
+  BusinessMerchantChatBotInformation,
+  BusinessMerchantChatBotStatus,
   ChangeStatus,
   DownloadFile,
   QuestionAndAnswer,
@@ -21,14 +21,14 @@ const MerchantBot = () => {
   const { t } = useTranslation()
 
   const [loading, setLoading] = useState<boolean>(false)
-  const [data, setData] = useState<BusinessMerchantChatBox[]>([])
+  const [data, setData] = useState<BusinessMerchantChatBot[]>([])
 
   const [pitchesOpen, setPitchesOpen] = useState(false)
   const [sps, setSps] = useState<Array<SalesAndPitches>>([])
   const [qaOpen, setQaOpen] = useState(false)
   const [qas, setQas] = useState<Array<QuestionAndAnswer>>([])
   const [infoOpen, setInfoOpen] = useState(false)
-  const [infos, setInfos] = useState<BusinessMerchantChatBoxInformation>({
+  const [infos, setInfos] = useState<BusinessMerchantChatBotInformation>({
     company_name: '',
     company_introduction: '',
     platform: [
@@ -52,9 +52,9 @@ const MerchantBot = () => {
       const result = await getBusinessChatBotList()
       if (result.code === 20000) {
         if (result.data.list && result.data.list.length > 0) {
-          let datas: Array<BusinessMerchantChatBox> = []
+          let datas: Array<BusinessMerchantChatBot> = []
           result.data.list.forEach((item: any) => {
-            const info: BusinessMerchantChatBoxInformation = {
+            const info: BusinessMerchantChatBotInformation = {
               company_name: item.company_name,
               company_introduction: item.company_introduction,
               platform: item.platform,
@@ -63,7 +63,7 @@ const MerchantBot = () => {
               phone_number: item.phone_number,
               links: item.links,
             }
-            const status: BusinessMerchantChatBoxStatus = {
+            const status: BusinessMerchantChatBotStatus = {
               id: item.id,
               status: item.status
             }
@@ -111,7 +111,7 @@ const MerchantBot = () => {
     setQaOpen(true)
   }
 
-  const onClickInfos = (data: BusinessMerchantChatBoxInformation) => {
+  const onClickInfos = (data: BusinessMerchantChatBotInformation) => {
     setInfos(data)
     setInfoOpen(true)
   }
@@ -185,7 +185,7 @@ const MerchantBot = () => {
       dataIndex: 'info',
       colSpan: 1,
       align: 'center',
-      render: (text: BusinessMerchantChatBoxInformation) => (
+      render: (text: BusinessMerchantChatBotInformation) => (
         <a
           onClick={() => {
             onClickInfos(text)
@@ -231,7 +231,7 @@ const MerchantBot = () => {
       dataIndex: 'status',
       colSpan: 1,
       align: 'center',
-      render: (text: BusinessMerchantChatBoxStatus) => (
+      render: (text: BusinessMerchantChatBotStatus) => (
         <Space size="middle">
           <Dropdown
             menu={{

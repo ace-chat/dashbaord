@@ -89,8 +89,10 @@ const Deep = () => {
     }
 
     try {
-      const res = await generatorDeepAnalytics(d)
-      setGeneratedResult(JSON.parse(res.data.content))
+      await generatorDeepAnalytics(d)
+      // const res = await generatorDeepAnalytics(d)
+      // setGeneratedResult(JSON.parse(res.data.content))
+      message.success("Upload success, please wait for analysis")
       await getHistory()
     } catch (e) {
       console.error(e)

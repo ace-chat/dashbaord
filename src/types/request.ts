@@ -50,3 +50,8 @@ export type SendVerifyCode = {
   type: 'email' | 'phone'
   target: '' | string
 }
+
+export type ChangeDeepBotUploadFiles = {
+  id: number
+  filename: string
+}

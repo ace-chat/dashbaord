@@ -1,13 +1,37 @@
-import { getDeepAnalyticList } from '@/request'
+import {
+  changeDeepAnalyticsBotUploadFile,
+  getDeepAnalyticList,
+  upload,
+} from '@/request'
+import {
+  ChangeDeepBotUploadFiles,
+  DeepAnalyticsTool,
+  DeepAnalyticsToolInfo,
+  DeepAnalyticsToolStatus,
+  DownloadFile,
+} from '@/types'
 import { DownOutlined } from '@ant-design/icons'
 import { Dropdown, Modal, Space, Table, TableProps, message } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import DownloadSvg from '@/assets/download.svg'
+import { pxToVw } from '@/utils'
+import AnalyticsInformationDetail from '@/components/Modal/AnalyticsInformationDetail'
+import Icon from '@/components/Icon/Icon'
 
 const DeepTool = () => {
   const { t } = useTranslation()
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any[]>([])
+
+  const fileInput: any = useRef()
+  const [infoOpen, setInfoOpen] = useState(false)
+  const [infos, setInfos] = useState<DeepAnalyticsToolInfo>({
+    business_desc: '',
+    data_desc: '',
+    product_desc: '',
+    service_name: '',
+  })
 
   useEffect(() => {
     setLoading(true)
@@ -16,15 +40,59 @@ const DeepTool = () => {
 
   const getList = async () => {
     setLoading(true)
-    const result = await getDeepAnalyticList()
-    if (result.code === 20000) {
-      if (result.data.list && result.data.list.length > 0) {
-        result.data.list.forEach((item: any) => {
-          console.log('item', item)
-        })
-      }
-    }
+
     try {
+      const result = await getDeepAnalyticList()
+      if (result.code === 20000) {
+        if (result.data.list && result.data.list.length > 0) {
+          const datas: Array<DeepAnalyticsTool> = []
+          result.data.list.forEach((item: any) => {
+            const status: DeepAnalyticsToolStatus = {
+              id: item.id,
+              status: item.status,
+            }
+
+            const info: DeepAnalyticsToolInfo = {
+              business_desc: item.business_desc,
+              product_desc: item.product_desc,
+              data_desc: item.data_desc,
+              service_name: item.service_name,
+            }
+
+            const upload_files: DownloadFile = {
+              id: item.id,
+              name: item.upload_files.name,
+              download_url: item.upload_files.download_url,
+            }
+
+            const bot_upload_files: DownloadFile = {
+              id: item.id,
+              name: item.bot_upload_files.name,
+              download_url: item.bot_upload_files.download_url,
+            }
+
+            datas.push({
+              key: item.id,
+              username: item.username,
+              business_desc: item.business_desc,
+              upload_files: upload_files,
+              bot_upload_files: bot_upload_files,
+              status: status,
+              analytics_time: [
+                new Date(item.created_time * 1000).toLocaleDateString(),
+                new Date(item.ended_time * 1000).toLocaleDateString(),
+              ],
+              info: info,
+            })
+          })
+
+          setData(datas)
+        } else {
+          setData([])
+        }
+      } else {
+        message.error(result.message)
+      }
     } catch (e) {
       console.error(e)
     } finally {
@@ -32,24 +100,118 @@ const DeepTool = () => {
     }
   }
 
+  const onClickInfos = (data: DeepAnalyticsToolInfo) => {
+    setInfos(data)
+    setInfoOpen(true)
+  }
+
+  const handleFileInputChange = async (e: any, id: number) => {
+    console.log("idididididi", id)
+    return
+    const chosenFile = e.target.files[0]
+    if (chosenFile) {
+      const allowedExtensions = ['.csv', '.xlsx', '.xlx', '.tsv']
+      const fileExtension = chosenFile.name.split('.').pop()?.toLowerCase()
+      if (!allowedExtensions.includes(`.${fileExtension}`)) {
+        message.error(
+          'Invalid file type. Please select a CSV, XLSX, XLX, or TSV file.'
+        )
+        if (fileInput.current) {
+          fileInput.current.value = ''
+        }
+      } else {
+        await uploadFile(chosenFile, id)
+      }
+    }
+  }
+
+  const uploadFile = async (chosenFile: any, id: number) => {
+    const formData = new FormData()
+    formData.append('file', chosenFile)
+
+    setLoading(true)
+
+    try {
+      const upload_result = await upload(formData)
+      if (upload_result.code === 20000) {
+        const file_data: ChangeDeepBotUploadFiles = {
+          id: id,
+          filename: upload_result.data,
+        }
+        const update_result = await changeDeepAnalyticsBotUploadFile(file_data)
+        if (update_result.code === 20000) {
+          message.success(t('Successfully upload'))
+          await getList()
+        }
+      }
+    } catch (e: any) {
+      console.error(e)
+      message.error(e.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const onClickDownloadCsvFiles = (data: DownloadFile) => {
+    if (data.download_url === '') {
+      message.error(t('No file to download'))
+    } else {
+      window.location.href = data.download_url
+    }
+  }
+
   const columns: TableProps<any>['columns'] = [
     {
       title: 'Your Tasks',
-      colSpan: 3,
-      dataIndex: 'company_name',
+      colSpan: 4,
+      dataIndex: 'username',
       align: 'center',
     },
     {
-      title: 'Sale Content',
-      dataIndex: 'company_introduction',
+      title: 'Analytics Content',
+      dataIndex: 'business_desc',
       colSpan: 0,
       align: 'center',
     },
     {
-      title: 'Sale Time',
-      dataIndex: 'sale_time',
+      title: 'Upload files',
+      dataIndex: 'upload_files',
+      colSpan: 0,
+      align: 'center',
+      width: 100,
+      render: (text: DownloadFile) => (
+        <a
+          onClick={() => {
+            onClickDownloadCsvFiles(text)
+          }}
+        >
+          <p
+            style={{
+              fontSize: 13,
+              color: '#0D99FF',
+              fontWeight: 400,
+            }}
+          >
+            CSV
+          </p>
+
+          <img
+            src={DownloadSvg}
+            alt="Bot"
+            style={{
+              width: pxToVw(15),
+              height: pxToVw(15),
+            }}
+          />
+        </a>
+      ),
+    },
+    {
+      title: 'Analytics Time',
+      dataIndex: 'analytics_time',
       colSpan: 0,
       align: 'right',
+      width: 150,
       render: (text) => (
         <>
           <p>Start {text[0]}</p>
@@ -58,45 +220,14 @@ const DeepTool = () => {
       ),
     },
     {
-      title: 'Sale Pitch',
-      dataIndex: 'sales_pitches',
-      colSpan: 1,
-      align: 'center',
-      render: (text: Array<any>) => (
-        <a
-          onClick={() => {
-            // onClickSalesPitches(text)
-          }}
-        >
-          View
-        </a>
-      ),
-    },
-    {
       title: 'Info',
       dataIndex: 'info',
       colSpan: 1,
       align: 'center',
-      render: (text: any) => (
+      render: (text: DeepAnalyticsToolInfo) => (
         <a
           onClick={() => {
-            // onClickInfos(text)
-          }}
-        >
-          View
-        </a>
-      ),
-    },
-
-    {
-      title: 'Q/A',
-      dataIndex: 'qa',
-      colSpan: 1,
-      align: 'center',
-      render: (text: Array<any>) => (
-        <a
-          onClick={() => {
-            // onClickQas(text)
+            onClickInfos(text)
           }}
         >
           View
@@ -105,17 +236,64 @@ const DeepTool = () => {
     },
     {
       title: 'File',
-      dataIndex: 'files',
+      dataIndex: 'bot_upload_files',
       colSpan: 1,
       align: 'center',
-      render: (text: Array<any>) => (
-        <a
-          onClick={() => {
-            // onClickFiles(text)
-          }}
-        >
-          View
-        </a>
+      render: (file: DownloadFile) => (
+        <>
+          {file.name !== '' && file.download_url !== '' ? (
+            <>
+              <a href={file.download_url}>{file.name}</a>
+            </>
+          ) : (
+            <>
+              <div
+                className="flex rounded-8 mt-16 justify-center items-center"
+                style={{
+                  backgroundColor: '#F4F6FA',
+                  display: 'flex',
+                  width: '100%',
+                  height: '100%',
+                  border: '1px dashed #8B8B8B',
+                  flexDirection: 'column',
+                }}
+                onClick={() => fileInput.current.click()}
+              >
+                <p>{file.id}</p>
+                <input
+                  type="file"
+                  id="fileInput"
+                  ref={fileInput}
+                  onChange={async (e) => {
+                    console.log('asdfsdfsd', file.id)
+                    await handleFileInputChange(e, file.id as number)
+                  }}
+                  accept=".csv,.xlx,.xlsx,.tsv"
+                  style={{ display: 'none' }}
+                />
+                <Icon
+                  name={'upload'}
+                  style={{
+                    width: pxToVw(22),
+                    height: pxToVw(22),
+                    marginTop: pxToVw(5),
+                  }}
+                />
+                <div
+                  className={`mt-2`}
+                  style={{
+                    color: '#000',
+                    opacity: 0.6,
+                    fontSize: pxToVw(10),
+                    fontFamily: 'PingFang SC Bold',
+                  }}
+                >
+                  {t('Upload a CSV/XLX/XLSX/TSV file here')}
+                </div>
+              </div>
+            </>
+          )}
+        </>
       ),
     },
     {
@@ -136,7 +314,7 @@ const DeepTool = () => {
                         // await onClickStatus(text.id, 1)
                       }}
                     >
-                      {t('Active')}
+                      {t('Done')}
                     </a>
                   ),
                 },
@@ -148,7 +326,7 @@ const DeepTool = () => {
                         // await onClickStatus(text.id, 2)
                       }}
                     >
-                      {t('Inactive')}
+                      {t('Pending')}
                     </a>
                   ),
                 },
@@ -174,6 +352,35 @@ const DeepTool = () => {
         >
           {t('Deep Analytics Tool')}
         </div>
+        <div className={`mt-30`}>
+          {data && data.length > 0 ? (
+            <>
+              <Table
+                columns={columns}
+                dataSource={data}
+                bordered
+                loading={loading}
+              />
+            </>
+          ) : (
+            <>
+              <div>Not Found</div>
+            </>
+          )}
+        </div>
+        <Modal
+          width={`70vw`}
+          style={{ padding: '40px 60px' }}
+          centered
+          open={infoOpen}
+          onCancel={() => {
+            setInfoOpen(false)
+          }}
+          destroyOnClose
+          footer={null}
+        >
+          <AnalyticsInformationDetail infos={infos} />
+        </Modal>
       </div>
     </>
   )

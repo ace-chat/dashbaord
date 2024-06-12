@@ -62,7 +62,7 @@ export type DownloadFile = {
   download_url: string
 }
 
-export type BusinessMerchantChatBox = {
+export type BusinessMerchantChatBot = {
   key: number
   company_name: string
   // links: Array<string>
@@ -77,26 +77,26 @@ export type BusinessMerchantChatBox = {
   // ended_time?: number
   sale_time: Array<string>
   // status: string
-  status: BusinessMerchantChatBoxStatus
-  info: BusinessMerchantChatBoxInformation
+  status: BusinessMerchantChatBotStatus
+  info: BusinessMerchantChatBotInformation
 }
 
-export type BusinessMerchantChatBoxStatus = {
+export type BusinessMerchantChatBotStatus = {
   id: number;
   status: number;
 }
 
-export type BusinessMerchantChatBoxInformation = {
+export type BusinessMerchantChatBotInformation = {
   company_name: string
   company_introduction: string
-  platform: BusinessMerchantChatBoxInformationPlatform[]
+  platform: BusinessMerchantChatBotInformationPlatform[]
   tone: number
   tone_name: string
   phone_number: string
   links: Array<string>
 }
 
-export type BusinessMerchantChatBoxInformationPlatform = {
+export type BusinessMerchantChatBotInformationPlatform = {
   id: number
   name: string
   status: boolean

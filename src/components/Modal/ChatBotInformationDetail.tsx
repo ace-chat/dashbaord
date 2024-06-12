@@ -1,14 +1,14 @@
-import { BusinessMerchantChatBoxInformation } from '@/types'
+import { BusinessMerchantChatBotInformation } from '@/types'
 import { pxToVw } from '@/utils'
 import { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { copied } from '@/utils'
 
 type Props = {
-  infos: BusinessMerchantChatBoxInformation
+  infos: BusinessMerchantChatBotInformation
 }
 
-const InformationDetail: FC<Props> = (props) => {
+const ChatBotInformationDetail: FC<Props> = (props) => {
   const { t } = useTranslation()
 
   const infos = useMemo(() => props.infos, [props.infos])
@@ -125,4 +125,4 @@ const InformationDetail: FC<Props> = (props) => {
   )
 }
 
-export default InformationDetail
+export default ChatBotInformationDetail

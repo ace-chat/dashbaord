@@ -65,7 +65,7 @@ const MerchantBot = () => {
             }
             const status: BusinessMerchantChatBotStatus = {
               id: item.id,
-              status: item.status
+              status: item.status,
             }
             datas.push({
               key: item.id,
@@ -125,17 +125,17 @@ const MerchantBot = () => {
     try {
       const data: ChangeStatus = {
         id: id,
-        status: status
+        status: status,
       }
       const result = await changeStatus(data)
       if (result.code === 20000) {
-        message.success(t("Update completed"))
+        message.success(t('Update completed'))
       } else {
-        message.error(t("Update failed, please try again later"))
+        message.error(t('Update failed, please try again later'))
       }
 
       await getList()
-    } catch(e) {
+    } catch (e) {
       console.error(e)
     }
   }
@@ -146,6 +146,15 @@ const MerchantBot = () => {
       colSpan: 3,
       dataIndex: 'company_name',
       align: 'center',
+      render: (text) => (
+        <p
+          style={{
+            color: '#A5A5A5',
+          }}
+        >
+          {text}
+        </p>
+      ),
     },
     {
       title: 'Sale Content',
@@ -160,8 +169,20 @@ const MerchantBot = () => {
       align: 'right',
       render: (text) => (
         <>
-          <p>Start {text[0]}</p>
-          <p>End {text[1]}</p>
+          <p
+            style={{
+              color: '#A5A5A5',
+            }}
+          >
+            Start {text[0]}
+          </p>
+          <p
+            style={{
+              color: '#A5A5A5',
+            }}
+          >
+            End {text[1]}
+          </p>
         </>
       ),
     },
@@ -174,6 +195,9 @@ const MerchantBot = () => {
         <a
           onClick={() => {
             onClickSalesPitches(text)
+          }}
+          style={{
+            color: '#A5A5A5',
           }}
         >
           View
@@ -189,6 +213,9 @@ const MerchantBot = () => {
         <a
           onClick={() => {
             onClickInfos(text)
+          }}
+          style={{
+            color: '#A5A5A5',
           }}
         >
           View
@@ -206,6 +233,9 @@ const MerchantBot = () => {
           onClick={() => {
             onClickQas(text)
           }}
+          style={{
+            color: '#A5A5A5',
+          }}
         >
           View
         </a>
@@ -220,6 +250,9 @@ const MerchantBot = () => {
         <a
           onClick={() => {
             onClickFiles(text)
+          }}
+          style={{
+            color: '#A5A5A5',
           }}
         >
           View
@@ -263,9 +296,13 @@ const MerchantBot = () => {
               ],
             }}
           >
-            <a>
+            <a
+              style={{
+                color: '#A5A5A5',
+              }}
+            >
               {text.status === 1 ? 'Active' : 'Inactive'}
-              <DownOutlined style={{marginLeft: 10}} />
+              <DownOutlined style={{ marginLeft: 10 }} />
             </a>
           </Dropdown>
         </Space>

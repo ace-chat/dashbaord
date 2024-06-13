@@ -29,10 +29,19 @@ http.interceptors.response.use(
     return Promise.resolve(res)
   },
   async (err) => {
+    if (err.response.data.code === 20005) {
+      window.location.href = '/#/login'
+      return Promise.reject(err)
+    }
+
     // if (!window.navigator.onLine) {
     //   await message.error(i18n.t('Please check network connection'))
     // }
-    await message.error(i18n.t('Network connection error, please check the network connection status'))
+    await message.error(
+      i18n.t(
+        'Network connection error, please check the network connection status'
+      )
+    )
 
     return Promise.reject(err)
   }

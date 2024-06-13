@@ -1,30 +1,39 @@
 import {
   changeDeepAnalyticsBotUploadFile,
+  changeDeepAnalyticsStatus,
   getDeepAnalyticList,
   upload,
 } from '@/request'
 import {
   ChangeDeepBotUploadFiles,
+  ChangeStatus,
   DeepAnalyticsTool,
   DeepAnalyticsToolInfo,
   DeepAnalyticsToolStatus,
   DownloadFile,
 } from '@/types'
 import { DownOutlined } from '@ant-design/icons'
-import { Dropdown, Modal, Space, Table, TableProps, message } from 'antd'
-import { useEffect, useRef, useState } from 'react'
+import {
+  Dropdown,
+  Modal,
+  Space,
+  Table,
+  TableProps,
+  Upload,
+  message,
+} from 'antd'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import DownloadSvg from '@/assets/download.svg'
 import { pxToVw } from '@/utils'
 import AnalyticsInformationDetail from '@/components/Modal/AnalyticsInformationDetail'
 import Icon from '@/components/Icon/Icon'
+import { RcFile } from 'antd/es/upload'
 
 const DeepTool = () => {
   const { t } = useTranslation()
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any[]>([])
-
-  const fileInput: any = useRef()
   const [infoOpen, setInfoOpen] = useState(false)
   const [infos, setInfos] = useState<DeepAnalyticsToolInfo>({
     business_desc: '',
@@ -105,22 +114,16 @@ const DeepTool = () => {
     setInfoOpen(true)
   }
 
-  const handleFileInputChange = async (e: any, id: number) => {
-    console.log("idididididi", id)
-    return
-    const chosenFile = e.target.files[0]
-    if (chosenFile) {
+  const handleFileInputChange = async (file: RcFile, id: number) => {
+    if (file) {
       const allowedExtensions = ['.csv', '.xlsx', '.xlx', '.tsv']
-      const fileExtension = chosenFile.name.split('.').pop()?.toLowerCase()
+      const fileExtension = file.name.split('.').pop()?.toLowerCase()
       if (!allowedExtensions.includes(`.${fileExtension}`)) {
         message.error(
           'Invalid file type. Please select a CSV, XLSX, XLX, or TSV file.'
         )
-        if (fileInput.current) {
-          fileInput.current.value = ''
-        }
       } else {
-        await uploadFile(chosenFile, id)
+        await uploadFile(file, id)
       }
     }
   }
@@ -160,12 +163,40 @@ const DeepTool = () => {
     }
   }
 
+  const onClickStatus = async (id: number, status: number) => {
+    try {
+      const data: ChangeStatus = {
+        id: id,
+        status: status,
+      }
+      const result = await changeDeepAnalyticsStatus(data)
+      if (result.code === 20000) {
+        message.success(t('Update completed'))
+      } else {
+        message.error(t('Update failed, please try again later'))
+      }
+
+      await getList()
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const columns: TableProps<any>['columns'] = [
     {
       title: 'Your Tasks',
       colSpan: 4,
       dataIndex: 'username',
       align: 'center',
+      render: (text: string) => (
+        <p
+          style={{
+            color: '#A5A5A5',
+          }}
+        >
+          {text}
+        </p>
+      ),
     },
     {
       title: 'Analytics Content',
@@ -214,8 +245,20 @@ const DeepTool = () => {
       width: 150,
       render: (text) => (
         <>
-          <p>Start {text[0]}</p>
-          <p>End {text[1]}</p>
+          <p
+            style={{
+              color: '#A5A5A5',
+            }}
+          >
+            Start {text[0]}
+          </p>
+          <p
+            style={{
+              color: '#A5A5A5',
+            }}
+          >
+            End {text[1]}
+          </p>
         </>
       ),
     },
@@ -228,6 +271,9 @@ const DeepTool = () => {
         <a
           onClick={() => {
             onClickInfos(text)
+          }}
+          style={{
+            color: '#A5A5A5',
           }}
         >
           View
@@ -243,54 +289,54 @@ const DeepTool = () => {
         <>
           {file.name !== '' && file.download_url !== '' ? (
             <>
-              <a href={file.download_url}>{file.name}</a>
+              <a
+                href={file.download_url}
+                style={{
+                  color: '#A5A5A5',
+                }}
+              >
+                {file.name}
+              </a>
             </>
           ) : (
             <>
-              <div
-                className="flex rounded-8 mt-16 justify-center items-center"
-                style={{
-                  backgroundColor: '#F4F6FA',
-                  display: 'flex',
-                  width: '100%',
-                  height: '100%',
-                  border: '1px dashed #8B8B8B',
-                  flexDirection: 'column',
+              <Upload
+                accept=".csv,.xlx,.xlsx,.tsv"
+                beforeUpload={async (e) => {
+                  await handleFileInputChange(e, file.id as number)
                 }}
-                onClick={() => fileInput.current.click()}
               >
-                <p>{file.id}</p>
-                <input
-                  type="file"
-                  id="fileInput"
-                  ref={fileInput}
-                  onChange={async (e) => {
-                    console.log('asdfsdfsd', file.id)
-                    await handleFileInputChange(e, file.id as number)
-                  }}
-                  accept=".csv,.xlx,.xlsx,.tsv"
-                  style={{ display: 'none' }}
-                />
-                <Icon
-                  name={'upload'}
-                  style={{
-                    width: pxToVw(22),
-                    height: pxToVw(22),
-                    marginTop: pxToVw(5),
-                  }}
-                />
                 <div
-                  className={`mt-2`}
+                  className="flex rounded-8 mt-16 justify-center items-center"
                   style={{
-                    color: '#000',
-                    opacity: 0.6,
-                    fontSize: pxToVw(10),
-                    fontFamily: 'PingFang SC Bold',
+                    backgroundColor: '#F4F6FA',
+                    display: 'flex',
+                    border: '1px dashed #8B8B8B',
+                    flexDirection: 'column',
+                    padding: 10,
                   }}
                 >
-                  {t('Upload a CSV/XLX/XLSX/TSV file here')}
+                  <Icon
+                    name={'upload'}
+                    style={{
+                      width: pxToVw(22),
+                      height: pxToVw(22),
+                      marginTop: pxToVw(5),
+                    }}
+                  />
+                  <div
+                    className={`mt-2`}
+                    style={{
+                      color: '#000',
+                      opacity: 0.6,
+                      fontSize: pxToVw(10),
+                      fontFamily: 'PingFang SC Bold',
+                    }}
+                  >
+                    {t('Upload a CSV/XLX/XLSX/TSV file here')}
+                  </div>
                 </div>
-              </div>
+              </Upload>
             </>
           )}
         </>
@@ -301,7 +347,7 @@ const DeepTool = () => {
       dataIndex: 'status',
       colSpan: 1,
       align: 'center',
-      render: (text: any) => (
+      render: (text: DeepAnalyticsToolStatus) => (
         <Space size="middle">
           <Dropdown
             menu={{
@@ -311,7 +357,7 @@ const DeepTool = () => {
                   label: (
                     <a
                       onClick={async () => {
-                        // await onClickStatus(text.id, 1)
+                        await onClickStatus(text.id, 1)
                       }}
                     >
                       {t('Done')}
@@ -323,7 +369,7 @@ const DeepTool = () => {
                   label: (
                     <a
                       onClick={async () => {
-                        // await onClickStatus(text.id, 2)
+                        await onClickStatus(text.id, 2)
                       }}
                     >
                       {t('Pending')}
@@ -333,7 +379,11 @@ const DeepTool = () => {
               ],
             }}
           >
-            <a>
+            <a
+              style={{
+                color: '#A5A5A5',
+              }}
+            >
               {text.status === 1 ? 'Down' : 'Pending'}
               <DownOutlined style={{ marginLeft: 10 }} />
             </a>

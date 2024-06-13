@@ -39,6 +39,7 @@ const Aside = () => {
 
   const [displayName, setDisplayName] = useState('')
   const [avatarUrl, setAvatarUrl] = useState('')
+  const [roleId, setRoleId] = useState(0)
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -47,6 +48,7 @@ const Aside = () => {
         if (resp.code === 20000) {
           setDisplayName(resp.data.display_name)
           setAvatarUrl(resp.data.avatar)
+          setRoleId(resp.data.role_id)
         }
       } catch (e) {
         console.error(e)
@@ -82,11 +84,20 @@ const Aside = () => {
     getItem(t('Chat Bot'), 'bot', <Icon name={'bot'} />, [
       getItem(t('Chat with ACE'), 'bot/chat'),
       getItem(t('Create a Chatbot'), 'bot/create'),
-      getItem(t('Merchant Chatbot'), 'bot/merchantbot'),
     ]),
     getItem(t('Analytics'), 'analytics.tsx', <Icon name={'analytics'} />, [
       getItem(t('Simple Analytics'), 'analytics.tsx/simple'),
       getItem(t('Deep Analytics'), 'analytics.tsx/deep'),
+    ]),
+    getItem(t('Support'), 'support', <Icon name={'support'} />),
+  ]
+
+  const adminItems: MenuProps['items'] = [
+    getItem(t('Home'), 'home', <Icon name={'home'} />),
+    getItem(t('Chat Bot'), 'bot', <Icon name={'bot'} />, [
+      getItem(t('Merchant Chatbot'), 'bot/merchantbot'),
+    ]),
+    getItem(t('Analytics'), 'analytics.tsx', <Icon name={'analytics'} />, [
       getItem(t('Deep Analytics Tool'), 'analytics.tsx/deeptool'),
     ]),
     getItem(t('Support'), 'support', <Icon name={'support'} />),
@@ -103,7 +114,7 @@ const Aside = () => {
         <Menu
           mode="vertical"
           defaultSelectedKeys={[open]}
-          items={items}
+          items={roleId === 1 ? items : roleId === 2 ? adminItems : []}
           onClick={change}
           style={{ flex: 'auto' }}
         />

@@ -1,7 +1,15 @@
 import { useState, useEffect, useMemo } from 'react'
 import Icon from '@/components/Icon/Icon.tsx'
 import { useTranslation } from 'react-i18next'
-import { Button, Input, InputNumber, message, Select, Divider } from 'antd'
+import {
+  Button,
+  Input,
+  InputNumber,
+  message,
+  Select,
+  Divider,
+  Checkbox,
+} from 'antd'
 import { pxToVw } from '@/utils'
 import moment from 'moment-timezone'
 
@@ -330,6 +338,7 @@ const Content = (props: Prop) => {
   const [type, setType] = useState<number>()
   const [keyword, setKeyword] = useState<string>()
   const [details, setDetails] = useState<string>()
+  const [imageCheckedValues, setImageCheckedValues] = useState<string[]>([])
 
   // local vars
   const countingNames = ['sixth', 'fifth', 'fourth', 'third', 'second', 'first']
@@ -537,6 +546,18 @@ const Content = (props: Prop) => {
         }
         break
       case 'entire':
+        let aiToggle = 0,
+          gToggle = 0
+        if (imageCheckedValues && imageCheckedValues.length > 0) {
+          imageCheckedValues.forEach((item) => {
+            if (item === 'Google Images') {
+              gToggle = 1
+            } else if (item === 'AI images') {
+              aiToggle = 1
+            }
+          })
+        }
+
         form = {
           topic: text,
           tones: tone,
@@ -548,7 +569,10 @@ const Content = (props: Prop) => {
           word_count: wordCount,
           other_details: details,
           language: language,
+          ai_toggle: aiToggle,
+          g_toggle: gToggle,
         }
+
         break
       default:
         break
@@ -1202,6 +1226,22 @@ const Content = (props: Prop) => {
               </div>
             )}
             {/* Other Details end */}
+
+            {/* Image Selected start */}
+            {props.optional?.image_toggle && (
+              <div className={`mt-24`}>
+                <div className={`flex items-center justify-between mt-12`}>
+                  <Checkbox.Group
+                    options={['Google Images', 'AI images']}
+                    defaultValue={['']}
+                    onChange={(imageCheckedValues) => {
+                      setImageCheckedValues(imageCheckedValues as string[])
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            {/* Image Selected end */}
 
             {/* Language start */}
             <div className={`mt-24`}>

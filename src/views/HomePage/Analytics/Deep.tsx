@@ -12,24 +12,12 @@ import {
 } from '@/request'
 import { AnalyticsHistory, AnalyticsHistoryChildren, Option } from '@/types'
 import moment from 'moment-timezone'
-import Plot from 'react-plotly.js'
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
 
 const Deep = () => {
   const { t } = useTranslation()
-  const [contentStatus, setContentStatus] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
 
   const [generatedResult, setGeneratedResult] = useState<any>()
-
-  const [options, setOptions] = useState<Array<Option>>([])
-  const [mainChartsData, setMainChartsData] = useState<any[]>([])
-  const [mainChartsLayout, setMainChartsLayout] = useState<any>({})
-  const [negativeChartsData, setNegativeChartsData] = useState<any[]>([])
-  const [negativeChartsLayout, setNegativeChartsLayout] = useState<any>({})
-  const [positiveChartsData, setPositiveChartsData] = useState<any[]>([])
-  const [positiveChartsLayout, setPositiveChartsLayout] = useState<any>({})
 
   const [history, setHistory] = useState<Array<AnalyticsHistory>>([])
 
@@ -79,7 +67,6 @@ const Deep = () => {
   }
 
   const getReport = async (file_name: any) => {
-    setContentStatus(false)
     const d = {
       business_description: business,
       product_description: product,
@@ -90,15 +77,12 @@ const Deep = () => {
 
     try {
       await generatorDeepAnalytics(d)
-      // const res = await generatorDeepAnalytics(d)
-      // setGeneratedResult(JSON.parse(res.data.content))
       message.success("Upload success, please wait for analysis")
       await getHistory()
     } catch (e) {
       console.error(e)
     } finally {
       setLoading(false)
-      setContentStatus(true)
     }
   }
 
@@ -164,90 +148,29 @@ const Deep = () => {
 
   const handleHistoryById = async (id: number) => {
     try {
-      setContentStatus(false)
       setLoading(true)
-      const res = await getDeepAnalyticsById(id)
-      setGeneratedResult(JSON.parse(res.data.content))
-      dealWithData(JSON.parse(res.data.content))
+      const result = await getDeepAnalyticsById(id)
+      if (result.code === 20000) {
+        setGeneratedResult(result.data)
+        if (result.data.status === 1) {
+          // Done
+          setLoading(false)
+        } else if (result.data.status === 2) {
+          // Pending
+          setLoading(true)
+        }
+      }
+      console.log("res", result)
     } catch (e) {
       console.error(e)
-    } finally {
-      setLoading(false)
-      setContentStatus(true)
     }
   }
 
-  const dealWithData = (data: any, i = 0) => {
-    let options: Option[] = []
-    data.negative_scatter.forEach((item: any, index: number) => {
-      options.push({
-        label: item.layout.title.text,
-        value: index,
-      })
-    })
-    setOptions(options)
-
-    let dataChartsData: any = undefined
-    let dataChartsLayout: any = undefined
-    data.charts.forEach((item: any, index: number) => {
-      if (index === i) {
-        dataChartsData = item.data
-        dataChartsLayout = item.layout
-      }
-    })
-    setMainChartsData(dataChartsData)
-    setMainChartsLayout(dataChartsLayout)
-
-    let positiveChartsData: any = undefined
-    let positiveChartsLayout: any = undefined
-    data.positive_scatter.forEach((item: any, index: number) => {
-      if (index === i) {
-        positiveChartsData = item.data
-        positiveChartsLayout = item.layout
-      }
-    })
-    setPositiveChartsData(positiveChartsData)
-    setPositiveChartsLayout(positiveChartsLayout)
-
-    let negativeChartsData: any = undefined
-    let negativeChartsLayout: any = undefined
-    data.negative_scatter.forEach((item: any, index: number) => {
-      if (index === i) {
-        negativeChartsData = item.data
-        negativeChartsLayout = item.layout
-      }
-    })
-    setNegativeChartsData(negativeChartsData)
-    setNegativeChartsLayout(negativeChartsLayout)
-  }
-
-  const generatorPDF = () => {
-    // @ts-ignore
-    let w = document.getElementById('PDF').offsetWidth
-    // @ts-ignore
-    let h = document.getElementById('PDF').offsetHeight
-    // @ts-ignore
-    html2canvas(document.getElementById('PDF'), {
-      dpi: 300, // Set to 300 DPI
-      scale: 3, // Adjusts your resolution
-      onrendered: function (canvas: any) {
-        var img = canvas.toDataURL('image/jpeg', 1)
-        var doc = new jsPDF('l', 'px', [w, h])
-        doc.addImage(img, 'JPEG', 0, 0, w, h)
-        doc.save('sample-file.pdf')
-      },
-    })
-  }
-
-  const handleChange = (value: number) => {
-    dealWithData(generatedResult, value)
-  }
-
-  useEffect(() => {
-    if (contentStatus) {
-      generatorPDF()
+  const onClickDownloadFile = () => {
+    if (generatedResult) {
+      window.location.href = generatedResult.bot_upload_files.download_url
     }
-  }, [contentStatus])
+  }
 
   return (
     <>
@@ -582,14 +505,14 @@ const Deep = () => {
                     className={`text-14 text-[#C4C4C4] w-432 text-center leading-16`}
                   >
                     {t(
-                      'Thank you for your patience. Our AI-bot is preparing a simple analytics report for you based on the data you provided.'
+                      'Thank you for your patience. Our experts are preparing a deep analysis of your data based on the service you chose.'
                     )}
                   </div>
                   <div
                     className={`text-14 text-[#C4C4C4] w-432 text-center leading-16`}
                   >
                     {t(
-                      'Please wait for a few minutes. Do not refresh the page.'
+                      'Estimated time for completion is ~2 weeks.'
                     )}
                   </div>
                 </div>
@@ -653,7 +576,7 @@ const Deep = () => {
                     <Button
                       type="default"
                       loading={loading}
-                      onClick={() => {}}
+                      onClick={onClickDownloadFile}
                       className={`w-167 h-39 flex items-center justify-center bg-[#E6E6F4] rounded-20 text-14 cursor-pointer select-none`}
                     >
                       <div
@@ -717,45 +640,6 @@ const Deep = () => {
           </div>
         </div>
       </div>
-
-      {contentStatus && (
-        <div className={'fixed top-5000 left-0'} id={`PDF`}>
-          <div className={`py-44`}>
-            <div className={`px-69`}>
-              <Select
-                defaultValue={options[0].value}
-                options={options}
-                onChange={handleChange}
-              ></Select>
-            </div>
-            <div className={`pl-30`}>
-              <div>
-                <Plot data={mainChartsData} layout={mainChartsLayout} />
-              </div>
-              <div>
-                <Plot data={positiveChartsData} layout={positiveChartsLayout} />
-              </div>
-              <div>
-                <Plot data={negativeChartsData} layout={negativeChartsLayout} />
-              </div>
-            </div>
-            <div className={`px-69 text-14`}>
-              <div
-                className={`mt-20 leading-28`}
-                dangerouslySetInnerHTML={{
-                  __html: generatedResult?.positive_report,
-                }}
-              ></div>
-              <div
-                className={`mt-20 leading-28`}
-                dangerouslySetInnerHTML={{
-                  __html: generatedResult?.negative_report,
-                }}
-              ></div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   )
 }

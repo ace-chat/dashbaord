@@ -44,6 +44,7 @@ export type Optional = {
   word_count?: boolean;
   other_detail?: boolean;
   topic?: boolean;
+  image_toggle?: boolean;
 }
 
 export type Url = {

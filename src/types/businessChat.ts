@@ -58,6 +58,7 @@ export type File = {
 }
 
 export type DownloadFile = {
+  id?: number
   name: string
   download_url: string
 }
@@ -82,8 +83,8 @@ export type BusinessMerchantChatBot = {
 }
 
 export type BusinessMerchantChatBotStatus = {
-  id: number;
-  status: number;
+  id: number
+  status: number
 }
 
 export type BusinessMerchantChatBotInformation = {

@@ -1,4 +1,5 @@
 import { Time } from '@/types/common.ts'
+import { DownloadFile } from './businessChat'
 
 export type AnalyticsHistoryChildren = {
   id: number
@@ -17,11 +18,11 @@ export type AnalyticsHistory = {
   children: Array<AnalyticsHistoryChildren>
 }
 
-export type DownloadFile = {
-  id?: number
-  name: string
-  download_url: string
-}
+// export type DownloadFile = {
+//   id?: number
+//   name: string
+//   download_url: string
+// }
 
 export type DeepAnalyticsToolStatus = {
   id: number

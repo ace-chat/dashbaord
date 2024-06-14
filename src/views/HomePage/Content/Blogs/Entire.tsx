@@ -22,6 +22,7 @@ const Entire: FC = () => {
     },
     word_count: true,
     other_detail: true,
+    image_toggle: true,
   });
   const [url] = useState<Url>({
     generator: "/content/blog/entire/generator",

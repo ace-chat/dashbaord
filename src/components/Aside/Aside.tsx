@@ -49,6 +49,7 @@ const Aside = () => {
           setDisplayName(resp.data.display_name)
           setAvatarUrl(resp.data.avatar)
           setRoleId(resp.data.role_id)
+          // setRoleId(2)
         }
       } catch (e) {
         console.error(e)

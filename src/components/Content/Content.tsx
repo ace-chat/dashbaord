@@ -265,56 +265,60 @@ const Content = (props: Prop) => {
   }
 
   useEffect(() => {
-    switch (props.tag) {
-      case 'media':
-      case 'engine':
-        Promise.all([
-          getRegions(),
-          getVoices(),
-          getTones(),
-          getPlatforms(),
-          getGenders(),
-          getAllHistory(),
-        ]).then()
-        break
-      case 'tone':
-        Promise.all([getTones(), getVoices(), getAllHistory()]).then()
-        break
-      case 'summarize':
-      case 'paraphrase':
-        Promise.all([getLanguages(), getAllHistory()]).then()
-        break
-      case 'voice':
-        Promise.all([getVoices(), getAllHistory()]).then()
-        break
-      case 'audience':
-        Promise.all([getRegions(), getGenders(), getAllHistory()]).then()
-        break
-      case 'freestyle':
-      case 'marketing':
-      case 'welcome':
-      case 'odds':
-        Promise.all([
-          getTones(),
-          getRegions(),
-          getGenders(),
-          getVoices(),
-          getAllHistory(),
-        ]).then()
-        break
-      case 'intro':
-      case 'outline':
-        Promise.all([getTones(), getVoices(), getAllHistory()]).then()
-        break
-      case 'entire':
-        Promise.all([
-          getTypes(),
-          getTones(),
-          getVoices(),
-          getAllHistory(),
-        ]).then()
+    async function init() {
+      switch (props.tag) {
+        case 'media':
+        case 'engine':
+          await Promise.all([
+            getRegions(),
+            getVoices(),
+            getTones(),
+            getPlatforms(),
+            getGenders(),
+            getAllHistory(),
+          ]).then()
+          break
+        case 'tone':
+          await Promise.all([getTones(), getVoices(), getAllHistory()]).then()
+          break
+        case 'summarize':
+        case 'paraphrase':
+          await Promise.all([getLanguages(), getAllHistory()]).then()
+          break
+        case 'voice':
+          await Promise.all([getVoices(), getAllHistory()]).then()
+          break
+        case 'audience':
+          await Promise.all([getRegions(), getGenders(), getAllHistory()]).then()
+          break
+        case 'freestyle':
+        case 'marketing':
+        case 'welcome':
+        case 'odds':
+          await Promise.all([
+            getTones(),
+            getRegions(),
+            getGenders(),
+            getVoices(),
+            getAllHistory(),
+          ]).then()
+          break
+        case 'intro':
+        case 'outline':
+          await Promise.all([getTones(), getVoices(), getAllHistory()]).then()
+          break
+        case 'entire':
+          await Promise.all([
+            getTypes(),
+            getTones(),
+            getVoices(),
+            getAllHistory(),
+          ]).then()
+      }
+      await getLanguages()
     }
-    getLanguages().then()
+
+    init()
   }, [])
 
   //generated text
@@ -775,7 +779,7 @@ const Content = (props: Prop) => {
                   <div>
                     <InputNumber
                       className="w-240 text-10 items-center"
-                      style={{ paddingTop: 5, paddingBottom: 5 }}
+                      style={{ paddingTop: 5, paddingBottom: 5, width: pxToVw(252)}}
                       min={0}
                       placeholder={t('Word Count')}
                       controls={true}

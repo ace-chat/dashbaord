@@ -7,7 +7,7 @@ import { Button, Input, Select, Space, Upload, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { cloneDeep } from 'lodash-es'
 
-import { Option, Platform, Tone, SP, QA } from '@/types'
+import { Option, Platform, Tone, SP, QA, BusinessChatRequest } from '@/types'
 import {
   getAllPhoneCode,
   getAllPlatform,
@@ -39,8 +39,8 @@ const Generator: FC<Props> = (props) => {
   const [websiteLinks, setWebsiteLinks] = useState<Array<string>>([])
   const [typedLink, setTypedLink] = useState('')
   const [companyName, setCompanyName] = useState('')
-  const [tone, setTone] = useState<number>(0)
-  const [platform, setPlatform] = useState<number>(0)
+  const [tone, setTone] = useState<number>()
+  const [platform, setPlatform] = useState<number>()
   const [phoneNumber, setPhoneNumber] = useState<{
     code: string
     number: string
@@ -156,13 +156,13 @@ const Generator: FC<Props> = (props) => {
       f.push(item.url)
     })
     try {
-      const data = {
+      const data: BusinessChatRequest = {
         company_name: companyName,
         links: websiteLinks,
         company_introduction: companyIntro,
-        platform: platform,
+        platform: platform || 0,
         phone_number: `${phoneNumber.code}${phoneNumber.number}`,
-        tone: tone,
+        tone: tone || 0,
         qa: props.questionAnswer,
         sales_pitches: props.salesPitches,
         files: f,

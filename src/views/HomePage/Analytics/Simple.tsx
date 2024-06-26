@@ -463,6 +463,17 @@ const Simple = () => {
               </div>
             ) : (
               <div className={`py-44`}>
+                <div className={`pl-30`}>
+                  <div
+                    className={`px-69`}
+                    dangerouslySetInnerHTML={{
+                      __html: generatedContent.summary_report,
+                    }}
+                  ></div>
+                </div>
+
+                <hr className="my-12 h-0.5 border-t-0 bg-neutral-100 opacity-100 dark:opacity-50" />
+
                 <div className={`px-69`}>
                   <Select
                     style={{ width: pxToVw(200) }}
